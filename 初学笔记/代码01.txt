@@ -1,0 +1,1826 @@
+// hello world
+#include<iostream>
+using namespace std;
+int main()
+{
+	cout << "hello world" << endl;
+
+	system("pause");
+
+	return 0;
+}
+//转数字(改变进制)
+#include <iostream>
+using namespace std;
+int main()
+{
+	char ch = 'A';
+
+	cout << ch << endl;
+
+	cout << (int)ch<< endl;
+	
+	system("pause");
+
+	return 0;
+}
+//两种风格字符串对比
+#include <iostream>
+using namespace std;
+#include <string>
+int main()
+{
+	char str[] = "hello world";
+
+	cout << str<< endl;
+
+	string str2 = "hello world";
+
+	cout << str2 << endl;
+
+	system("pause");
+
+	return 0;
+}
+//输出为 1 0
+#include <iostream>
+using namespace std;
+int main()
+{
+	bool flag = true;//bool可替换
+
+	cout << flag << endl;
+
+	flag = false;
+
+	cout << flag << endl;
+
+	system("pause");
+
+	return 0;
+
+}
+//新赋值
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int a = 0;
+
+	cout << "赋值" << endl;
+
+	cin >> a;
+
+	cout <<"新赋值"<< a<< endl;
+
+	system("pause");
+
+	return 0;
+
+}
+//赋值运算符
+#include <iostream>;
+using namespace std;
+int main()
+{
+	int a = 10;
+
+	a += 10;
+
+	cout << "a =" << a << endl;
+
+	system("pause");
+
+	return 0;
+
+}
+//比较运算
+#include <iostream>;
+using namespace std;
+int main()
+{
+	int a = 10;
+	int b = 10;
+
+	cout << （a>=b） << a << endl;
+
+	system("pause");
+
+	return 0;
+
+}
+//if单行语句
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int score = 0;
+
+	cout << "请输入成绩" << endl;
+
+	cin >> score;
+
+	cout << "你的成绩为" << score << endl;
+
+	if (score > 600)
+	{
+		cout << "恭喜考中" << endl;
+	}
+
+	if (score < 600)
+	{
+		cout << "再接再厉" << endl;
+	}
+
+	system("pause");
+
+	return 0;
+}
+//if多条件语句
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int score = 0;
+
+	cout << "请输入成绩" << endl;
+
+	cin >> score;
+
+	cout << "你的成绩为" << score << endl;
+
+	if (score >600)
+	{
+		cout << "一本" << endl;
+	}
+
+	else if (score >500)
+	{
+		cout << "二本" << endl;
+	}
+	else if (score > 400)
+	{
+		cout << "三本" << endl;
+	}
+	else
+	{
+		cout << "没救了" << endl;
+	}
+
+	system("pause");
+
+	return 0;
+}
+//自制---奇偶判断
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int a = 0;
+
+	cout << "请输入一个任意整数" << endl;
+
+	cin >> a;
+
+	int b = a % 2;
+
+	//cout << "取模为"<<b << endl;
+	//0 偶数
+	//1或-1 奇数
+
+	if (b > 0)
+	{
+		cout << "这是个奇数" << endl;
+	}
+	else if (b < 0)
+	{
+		cout << "这是个奇数" << endl;
+	}
+	else
+	{
+		cout << "这是个偶数" << endl;
+	}
+
+	system("pause");
+
+	return 0;
+}//（“==”等号判定，可省去3行代码）
+
+//自制---质合判定（bushi）//错了，但没完全错
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int a = 0;
+
+	cout << "请输入10位以下整数" << endl;
+
+	cin >> a;
+
+	if (a <= 1)
+	{
+		cout << "非质数，也非合数" << endl;
+	}
+	else if (a == 2)
+	{
+		cout << "质数" << endl;
+	}
+	else if (a == 3)
+	{
+		cout << "质数" << endl;
+	}
+	else if (a == 5)
+	{
+		cout << "质数" << endl;
+	}
+	else if (a == 7)
+	{
+		cout << "质数" << endl;
+	}
+	else
+	{
+		int b = a % 2;
+
+		if (b == 0)
+		{
+			cout << "合数" << endl;
+		}
+		else
+		{
+			int c = a % 3;
+
+			if (c == 0)
+			{
+				cout << "合数" << endl;
+			}
+			else
+			{
+				int d = a % 5;
+
+				if (d == 0)
+				{
+					cout << "合数" << endl;
+				}
+				else
+				{
+					int e = a % 7;
+
+					if (e == 0)
+					{
+						cout << "合数" << endl;
+					}
+					else
+					{
+						cout << "质数" << endl;
+					}
+				}
+			}
+		}
+	}
+
+
+
+	system("pause");
+
+	return 0;
+}
+
+//自制---三数判断（暂不包括等于）
+#include <iostream>
+using namespace std;
+int main()
+{
+	int A = 0;
+	cout << "请定义A的值" << endl;
+	cin >> A;
+	int B = 0;
+	cout << "请定义B的值" << endl;
+	cin >> B;
+	int C = 0;
+	cout << "请定义C的值" << endl;
+	cin >> C;
+
+	if (A > B)
+	{
+		if (A > C)
+		{
+			if (B > C)
+			{
+				cout << "A>B>C" << endl;
+			}
+			else//C > B
+			{
+				cout << "A>C>B" << endl;
+			}
+		}
+		else//C > A
+		{
+			cout << "C>A>B" << endl;
+		}
+	}
+	else//B > A
+	{
+		if (C > A)
+		{
+			if (B > C)
+			{
+				cout << "B>C>A" << endl;
+			}
+			else//C > B
+			{
+				cout << "C>B>A" << endl;
+			}
+		}
+		else//A> C
+		{
+			cout << "B>A>C" << endl;
+		}
+	}
+
+	system("pause");
+
+	return 0;
+
+}
+
+//自制---三数判断（改良）
+#include <iostream>
+using namespace std;
+int main()
+{
+	int A = 0;
+	cout << "请定义A的值" << endl;
+	cin >> A;
+	int B = 0;
+	cout << "请定义B的值" << endl;
+	cin >> B;
+	int C = 0;
+	cout << "请定义C的值" << endl;
+	cin >> C;
+
+	if (A > B)
+	{
+		if (A > C)
+		{
+			if (B > C)
+			{
+				cout << "A > B > C" << endl;
+			}
+			else if(C > B)
+			{
+				cout << "A > C > B" << endl;
+			}
+			else//B = C
+			{
+				cout << "A > B = C" << endl;
+			}
+		}
+		else if(C > A)
+		{
+			cout << "C > A > B" << endl;
+		}
+		else//A = C
+		{
+			cout << "A = C > B" << endl;
+		}
+	}
+	else if (B > A)
+	{
+		if (C > A)
+		{
+			if (B > C)
+			{
+				cout << "B > C >A" << endl;
+			}
+			else if(C > B)
+			{
+				cout << "C > B > A" << endl;
+			}
+			else//B = C
+			{
+				cout << "B = C > A" << endl;
+			}
+		}
+		else if(A > C)
+		{
+			cout << "B > A > C" << endl;
+		}
+		else//A = C
+		{
+			cout << "B > A = C" << endl;
+		}
+	}
+	else//A = B
+	{
+		if (A > C)
+		{
+			cout << "A = B > C" << endl;
+		}
+		else if(C > A)
+		{
+			cout << "C > A = B" << endl;
+		}
+		else//A = C
+		{
+			cout << "A = B = C" << endl;
+		}
+	}
+
+	system("pause");
+
+	return 0;
+
+}
+
+//自制--数字游戏
+#include <iostream>
+
+using namespace std;
+
+#include <ctime>
+
+int main()
+{
+	srand((unsigned int)time(NULL));
+
+	int a = rand() % 100 + 1;
+
+	//cout << "a等于" << a << endl;
+
+	int b = 0;
+
+	int c = 1;
+
+	cout << "这是一个1-100的整数，猜猜等于几" << endl;
+
+	while (c <= 6)
+	{
+		//cout << "c等于" << c << endl;
+
+		c++;
+
+		cin >> b;
+
+		if (b > a)
+		{
+			cout << "过大" << endl;
+		}
+		else if (b < a)
+		{
+			cout << "过小" << endl;
+		}
+		else if (b = a)
+		{
+			cout << "猜对了，流批" << endl;
+
+			c += 100;
+
+			break;
+		}
+
+	}
+
+	//cout << "c2等于" <<c<< endl;
+
+	if (c < 100)
+	{
+		cout << "6次都猜不中，菜" << endl;
+
+	}
+
+	system("pause");
+
+	return 0;
+}
+
+//自制---水仙花数
+#include<iostream>
+using namespace std;
+int main()
+{
+	long long a = 0;//计数菌-个
+	//cout << "输入" << endl;
+	//cin >> a;
+	int b = 0;//计数菌-拾
+	int c = 0;//计数菌-佰
+	int d = 0;//计数菌-环
+	int e = 0;//计数菌-终
+	while (true)
+	{
+		d++;
+
+		int a = 99 + d;
+		
+		//cout << "初始a = " << a << endl;
+
+		if (a == 1000)
+		{
+			break;
+		}
+
+		int c = 0;
+
+		while (a >= 100)
+		{
+
+			c++;
+			//cout << "计数 = " << c << endl;
+			a -= 100;
+			//cout<<"佰a值" << a << endl;
+		}
+
+		//cout << "佰数" << c << endl;
+
+		//cout << "拾a值" << a << endl;
+
+		int b = 0;
+
+		while (a >= 10)
+		{
+			b++;
+			//cout << "计数 = " << b << endl;
+			a -= 10;
+			//cout<<"拾a值" << a << endl;
+		}
+
+		//cout << "拾数" << b << endl;
+
+		//cout << "个 a = " << a << endl;
+		//cout << "拾 b = " << b << endl;
+		//cout << "佰 c = " << c << endl;
+
+		long long y = a * a*a + b * b*b + c * c*c;
+		long long z = a + b * 10 + c * 100;
+
+		//cout << "y = " << y << endl;
+		//cout << "z = " << z << endl;
+
+		if (y == z)
+		{
+			//cout << "水仙花数" << endl;
+			cout << z << endl;
+			e++;
+		}
+		//else
+		//{
+		//	cout << "不是水仙花数" << endl;
+		//}
+	}
+	cout << "共计" << e << "个" << endl;
+	system("pause");
+	return 0;
+}
+
+//水仙花数---简化
+#include<iostream>
+using namespace std;
+int main()
+{
+	int a = 99;
+	do
+	{
+		a++;
+		int b = a % 10;
+		int c = a / 10 % 10;
+		int e = a / 100;
+		//cout << "a = " << a << endl;
+		//cout << "b = " << b << endl;
+		//cout << "c = " << c << endl;
+		//cout << "e = " << e << endl;
+		if (b*b*b+c*c*c+e*e*e == a)
+		{
+			cout << a << endl;
+		}
+	} 
+	while (a < 999);
+	system("pause");
+	return 0;
+}
+
+//自制---敲桌子游戏
+#include<iostream>
+using namespace std;
+int main()
+{
+	int a = 0;//初始值
+	int y = 0;//计数
+	do
+	{
+		a++;
+		int b = a % 10;//个位
+		int c = a / 10;//十位
+		int e = a % 7;//取模于七
+
+		//cout << "a = " << a << endl;
+		//cout << "b = " << b << endl;
+                //cout << "c = " << c << endl;
+                //cout << "e = " << e << endl;
+
+		//方案---壹
+		while (true)
+		{
+			if (b == 7)
+			{
+				y++;
+				cout << "敲桌子" << endl; break;
+			}
+			if (c == 7)
+			{
+				y++;
+				cout << "敲桌子" << endl; break;
+			}
+			if (e == 0)
+			{
+				y++;
+				cout << "敲桌子" << endl; break;
+			}
+			else
+			{
+				cout << a << endl;
+				break;
+			}
+		}
+
+		//方案---贰
+		//if (b == 7)
+		//{
+		//	cout << "敲桌子" << endl; y++;
+		//}
+		//else
+		//{
+		//	if (c == 7)
+		//	{
+		//		cout << "敲桌子" << endl; y++;
+		//	}
+		//	else
+		//	{
+		//		if (e == 0)
+		//		{
+		//			cout << "敲桌子" << endl; y++;
+		//		}
+		//		else
+		//		{
+		//			cout << a << endl;
+		//		}
+		//	}
+		//}
+
+	} while (a < 100);
+
+	cout << "y = " << y << endl;
+
+	system("pause");
+
+	return 0;
+}
+
+//敲桌子-正解
+#include<iostream>
+using namespace std;
+int main()
+{
+	int y = 0;
+	for (int a = 1; a <= 100; a++)
+	{
+		if (a % 10 == 7 || a / 10 == 7 || a % 7 == 0)
+		{
+			cout << "敲桌子" << endl; y++;
+		}
+		else
+		{
+			cout << a << endl;
+		}
+	}
+	cout << "y = " << y << endl;
+	system("pause");
+	return 0;
+}
+//九九乘法表
+#include<iostream>
+using namespace std;
+int main()
+{
+	for (int i = 1; i <= 9; i++)
+	{
+		for (int a = 1; a <= i; a++)
+		{
+			cout << a << "*" << i << "=" << a * i << " ";
+		}
+		cout << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+//五只老母猪
+#include<iostream>
+using namespace std;
+int main()
+{
+	int a[10] = { 1,2,3,4,5 };
+	int t = 0;
+	int z = 0;
+	int w = 0;
+
+	for (int i = 0; i < 5; i++)
+	{
+		//z = i+1;
+		//cout << "循环次数" << z << endl;
+		if (a[t] < a[i]) { t = i; w = a[i]; }
+		cout << "输出t" << t << endl;
+	}
+	cout << "最大是a[" << t << "]" << endl;
+	cout << "最大值是" << w << endl;
+
+	system("pause");
+	return 0;
+}
+
+//元素逆置
+#include<iostream>
+using namespace std;
+int main()
+{
+
+	int arr[5] = { 1,2,3,4,5 };
+	int start = 0;
+	int end = sizeof(arr)/sizeof(arr[0])-1;
+	int temp = 0;
+	for (int a = 0; a < sizeof(arr)/sizeof(arr[0]); a++)
+	{
+		cout << "原数组" << arr[a] << endl;
+	}
+
+	while (start < end)
+	{
+
+		temp = arr[start];
+		arr[start] = arr[end];
+		arr[end] = temp;
+		start++; end--;
+	}
+	for (int b = 0; b < 5; b++)
+	{
+		cout << "逆数组" << arr[b] << endl;
+	}
+
+
+	system("pause");
+	return 0;
+}
+//冒泡排序
+#include<iostream>
+using namespace std;
+int main()
+{
+	int temp = 0;//用于变量交换
+	int arr[9] = { 3,9,6,2,8,1,4,5,7 };//数组
+	int change = sizeof(arr) / sizeof(arr[0]);//统计元素个数
+	int un = change-1;//需变化(减去循环数需要)
+	for (int w = 0; w < change; w++)
+	{
+		for (int i = 0; i < un; i++)
+		{
+			if (arr[i] > arr[i + 1])
+			{
+				temp = arr[i];
+				arr[i] = arr[i + 1];
+				arr[i + 1] = temp;
+			}
+			for (int a = 0; a < change; a++)
+			{
+				cout << "数列" << arr[a];
+			}
+			cout << "互换次数---" << i + 1 << endl;
+		}
+		un--;
+	}
+	cout << "最终数组排列----------";
+	for (int c = 0; c < change; c++)
+	{cout << arr[c];}
+	cout << endl;
+	//元素逆置
+	int start = 0;
+	int end = sizeof(arr) / sizeof(arr[0]) - 1;
+	int T = 0;
+	while (start < end)
+	{
+
+		T = arr[start];
+		arr[start] = arr[end];
+		arr[end] = T;
+		start++; end--;
+	}
+
+	cout << "元素逆置数组----------";
+	for (int b = 0; b < change; b++)
+	{
+		cout << arr[b];
+	}
+	cout << endl;
+
+
+
+	system("pause");
+	return 0;
+}
+
+//函数逆置
+#include<iostream>
+using namespace std;
+int main()
+{
+	void sort(int*p, int num);//声明
+	int arr[10] = { 7,2,5,4,0,6,1,8,9,3 };//数组定义
+    int num = sizeof(arr) / sizeof(arr[0]);//元素个数
+	//for (int r = 0; r < num; r++)
+	//{
+	//	cin >> arr[r];
+	//}
+	//cout << "num = " << num << endl;
+	cout << "原来的";
+	for (int q = 0; q < num; q++)
+	{
+		cout << arr[q] << " ";
+	}
+	cout << endl;//换行
+
+	sort(arr, num);
+	cout << "现在的";
+	for (int w = 0; w < num; w++)
+	{
+		cout << arr[w] << " ";
+	}
+	system("pause");
+	return 0;
+}
+//指针函数
+void sort(int*p, int num)
+{
+	for (int i = 0; i < num - 1; i++)
+	{
+		for (int j = 0; j < num - i - 1;j++)
+		{
+			if(p[j]>p[j+1])
+			{
+				int temp = p[j];
+				p[j] = p[j + 1];
+				p[j + 1] = temp;
+			}
+		}
+	}
+}
+
+
+//老师和学生
+#include<iostream>
+using namespace std;
+#include<string>
+#include<ctime>
+struct student
+{
+	string sname;
+	int score;
+};
+struct teacher
+{
+	string tname;
+	struct student stu[5];
+};
+void change(struct teacher tea[], int num)
+{
+	string name = "ABCDE";
+	string name2 = "123";
+	for (int i = 0; i < 3; i++)
+	{
+		tea[i].tname = "Teacher_" ;
+		tea[i].tname += name[i];
+		cout << "老师" << tea[i].tname << endl;
+		for (int j = 0; j < 5; j++)
+		{
+			tea[i].stu[j].sname = "Student_";
+			tea[i].stu[j].sname += name[j];
+			tea[i].stu[j].sname += name2[i];
+			int random = rand() % 71 + 30;
+			tea[i].stu[j].score = random;
+			cout << "\t学生" << tea[i].stu[j].sname << "   成绩_" << random << endl;
+		}
+	}
+}
+int main()
+{
+	srand((unsigned int)time (NULL));
+	struct teacher tea[3];
+	change(tea,3);
+	cout << "老师" << tea[1].tname << endl;
+	system("pause");
+	return 0;
+}
+
+//颜色控制
+        include<Windows.h>
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_颜色//仅支持三原色);
+或
+	system("color ?");//改变所有
+
+
+#include <stdio.h>//借助c语言库实现颜色控制
+
+int main()
+{
+	printf("\033[31mThis text is red \033[0mThis text has default color\n");
+
+	printf("\033[31;43mThis text is red with yellow background \033[0mThis text has default color\n");
+
+	return(0);
+}
+
+//c++语言库实现颜色控制
+#include <iostream>
+#include "windows.h"
+using namespace std;
+
+int main()
+{
+	cout << "原色testCOLOR（没有设置字体颜色）" << endl;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED |
+		FOREGROUND_GREEN | FOREGROUND_BLUE);//设置三色相加
+	cout << "白色testCOLOR（红色绿色蓝色相加）" << endl;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED);
+	//设置红色
+	cout << "红色testCOLOR（设置的颜色为红色）" << endl;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_GREEN)
+		;//设置绿色
+	cout << "绿色testCOLOR（设置的颜色为绿色）" << endl;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_BLUE);
+	//设置蓝色
+	cout << "蓝色testCOLOR（设置的颜色为蓝色）" << endl;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED |
+		FOREGROUND_GREEN);//设置红色和绿色相加
+	cout << "黄色testCOLOR（红色和绿色相加色）" << endl;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED |
+		FOREGROUND_BLUE);//设置红色和蓝色相加
+	cout << "粉色testCOLOR（红色和蓝色相加色）" << endl;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_GREEN |
+		FOREGROUND_BLUE);//设置绿色和蓝色相加
+	cout << "青色testCOLOR（绿色和蓝色相加色）" << endl;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY);
+	//设置颜色，没有添加颜色，故为原色
+	cout << endl;
+
+	system("pause");
+	return 0;
+}
+
+//数据引用
+#include<iostream>
+using namespace std;
+
+void test01(){
+	//数据引用
+	int a = 0;
+	int &b = a;
+	cout << b << endl;
+}
+void test02(){
+	//数组引用其一
+	int arr[3] = { 1,2,3 };
+	typedef int(type)[3];
+	type & ARR = arr;
+	for (int i = 0; i < 3; i++)
+	{
+		cout << ARR[i] << endl;
+	}
+}
+void test03(){
+	//数组引用其二
+	int arr[3] = { 1,2,3 };
+	typedef int(&type)[3];
+	type ARR = arr;
+	for (int i = 0; i < 3; i++)
+	{
+		cout << ARR[i] << endl;
+	}
+}
+void test04(){
+	//数组引用其三
+	int arr[3] = { 1,2,3 };
+	int(&ARR)[3] = arr;
+	for (int i = 0; i < 3; i++)
+	{
+		cout << ARR[i] << endl;
+	}
+}
+int main()
+{
+
+	test04();
+
+	system("pause");
+	return(0);
+}
+
+//类和对象，封装案例(类似struct结构体)
+#include<iostream>
+#include<string>
+using namespace std;
+
+class student
+{
+public:
+
+	string name;
+	int number;
+	void m_name(string n)
+	{
+		name = n;
+	}
+	void m_number(int n)
+	{
+		number = n;
+	}
+
+	void show()
+	{
+		cout << "姓名  " << name << "  学号  " << number << endl;
+	}
+};
+
+int main()
+{
+	student s1;
+	s1.m_name("张三");
+	s1.m_number(10);
+	s1.show();
+
+	system("pause");
+	return 0;
+}
+
+//封装设计案例-立方体类
+
+#include<iostream>
+using namespace std;
+
+class Cube
+{
+private:
+	//长
+	int m_L;
+	//宽
+	int m_W;
+	//高
+	int m_H;
+
+public:
+	void set_L(int L)//长的输入
+	{
+		m_L = L;
+	}
+	int get_L()//长的输出
+	{
+		return m_L;
+	}
+	void set_W(int W)//宽的输入
+	{
+		m_W = W;
+	}
+	int get_W()//宽的输出
+	{
+		return m_W;
+	}
+	void set_H(int H)//高的输入
+	{
+		m_H = H;
+	}
+	int get_H()//高的输出
+	{
+		return m_H;
+	}
+
+	void ShowPrint()
+	{
+		cout << "长：" << m_L << " 宽：" << m_W << " 高：" << m_H << endl;
+	}
+	int ShowS()
+	{
+		return 2 * (m_L*m_W + m_L * m_H + m_W * m_H);
+	}
+	int ShowV()
+	{
+		return m_L * m_W*m_H;
+	}
+
+	bool Judje(Cube &s)
+	{
+		if (m_L == s.get_L() && m_W == s.get_W() && m_H == s.get_H())
+		{
+			cout << "两立方体全等" << endl;
+			return true;
+		}
+		cout << "两立方体不全等" << endl;
+		return false;
+	}
+
+
+};
+
+void Judje(Cube &s1, Cube &s2)
+{
+	if (s1.get_L() == s2.get_L() && s1.get_W() == s2.get_W() && s1.get_H() == s2.get_H())
+	{
+		cout << "两立方体全等" << endl;
+	}
+	else
+	{
+		cout << "两立方体不全等" << endl;
+	}
+}
+
+int main()
+{
+	Cube s1;
+	s1.set_L(10);
+	s1.set_W(10);
+	s1.set_H(10);
+	s1.ShowPrint();
+
+	int temp01 = s1.ShowS();
+	cout << "s1 面积："<<temp01;
+	temp01 = s1.ShowV();
+	cout << " 体积" << temp01 << endl;
+
+	Cube s2;
+	s2.set_L(10);
+	s2.set_W(10);
+	s2.set_H(10);
+	s2.ShowPrint();
+
+	int temp02 = s2.ShowS();
+	cout << "s2 面积：" << temp02;
+	temp02 = s2.ShowV();
+	cout << " 体积" << temp02 << endl;
+
+	Judje(s1,s2);//全局判定
+	s1.Judje(s2);//成员判定
+
+	system("pause");
+	return 0;
+
+
+}
+
+//封装设计案例-点和圆的位置关系
+
+#include<iostream>
+using namespace std;
+
+class Dian
+{
+public:
+	void setX(int x)
+	{
+		m_X = x;
+	}
+	int getX()
+	{
+		return m_X;
+	}
+
+	void setY(int y)
+	{
+		m_Y = y;
+	}
+	int getY()
+	{
+		return m_Y;
+	}
+
+private:
+	int m_X;
+	int m_Y;
+};
+
+class Yuan
+{
+public:
+	void setBanjing(int B)
+	{
+		m_R = B;
+	}
+	int getBanjing()
+	{
+		return m_R;
+	}
+	void setYuanxin(Dian &xin)
+	{
+		m_xin = xin;
+	}
+	Dian getYuanxin()
+	{
+		return m_xin;
+	}
+
+private:
+	//半径
+	int m_R;
+	//圆心
+	Dian m_xin;
+};
+
+void Judje(Yuan & yuan, Dian & zuobiao)
+{
+	int DianChaFang =
+		(yuan.getYuanxin().getX() - zuobiao.getX())*(yuan.getYuanxin().getX() - zuobiao.getX()) +
+		(yuan.getYuanxin().getY() - zuobiao.getY())*(yuan.getYuanxin().getY() - zuobiao.getY());
+	int BanJingFang = yuan.getBanjing()*yuan.getBanjing();
+
+	if (DianChaFang == BanJingFang)
+	{
+		cout << "点在圆上"<<endl;
+	}
+	else if (DianChaFang > BanJingFang)
+	{
+		cout << "点在园外" << endl;
+	}
+	else
+	{
+		cout << "点在园内" << endl;
+	}
+}
+
+
+int main()
+{
+	Yuan yuan;
+	yuan.setBanjing(10);
+	Dian xin;
+	xin.setX(10);
+	xin.setY(0);
+	yuan.setYuanxin(xin);
+
+	Dian zuobiao;
+	zuobiao.setX(10);
+	zuobiao.setY(10);
+
+	Judje(yuan, zuobiao);
+
+	system("pause");
+	return 0;
+}
+
+//构造函数和析构函数的调用
+
+#include<iostream>
+using namespace std;
+class system01
+{
+public:
+	system01()
+	{
+		cout << "构造函数调用" << endl;
+	}
+
+	~system01()
+	{
+		cout << "析构函数调用" << endl;
+	}
+};
+void Show()
+{
+	system01 a;
+}
+int main()
+{
+	Show();//两函数都能调用
+	system01 b;//只能调用构造函数
+	system("pause");
+	return 0;
+}
+
+//构造函数的分类及调用
+
+#include<iostream>
+using namespace std;
+class system01
+{
+public:
+	system01()//无参构造函数
+	{
+		cout << "无参构造函数调用" << endl;
+	}
+	system01(int a)//有参构造函数
+	{
+		cout << "有参构造函数调用" << endl;
+	}
+	system01(const system01&q)//拷贝构造函数
+	{
+		cout << "拷贝构造函数调用" << endl;
+	}
+	~system01()//析构函数
+	{
+		cout << "析构函数调用" << endl;
+	}
+};
+
+int main()
+{
+	//括号法
+	//system01 s1;
+	//system01 s2(10);
+	//system01 s3(s2);
+
+	/*调用默认构造函数时不要加括号,否则会被认为是声明*/
+
+	//显示法
+	//system01 s1;
+	//system01 s2 = system01 (10);
+	//system01 s3 = system01(s2);
+	
+	//system01(10);
+	/*匿名对象执行结束系统回收,构造函数和析构函数都调用*/
+
+	//隐式转换法
+	//system01 s1;
+	//system01 s2 = 10;
+	//system01 s3 = s2;
+
+	system("pause");
+	return 0;
+}
+
+//深拷贝与浅拷贝
+#include<iostream>
+using namespace std;
+class student
+{
+public:
+	student()
+	{
+		cout << "无参构造函数调用" << endl;
+	}
+	student(int age,int high)
+	{
+		cout << "有参构造函数调用" << endl;
+		m_age = age;
+		m_high = new int(high);
+	}
+	student(const student &person)
+	{
+		m_age = person.m_age;
+		/*浅拷贝*/
+		//m_high = person.m_high;//析构函数执行时，堆区中同一空间多次释放
+		/*深拷贝*/
+		m_high = new int(*person.m_high);//在堆区申请新空间，指针互不影响
+		cout << "拷贝构造函数调用" << endl;
+	}
+	~student()
+	{
+		if (m_high != NULL)
+		{
+			delete m_high;
+			m_high = NULL;
+		}
+		cout << "析构函数调用" << endl;
+	}
+	int m_age; int*m_high;
+};
+void Show()
+{
+	student s1(10, 180);
+	student s2(s1);
+
+	cout << s1.m_age << " " << *s1.m_high << endl;
+	cout << s2.m_age << " " << *s2.m_high << endl;
+}
+int main()
+{
+	Show();
+	system("pause");
+	return 0;
+}
+
+//初始化列表01
+
+#include<iostream>
+using namespace std;
+class student
+{
+public:
+	student():m_a(10)
+	{
+	}
+	int m_a;
+};
+int main()
+{
+	student s1;
+	cout << s1.m_a << endl;
+	system("pause");
+	return 0;
+}
+
+//初始化列表02
+
+#include<iostream>
+using namespace std;
+class student
+{
+public:
+	student(int a):m_a(a)
+	{
+	}
+	int m_a;
+};
+int main()
+{
+	student s1(10);
+	cout << s1.m_a << endl;
+	system("pause");
+	return 0;
+}
+
+//类对象作为类成员
+
+#include<iostream>
+using namespace std;
+#include<string>
+class Phone
+{
+public:
+	Phone(string name):m_name(name)
+	{
+		cout << "Phone构造函数调用" << endl;
+	}
+	~Phone()
+	{
+		cout << "Phone析构函数调用" << endl;
+	}
+	string m_name;
+};
+
+class Person
+{
+public:
+	Person(string namePerson,string namePhone) :m_name(namePerson), m_Phone(namePhone)//Phone用到了隐式转换
+	{
+		cout << "Person构造函数调用" << endl;
+	}
+	~Person()
+	{
+		cout << "Person析构函数调用" << endl;
+	}
+	string m_name;
+	Phone m_Phone;
+};
+void Show()
+{
+	Person s1("张三", "oppoR999");
+	cout << "姓名：" << s1.m_name << " 手机：" << s1.m_Phone.m_name << endl;
+}
+void main()
+{
+	Show();
+	system("pause");
+}
+
+//explicit关键字
+
+#include<iostream>
+using namespace std;
+class student
+{
+public:
+	explicit student(int age):m_age(age){}
+	int m_age;
+};
+void Show()
+{
+	//student s1 = 10;//抑制隐式转换法
+	student s1(10);
+	cout << s1.m_age << endl;
+}
+void main()
+{
+	Show();
+	system("pause");
+}
+
+//静态成员变量
+
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+	static int a;
+};
+int Person::a = 0;
+void Show()
+{
+	cout << Person::a << endl;
+}
+void main()
+{
+	Show();
+	system("pause");
+}
+
+//静态成员函数
+
+#include<iostream>
+using namespace std;
+class student
+{
+public:
+	static void St()
+	{
+		cout << "a = " <<m_age << endl;
+		//cout << "m_q = " << m_q << endl;//静态成员函数只能访问静态成员变量
+		cout << "静态成员函数调用" << endl;
+	}
+	static int m_age;
+	int m_q = 10;
+};
+int student::m_age = 100;
+void Show()
+{
+	student s1;
+	s1.St();
+}
+void main()
+{
+	//Show();//通过对象调用静态成员函数
+	//student::St();//通过类名调用静态成员函数
+	/*PS:构造函数不能作为静态成员函数*/
+	system("pause");
+}
+
+//单例模式-基本案例
+
+#include<iostream>
+using namespace std;
+//单例模式：通过一个类只能使用唯一对象
+class Point
+{
+public:
+	static Point*get()//提供单例对象地址（只读）
+	{
+		//cout << "类内静态成员地址：" << people << endl;
+		return people;
+	}
+private:
+	Point() { cout << "Hello World" << endl; }//1、防止多个对象创建
+private:
+	Point(const Point&){}//2、防止对象被克隆(拷贝)
+private:
+	static Point*people;//3、防止对象指针被修改(NULL)
+};
+Point*Point::people = new Point;//在堆区申请了空间，此时调用了构造函数
+int main()
+{
+	cout << "main 函数调用" << endl;
+	 //1、防止多个对象创建
+	 //Point s1;
+	 //2、防止对象被克隆(拷贝)
+	 //Point*s1 = Point::get();
+	 //Point*s2 = new Point(*s1);
+	 //3、防止对象指针被修改(NULL)
+	 //Point::people = NULL;
+	system("pause");
+	return true;
+}
+
+//单例模式-打印机案例
+
+#include<iostream>
+using namespace std;
+#include<string>
+class print
+{
+public:
+	static print*get()
+	{
+		return pointer;
+	}
+	void getText(string cin)
+	{
+		cout << cin << endl;
+		number++;
+	}
+	int number = 0;//需通过指针访问
+	//static int number;//静态成员变量对计数的实现(可通过类名直接访问)
+private:
+	print(){}
+	print(const print&) {}
+	static print*pointer;
+};
+print*print::pointer = new print;
+//int print::number = 0;//静态number声明
+int main()
+{
+	print*c1 = print::get();
+	c1->getText("1");
+	c1->getText("2");
+	c1->getText("3");
+	print*c2 = print::get();
+	c2->getText("4");
+	c2->getText("5");
+	//cout << "打印机使用次数：" << print::number << endl;//静态成员可访问(number)
+	cout << "打印机使用总次数：" << c1->number<< endl;
+	system("pause");
+	return 0;
+}
+
+//this指针 1、防止形参和成员变量重名
+
+#include<iostream>
+using namespace std;
+class student
+{
+public:
+	void set(int age)
+	{
+		this->age = age;
+	}
+	int age;
+};
+void Show()
+{
+	student s1;
+	s1.set(10);
+	cout << s1.age << endl;
+}
+void main()
+{
+	Show();
+	system("pause");
+}
+
+//this指针 2、非静态成员函数返回对象本身
+
+#include<iostream>
+using namespace std;
+class student
+{
+public:
+	student(){}
+	student& get(student&c)
+	{
+		m_age += c.m_age;
+		return *this;
+	}
+	student(int age)
+	{
+		m_age = age;
+	}
+	int m_age = 0;
+};
+void Show()
+{
+	student c1(10);
+	cout << "c1 的年龄是：" << c1.m_age << endl;
+	student c2(10);
+        //链式编程思想 类似于 cout<<""<<""<<""......<<endl;
+	c2.get(c1).get(c1).get(c1);//......
+	cout << "c2 的年龄是：" << c2.m_age << endl;
+
+}
+void main()
+{
+	Show();
+	system("pause");
+}
+
+//空指针访问成员函数
+/*能访问，但是不能完全访问*/
+
+#include<iostream>
+using namespace std;
+class Point
+{
+public:
+	void getPoint01()
+	{
+		cout << "成员函数01调用" << endl;
+	}
+	void getPoint02()
+	{
+		//m_age = 10;//空this指针无法调用，无法对成员进行修改
+		cout << "成员函数02调用" << endl;
+	}
+	int m_age;
+	Point * point;
+};
+void GetShow()
+{
+	Point*c1 = NULL;
+	c1->getPoint01();
+	c1->getPoint02();
+
+}
+int main()
+{
+	GetShow();
+	system("pause");
+	return true;
+}
+
+//常函数定义 常对象定义
+/*新加mutable关键字*/
+
+#include<iostream>
+using namespace std;
+class Point
+{
+public:
+	//加const后无法对普通成员属性修改
+	void setPoint()const//该函数名为常函数
+	{
+		m_age = 100;
+	}
+	void getPoint()const
+	{
+		cout << "m_age = " << m_age << endl;
+	}
+	//成员属性声明时加关键字mutable后可被常函数修改属性
+	mutable int m_age;
+};
+void GetShow()
+{
+	//加const后无法对普通成员属性修改
+	const Point c1;//该对象名为常对象 常对象只能调用常函数
+	c1.setPoint();
+	c1.getPoint();
+}
+int main()
+{
+	GetShow();
+	system("pause");
+	return true;
+}
+
+//友元声明
+/*新加friend关键字*/
+
+#include<iostream>
+using namespace std;
+#include<string>
+class Building;//类的声明
+class GoodFriend
+{
+public:
+	GoodFriend();//创建Building的堆区指针
+	void visit01();//访问客厅和卧室
+	void visit02();//访问客厅不能访问卧室
+	Building*building;
+};
+class Building
+{
+	//friend class GoodFriend;//类的友元声明
+	//GoodFriend类中的所有成员函数都有权限访问Building的成员属性
+	friend void GoodFriend::visit01();//成员函数友元声明
+	//GoodFriend类中的指定成员函数才有权限访问Building的成员属性
+public:
+	Building();//客厅卧室初始化
+public:
+	string m_SittingRoom;//客厅
+private:
+	string m_BedRoom;//卧室
+};
+Building::Building()
+{
+	m_SittingRoom = "客厅";
+	m_BedRoom = "卧室";
+}
+GoodFriend::GoodFriend()
+{
+	building = new Building;
+}
+void GoodFriend::visit01()
+{
+	cout << "GoodFriend::visit01正在访问：" << building->m_SittingRoom << endl;
+	cout << "GoodFriend::visit01正在访问：" << building->m_BedRoom << endl;
+}
+void GoodFriend::visit02()
+{
+	cout << "GoodFriend::visit02正在访问：" << building->m_SittingRoom << endl;
+	//cout << "GoodFriend::visit02正在访问：" << building->m_BedRoom << endl;//成员函数没有在Building友元声明
+}
+void show()
+{
+	GoodFriend c1;
+	c1.visit01();
+	c1.visit02();
+}
+int main()
+{
+	show();
+	system("pause");
+	return 0;
+}

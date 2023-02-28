@@ -1,0 +1,358 @@
+//文本读取（不能读取汉字）可跳过指定符号
+
+#include<iostream>
+using namespace std;
+#include<fstream>
+#include<string>
+#include<vector>
+void Print()
+{
+	ifstream ifs;
+	ifs.open("6.txt",ios::binary);
+	if (!ifs.is_open())
+	{
+		cout << "文件打开失败" << endl; return;
+	}
+	string str;
+	ifs >> str;
+	vector<string>v;
+	int pos = 0;
+	int start = 0;
+	while (true)
+	{
+		pos = str.find(",", start);
+		if (pos == -1)
+		{
+			string temp = str.substr(start, str.size() - start);
+			v.push_back(temp);
+			break;
+		}
+		string temp = str.substr(start, pos - start);
+		v.push_back(temp);
+		start = pos + 1;
+	}
+	for (vector<string>::iterator it = v.begin(); it != v.end(); it++)
+	{
+		cout << *it;
+	}
+	cout << endl;
+
+}
+int main()
+{
+	Print();
+	system("pause");
+	return 0;
+}
+
+//光标定位函数
+
+#include <windows.h>
+void gotoxy(int y, int x)
+{
+	COORD p;//定义结构体变量p
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);//获取当前函数句柄
+	p.X = x; p.Y = y;//将光标的目标移动位置传递给结构体
+	SetConsoleCursorPosition(handle, p);//移动光标
+}
+
+//自动输入上一次的值
+
+#include<conio.h>
+while (true)
+{	
+        char character = _getch();
+	do
+	{
+
+
+	} while (!_kbhit());
+	system("cls");
+}
+
+//目标窗口大小定义
+
+#include <windows.h>
+#include <iostream>
+ 
+#define IsKeyDown(VK_NAME) ((GetAsyncKeyState(VK_NAME) & 0x8000) ? true:false)   
+ 
+int main()
+{
+    POINT point;        // 鼠标所在位置
+ 
+    HWND target;        // 目标窗口句柄
+    HWND parent;        // 目标父窗口句柄
+    INT width, height;  // 窗口新宽高
+ 
+    // 软件用法
+    std::cout << "\n功能：设置目标窗口的大小\n\n";
+    std::cout << "用法：输入参数后，将鼠标移到要设置的窗口上，然后按下 Ctrl 键 1 秒钟即可\n";
+    std::cout << "      按下 Shift 键可重新输入\n";
+    std::cout << "      按下  Alt  键可退出程序\n";
+ 
+    BOOL start = true;  // 是否开始循环
+    while(start)
+    {
+        std::cout << "\n请输入窗口宽度：";
+        std::cin >> width;
+        std::cout << "请输入窗口高度：";
+        std::cin >> height;
+        std::cout << "\n移动鼠标，然后按键（Ctrl/Shift/Alt）...\n";
+ 
+        BOOL listen = true;  // 是否开始监听用户按键
+        while (listen)
+        {
+            // Ctrl 键确认窗口
+            if IsKeyDown(VK_CONTROL)
+            {
+                // 获取鼠标位置
+                GetCursorPos(&point);
+                // 获取鼠标位置的窗口句柄
+                target = WindowFromPoint(point);
+                // 合法性判断
+                if (target != NULL && target != INVALID_HANDLE_VALUE) {
+                    // 获取顶层窗口句柄
+                    parent = GetParent(target);
+                    while (parent != NULL && parent != INVALID_HANDLE_VALUE)
+                    {
+                        target = parent;
+                        parent = GetParent(target);
+                    }
+                    // 获取窗口原始大小
+                    RECT rect;
+                    GetWindowRect(target, &rect);
+                    // 重新设置窗口大小
+                    MoveWindow(target, rect.left, rect.top, width, height, true);
+                    // 停止监听
+                    listen = false;
+                }
+            }
+            // Shift 键停止监听
+            else if (IsKeyDown(VK_SHIFT))
+            {
+                listen = false;
+            }
+            // Alt 键退出程序
+            else if (IsKeyDown(VK_MENU))
+            {
+                listen = false;
+                start = false;
+            }
+            Sleep(200);
+        }
+        std::cout << "\n----------\n";
+    }
+    return 0;
+}
+
+//当前窗口大小改变
+
+#include<windows.h>
+#define IsKeyDown(VK_NAME) ((GetAsyncKeyState(VK_NAME) & 0x8000) ? true:false)   
+void DocContral()
+{
+		HWND target;        // 目标窗口句柄
+		HWND parent;        // 目标父窗口句柄
+		INT width, height;  // 窗口新宽高
+		width = 1920;
+		height = 1080;
+		//std::cout << "\n请输入窗口宽度：";
+		//std::cin >> width;
+		//std::cout << "请输入窗口高度：";
+		//std::cin >> height;
+		// 获取窗口句柄
+		target = GetForegroundWindow();
+		// 合法性判断
+		if (target != NULL && target != INVALID_HANDLE_VALUE) {
+			// 获取顶层窗口句柄
+			parent = GetParent(target);
+			while (parent != NULL && parent != INVALID_HANDLE_VALUE)
+			{
+				target = parent;
+				parent = GetParent(target);
+			}
+			// 获取窗口原始大小
+			RECT rect;
+			GetWindowRect(target, &rect);
+			// 重新设置窗口大小
+			MoveWindow(target, rect.left, rect.top, width, height, true);
+
+		}
+}
+
+//缓冲运行速度
+
+void Time()
+{
+	clock_t startTime, endTime;//计时
+	double Time = 0;
+	while (Time < 0.04)
+	{
+		startTime = clock();//计时开始
+
+		endTime = clock();//计时结束
+		Time += (double)(endTime - startTime) / CLOCKS_PER_SEC;
+	}
+}
+
+//c++改变字体颜色
+
+cout << "\033[31m"<<s <<"\033[0m" << endl;
+
+常用的ANSI控制码如下：
+\033[0m 关闭所有属性
+\033[1m 高亮
+\033[2m 亮度减半
+\033[3m 斜体
+\033[4m 下划线
+\033[5m 闪烁
+\033[6m 快闪
+\033[7m 反显
+\033[8m 消隐
+\033[9m 中间一道横线
+10-19 关于字体的
+21-29 基本与1-9正好相反
+30-37 设置前景色
+40-47 设置背景色
+30:黑
+31:红
+32:绿
+33:黄
+34:蓝色
+35:紫色
+36:深绿
+37:白色
+38 打开下划线,设置默认前景色
+39 关闭下划线,设置默认前景色
+40 黑色背景
+41 红色背景
+42 绿色背景
+43 棕色背景
+44 蓝色背景
+45 品红背景
+46 孔雀蓝背景
+47 白色背景
+48 不知道什么东西
+49 设置默认背景色
+50-89 没用
+90-109 又是设置前景背景的，比之前的颜色浅
+\033[nA 光标上移n行
+\033[nB 光标下移n行
+\033[nC 光标右移n行
+\033[nD 光标左移n行
+\033[y;xH设置光标位置
+\033[2J 清屏
+\033[K 清除从光标到行尾的内容
+\033[s 保存光标位置
+\033[u 恢复光标位置
+\033[?25l 隐藏光标
+\033[?25h 显示光标
+//隐藏光标函数
+void HideCursor()
+{
+	CONSOLE_CURSOR_INFO cursor_info = { 1,0 };//第二个值为0表示隐藏光标
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
+}
+
+//光标隐藏
+#include <windows.h>
+void HideCursor()//隐藏光标
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO CursorInfo;
+	GetConsoleCursorInfo(handle, &CursorInfo);//获取控制台光标信息
+	CursorInfo.bVisible = false; //隐藏控制台光标
+	SetConsoleCursorInfo(handle, &CursorInfo);//设置控制台光标状态
+}
+
+//数组全赋值
+
+	int Arr[20][20];
+	memset(Arr, 0, sizeof(Arr));
+
+//C++中表示正无穷与负无穷
+正无穷：0x3f3f3f3f
+负无穷：0xc0c0c0c0
+
+//设置控制台名称
+#include <windows.h>
+SetConsoleTitle("Bad Apple");
+
+//窗口大小设置(单位：像素)
+#include <windows.h>
+void DocContral()
+{
+	HWND target;        // 目标窗口句柄
+	HWND parent;        // 目标父窗口句柄
+	INT width, height;  // 窗口新宽高
+	//width = 800;
+	//height = 618;
+	width = 718;//674
+	height = 430;//
+	//std::cout << "\n请输入窗口宽度：";
+	//std::cin >> width;
+	//std::cout << "请输入窗口高度：";
+	//std::cin >> height;
+	// 获取窗口句柄
+	target = GetForegroundWindow();
+	// 合法性判断
+	if (target != NULL && target != INVALID_HANDLE_VALUE) {
+		// 获取顶层窗口句柄
+		parent = GetParent(target);
+		while (parent != NULL && parent != INVALID_HANDLE_VALUE)
+		{
+			target = parent;
+			parent = GetParent(target);
+		}
+		// 获取窗口原始大小
+		RECT rect;
+		GetWindowRect(target, &rect);
+		// 重新设置窗口大小
+		MoveWindow(target, rect.left, rect.top, width, height, true);
+	}
+}
+
+//字体大小设置
+#include <windows.h>
+void SetFont(int size)
+{
+	//hello imX2G
+	CONSOLE_FONT_INFOEX cfi; //hello imX2G
+	cfi.cbSize = sizeof cfi; //hello imX2G
+	//cfi.nFont = 0; //hello imX2G
+	//cfi.dwFontSize.X = 0; //hello imX2G
+	cfi.dwFontSize.Y = size;  //设置字体大小
+	cfi.FontFamily = FF_DONTCARE; //hello imX2G
+	cfi.FontWeight = FW_NORMAL; //字体粗细 FW_BOLD
+	wcscpy_s(cfi.FaceName, L"黑体");  //设置字体，必须是控制台已有的
+	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi); //hello imX2G
+	//HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE); //hello imX2G
+	//CONSOLE_FONT_INFO consoleCurrentFont; //hello imX2G
+	//GetCurrentConsoleFont(handle, FALSE, &consoleCurrentFont); //hello imX2G
+}
+
+//如果基类含有静态变量，则子类共用这个静态变量且和父类共享
+
+//override关键字
+struct Base 
+{
+    virtual void Turing() = 0;
+    virtual void Dijkstra() = 0;
+    virtual void VNeumann(int g) = 0;
+    virtual void DKnuth() const;
+    void Print();
+};
+struct DerivedMid: public Base 
+{
+    // void VNeumann(double g);
+    //接口被隔离了，曾想多一个版本的VNeumann函数
+};
+struct DerivedTop : public DerivedMid 
+{
+    void Turing() override;
+    void Dikjstra() override; //无法通过编译，拼写错误，并非重载
+    void VNeumann(double g) override; //无法通过编译，参数不一致，并非重载    
+void DKnuth() override; //无法通过编译，常量性不一致，并非重载
+void Print() override; //无法通过编译，非虚函数重载
+};

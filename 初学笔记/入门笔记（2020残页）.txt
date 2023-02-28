@@ -1,0 +1,299 @@
+8.11
+
+// 或 /* */不列入调试
+
+8.12
+
+数据类型 变量名 ＝ 变量初始值
+例:int a = 10;
+cout << "a =" << a << endl;
+//输出a = 10
+
+常量定义
+1、#define 宏常量
+例：#define Day 7
+cout << "一周：" << Day << "天"<< endl;
+//输出一周：7天
+2、const 修饰变量（也称常量)
+修改报错
+例：const int month = 12;
+month = 12;
+cout << "一年：" << month << "个月" << endl;
+//以上报错
+区分：#define在int main前
+const在int main后
+
+关键字歧义 见"关键字"
+例：int int = 10;错误
+
+8.13
+
+标识符：数字 字母 下划线 
+数字不能开头
+标识符区分大小写
+
+	int num1 = 10;
+	int num2 = 20;
+	int sum= num1 + num2;
+	cout << sum << endl;
+        //输出30
+
+"int" //防止空间浪费，定义合理空间
+short 短整型 2字节
+int 整形 4字节
+long 长整型 常为4字节，64位8字节
+long long 长长整形 8字节
+超过部分从负值下限循环，见"数据类型"
+short<int<=long<=long long
+
+sizeof（大小）
+short num = 10;
+cout << sizeof(short) << endl;
+//输出sizeof中"short"是变量,可被"num"替换
+"数据类型""变量"可替换
+
+小数
+单精度float 4字节 7位 //替换值加f
+双精度double 8字节 15-16位
+默认输出小数最多6位
+//科学计数法 例:3e2 = 300=3*10^2
+（e为10 后接指数幂）
+
+字符型
+非存储 对应数字转换为ASCLL编码储存
+1、单引号 ‘’
+2、只能有一个字母
+3、例:	char ch = 'a';
+
+	cout << ch << endl;
+
+	cout << (int)ch<< endl;
+
+       //转数字
+
+ASCLL编码
+a = 97
+A = 65
+
+转义字符
+//换行符 \n
+//反斜杠 \\
+//水平制表符 \t (根据 最大 输入量空格)
+
+8.14
+
+字符串
+c风格-
+char 变量名[] = “字符串”;
+（和字符不同于:中括号 双引号）
+(对比单字符:char 变量名 = ‘字符')
+c++风格-
+string 变量名 = “字符串”;
+重点//c++风格加头文件 #include <string>
+
+bool类型（bool占1字节，省空间）
+1 真 0 假 （true false）（除0都是真）
+随 机 应 变
+
+数据输入
+例:cin >> a;
+(bool类型非0即是正-强制转1）
+
+运算符
+算数 赋值 比较 逻辑
+详见 算数运算（除法不保留小数，除零报错）
+小数运算用 float或double
+
+8.18
+
+取模本质是求余数
+0不能是除数
+小数不能取模运算
+
+给定一个正整数p，任意一个整数n，一定存在等式 ：
+n = kp + r ；
+其中 k、r 是整数，且 0 ≤ r < p，则称 k 为 n 除以 p 的商，r 为 n 除以 p 的余数。
+
+前置递增:先++后表达
+前置递减:先表达后++
+递减同理 略
+例:
+	int a = 10;
+	int b = ++a;
+	cout << "a=" << a << endl;
+	cout << "b=" << b << endl;
+        //输出a=11 b=11
+
+	int a = 10;
+	int b = a++;
+	cout << "a=" << a << endl;
+	cout << "b=" << b << endl;
+        //输出a=11 b=10
+
+8.19
+
+赋值运算 例:
+	int a = 10;
+
+	a += 10;
+
+	cout << "a =" << a << endl;
+	
+        //输出a = 20
+        //代表 输出a=变量a+10
+
+比较运算 例:
+	int a = 10;
+
+	int b = 20;
+
+	cout << (a<=b)<< endl;
+        
+        //若属实输出 1 不属实输出 0
+        //加括号（优先运算）
+
+8.22
+
+逻辑-非 ！
+真假，假真
+
+逻辑-与 &&
+全真，例假
+//加括号（优先运算）
+
+逻辑-或 ||
+全假，例真
+//加括号（优先运算）
+
+8.23
+
+基本流程
+1、顺序结构（默认）
+2、选择结构（3种if语句）
+3、循环结构
+
+单行if 例:
+	int score = 0;
+
+	cout << "输入成绩" << endl;
+
+	cin >> score;
+
+	cout << "成绩" << score << endl;
+
+	if (score > 600)
+	{
+		cout << "恭喜" << endl;
+	}
+
+	if (score < 600)
+	{
+		cout << "再接再厉" << endl;
+	}
+        //if句没有“;”
+
+多行if 例:
+else( )
+{
+cout<<"未达标"<<endl;
+}
+
+多条件if 例:
+else if( )
+{
+cout<<"无限套娃"<<endl;
+}
+
+8.24
+
+  //自定义输入值大于32767不循环，输出定值32767
+  short 变量 = 0;
+  cin>>变量;
+  cout<<变量<<endl;
+
+8.25
+
+if嵌套:
+if里加单行if无限无限套娃套娃
+
+“三只小猪案例”见---基本代码
+
+三目运算
+	int a = ？;
+	int b = ？;
+	int c = 0;
+	c = (a > b ? a : b);
+	cout << c << endl;
+        //a > b 判定为true a : b 输出a
+        //a > b 判定为false a : b 输出b
+        //例:(a > b ? a : b) = 100 无论输出a或b都被赋值100 未被赋值的不受影响
+
+8.26
+
+swatch语句:
+	switch(a)
+	{
+	case 10:
+	case 9:
+		cout << "壹" << endl;
+		break;
+	case 8:
+	case 7:
+		cout << "贰" << endl;
+		break;
+	default:
+		cout << "叁" << endl;
+		break;
+//利 运算快，整齐
+//弊 无法筛选区间，受限 整形&字符型
+
+while 循环
+例:
+	while (a < 10000)//满足括号条件才会循环
+	{
+		a *= 2;
+		cout << "a = " << a << endl;
+	}
+
+8.27
+
+//随机数字
+#include <iostream>
+
+using namespace std;
+
+#include <ctime>
+
+int main()
+{
+	srand((unsigned int)time(NULL));
+
+	int a = rand() % 100 + 1;
+}
+
+8.29
+
+//do...while 特性:判定前运行一次
+例:
+	int a = 1;
+	do
+	{
+		cout << a << endl;
+		a++;
+	} while (1);
+
+8.30
+
+for循环:
+for(int a = 0;a < 10;a++)//(起始表达式;条件表达式;末尾循环体)
+{
+cout << a << endl;
+}
+
+1.19
+
+跳转语句:
+break语句
+1、可退出循环结构(goto循环除外)
+2、可退出switch语句
+3、可退出嵌套循环(只有嵌套if不行)

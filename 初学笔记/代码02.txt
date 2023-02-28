@@ -1,0 +1,2961 @@
+//加号运算符重载
+
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+	//成员函数重载
+	//Person& operator+(Person &c)
+	//{
+	//	Person temp;
+	//	temp.m_A = this->m_A + c.m_A;
+	//	temp.m_B = this->m_B + c.m_B;
+	//	return temp;
+	//}
+	int m_A;
+	int m_B;
+};
+//全局函数重载
+Person& operator+(Person &c1, Person &c2)
+{
+	Person temp;
+	temp.m_A = c1.m_A + c2.m_A;
+	temp.m_B = c1.m_B + c2.m_B;
+	return temp;
+}
+void Point()
+{
+	Person c1;
+	c1.m_A = 10;
+	c1.m_B = 10;
+	Person c2;
+	c2.m_A = 10;
+	c2.m_B = 10;
+	Person c3 = c1 + c2;//实现"+"运算符重载(简化)
+	//成员函数重载本质
+	//Person c3 = c1.operator+(c2);
+	//全局函数重载本质
+	//Person c3 = operator+(c1, c2);
+	cout << c3.m_A << " " << c3.m_B << endl;
+}
+int main()
+{
+	Point();
+	system("pause");
+	return 0;
+}
+
+
+//左移运算符重载
+
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+	//成员函数重载
+	void operator<<(ostream &out)
+	{
+		out << m_A << " " << m_B << endl;
+	}
+	int m_A;
+	int m_B;
+};
+//全局函数重载
+ostream& operator<<(ostream&out, Person&c)
+{
+	out << c.m_A << " " << c.m_B;
+	return out;//返回"cout"使之能够链式传递 如在Point函数调用后加<< endl;
+}
+void Point()
+{
+	Person c1;
+	c1.m_A = 10;
+	c1.m_B = 10;
+	c1 << cout;//1、 成员函数重载
+	cout << c1 << endl;//2、全局函数重载
+	c1.operator<<(cout);//1、本质
+	operator<<(cout, c1) << endl;//2、本质
+	//PS:cout对象没有自己的成员函数，只能调c1的成员函数
+}
+int main()
+{
+	Point();
+	system("pause");
+	return 0;
+}
+
+//递增运算符重载
+
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+	Person& operator++()
+	//返回值还可以是匿名对象，最好是引用，匿名无法实现链式前置递增
+	{
+		MyInteger++;
+		return *this;
+	}
+	Person operator++(int)
+	//返回值必须是匿名对象，temp会被释放，匿名返回值目前无法实现链式后置递增
+	{
+		Person temp = *this;
+		MyInteger++;
+		return temp;
+	}
+	int MyInteger = 10;
+};
+ostream& operator<<(ostream& cout, Person c)
+//这里的Person类型不能用引用传递，做后置递增时会导致对匿名对象的引用，c++不支持这种操作
+{
+	cout << c.MyInteger;
+	return cout;
+}
+void Show()
+{
+	Person c1;
+	Person*C = &c1;
+	cout << c1 << endl;
+	cout << ++c1 << endl;
+	cout << c1++ << endl;
+	cout << ++(++c1) << endl;
+	cout << (c1++)++ << endl;//无法实现的链式后置递增
+	cout << c1 << endl;
+}
+int main()
+{
+	Show();
+	system("pause");
+	return 0;
+}
+
+//赋值运算符重载
+
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+	Person(int age)
+	{
+		m_Age = new int(age);
+	}
+	Person& operator=(Person& c)
+	{
+		//浅拷贝
+		//m_Age = c.m_Age;
+		//深拷贝
+		if (m_Age != NULL)
+		{
+			delete m_Age;
+			m_Age = NULL;
+		}
+		m_Age = new int(*c.m_Age);
+		return *this;
+	}
+	~Person()
+	{
+		delete m_Age;
+		m_Age = NULL;
+	}
+	int* m_Age;
+};
+void Show()
+{
+	Person c1(10);
+	Person c2(20);
+	Person c3(30);
+	c3 = c2 = c1;
+	cout << *c1.m_Age << endl;
+	cout << *c2.m_Age << endl;
+	cout << *c3.m_Age << endl;
+}
+int main()
+{
+	Show();
+	system("pause");
+	return 0;
+}
+
+//关系运算符重载
+
+#include<iostream>
+using namespace std;
+#include<string>
+class Person
+{
+public:
+	Person(string name, int age)
+	{
+		m_Name = name;
+		m_Age = age;
+	}
+	//成员函数重载关系运算符
+	//bool operator==(Person& c)
+	//{
+	//	if (this->m_Age == c.m_Age && this->m_Name == c.m_Name)
+	//	{
+	//		return true;
+	//	}
+	//	else
+	//	{
+	//		return false;
+	//	}
+	//}
+	string m_Name;
+	int m_Age;
+};
+//全局函数重载关系运算符
+bool operator==(Person&c1, Person&c2)
+{
+	if (c1.m_Age == c2.m_Age && c1.m_Name == c2.m_Name)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+void Point()
+{
+	Person c1("张三", 10);
+	Person c2("张三", 10);
+
+	if (c1 == c2)
+	{
+		cout << "c1和c2相等" << endl;
+	}
+	else
+	{
+		cout << "c1和c2不相等" << endl;
+	}
+}
+int main()
+{
+	Point();
+	system("pause");
+	return 0;
+}
+
+//函数调用运算符重载
+
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+	void operator()()
+	{
+		cout << "函数调用运算符重载" << endl;
+	}
+};
+void test01()
+{
+	Person c1;
+	c1();//简写
+	c1.operator()();//实质
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//智能指针（伪）//指针运算符重载（真）
+//类似"C->->"用一个类的局域对象来控制另一个类的堆区对象的释放
+
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+	Person()
+	{
+		//cout << "Person默认构造函数调用" << endl;
+	}
+	Person(int age)
+	{
+		//cout << "Person有参构造函数调用" << endl;
+		this->m_Age = age;
+	}
+	Person(const Person&)
+	{
+		//cout << "Person拷贝构造函数调用" << endl;
+	}
+	~Person()
+	{
+		//cout << "Person析构函数调用" << endl;
+	}
+	int m_Age;
+};
+class SmartPointer//智能指针
+{
+public:
+	SmartPointer()
+	{
+		//cout << "SmartPointer默认构造函数调用" << endl;
+	}
+	SmartPointer(Person* P)
+	{
+		//cout << "SmartPointer有参构造函数调用" << endl;
+		this->PersonPointer = P;
+	}
+	~SmartPointer()
+	{
+		if (PersonPointer != NULL)
+		{
+			delete PersonPointer;
+			PersonPointer = NULL;
+		}
+		//cout << "SmartPointer析构函数调用" << endl;
+	}
+	Person& operator*()
+	{
+		return *PersonPointer;
+	}
+	Person* operator->()
+	{
+		return PersonPointer;
+	}
+	Person * PersonPointer;
+};
+void test01()
+{
+	SmartPointer Pointer(new Person(10));
+	cout << (*Pointer).m_Age << endl;
+	cout << Pointer->m_Age << endl;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//继承基本语法
+
+#include<iostream>
+using namespace std;
+class Base
+{
+public:
+	Base()
+	{
+		m_a = 10;
+	}
+	int m_a;
+};
+class Son:public Base
+{
+};
+void Show()
+{
+	Son c1;
+	cout << c1.m_a << endl;
+}
+int main()
+{
+	Show();
+	system("pause");
+	return 0;
+}
+
+//继承中同名成员处理
+
+#include<iostream>
+using namespace std;
+class Base
+{
+public:
+	static int m_Age;
+};
+int Base::m_Age = 30;
+class Son :public Base
+{
+public:
+	static int m_Age;
+};
+int Son::m_Age = 10;
+void GetAge()
+{
+	Son son;
+	cout << Son::m_Age << endl;
+	cout << Base::m_Age << endl;
+	//Son:: 是通过类名访问 Base:: 是通过作用域访问
+	cout << Son::Base::m_Age << endl;
+}
+int main()
+{
+	GetAge();
+	system("pause");
+	return 0;
+}
+
+//多继承
+
+#include<iostream>
+using namespace std;
+class Base01
+{
+public:
+	static int m_Age;
+};
+int Base01::m_Age = 30;
+class Base02
+{
+public:
+	static int m_Age;
+};
+int Base02::m_Age = 40;
+class Son :public Base01,public Base02
+{
+public:
+	static int m_Age;
+};
+int Son::m_Age = 10;
+void GetAge()
+{
+	Son son;
+	cout << Son::m_Age << endl;
+	cout << Base01::m_Age << endl;
+	cout << Base02::m_Age << endl;
+}
+int main()
+{
+	GetAge();
+	system("pause");
+	return 0;
+}
+
+//菱形继承问题及解决
+
+#include<iostream>
+using namespace std;
+class Ancestor
+{
+public:
+	void Get()
+	{
+		cout << "传家宝" << endl;
+	}
+};
+class Dad :virtual public Ancestor
+{
+public:
+};
+class Mom :virtual public Ancestor
+{
+public:
+};
+class Son :public Dad,public Mom
+{
+public:
+};
+void GetAge()
+{
+	Son son;
+	son.Son::Get();//父类virtual继承上一级 使得 Get() 明确
+	son.Dad::Get();
+	son.Mom::Get();
+}
+int main()
+{
+	GetAge();
+	system("pause");
+	return 0;
+}
+
+//多态基本语法
+
+#include<iostream>
+using namespace std;
+class Animal
+{
+public:
+	virtual void speak()
+	{
+		cout << "Animal speak" << endl;
+	}
+};
+class Dog :public Animal
+{
+public:
+	void speak()
+	{
+		cout << "Dog speak" << endl;
+	}
+};
+class Cat :public Animal
+{
+public:
+	void speak()
+	{
+		cout << "Cat speak" << endl;
+	}
+};
+void WhoSpeak(Animal&animal)
+{
+	animal.speak();
+}
+void Get()
+{
+	Animal animal;
+	Cat cat;
+	Dog dog;
+	WhoSpeak(animal);
+	WhoSpeak(cat);
+	WhoSpeak(dog);
+}
+int main()
+{
+	Get();
+	system("pause");
+	return 0;
+}
+
+//计算器-普通写法
+
+#include<iostream>
+using namespace std;
+#include<string>
+class Calculate
+{
+public:
+	int calculate(string str)
+	{
+		if (str == "+")
+		{
+			return m_sum01 + m_sum02;
+		}
+		else if (str == "-")
+		{
+			return m_sum01 - m_sum02;
+		}
+		else if (str == "*")
+		{
+			return m_sum01 * m_sum02;
+		}
+	}
+	int m_sum01;
+	int m_sum02;
+};
+void test01()
+{
+	Calculate c;
+	c.m_sum01 = 10;
+	c.m_sum02 = 10;
+	cout << c.calculate("+") << endl;
+	cout << c.calculate("-") << endl;
+	cout << c.calculate("*") << endl;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//计算器-多态写法
+
+#include<iostream>
+using namespace std;
+class Calculate
+{
+public:
+	virtual int Accomplish() = 0;
+	static int m_sum01;
+	static int m_sum02;
+};
+int Calculate::m_sum01 = 10;
+int Calculate::m_sum02 = 10;
+class Add :public Calculate
+{
+public:
+	virtual int Accomplish()
+	{
+		return m_sum01 + m_sum02;
+	}
+};
+class Sub :public Calculate
+{
+public:
+	virtual int Accomplish()
+	{
+		return m_sum01 - m_sum02;
+	}
+};
+class Mul :public Calculate
+{
+public:
+	virtual int Accomplish()
+	{
+		return m_sum01 * m_sum02;
+	}
+};
+void test01()
+{
+	Calculate * c = new Add;
+	cout << c->m_sum01 << " + " << c->m_sum02 << " = "<< c->Accomplish() << endl;
+	delete c;
+	c = new Sub;
+	cout << c->m_sum01 << " - " << c->m_sum02 << " = " << c->Accomplish() << endl;
+	delete c;
+	c = new Mul;
+	cout << c->m_sum01 << " * " << c->m_sum02 << " = " << c->Accomplish() << endl;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//纯虚函数&抽象类
+
+//派生类若不能重写基类虚函数，则派生类也为抽象类
+#include<iostream>
+using namespace std;
+class Calculate
+{
+public:
+	virtual int Accomplish() = 0;
+};
+int main()
+{
+	system("pause");
+	return 0;
+}
+
+//多态饮品类案例
+
+#include<iostream>
+using namespace std;
+class Interface
+{
+public:
+	virtual void test01() = 0;
+	virtual void test02() = 0;
+	virtual void test03() = 0;
+	void Everyone()
+	{
+	      test01();test02();test03();
+	}
+};
+class Coffee:public Interface
+{
+public:
+	virtual void test01()
+	{
+		cout << "Coffee 的第一步" << endl;
+	}
+	virtual void test02()
+	{
+		cout << "Coffee 的第二步" << endl;
+	}
+	virtual void test03()
+	{
+		cout << "Coffee 的第三步" << endl;
+	}
+};
+class Tea :public Interface
+{
+public:
+	virtual void test01()
+	{
+		cout << "Tea 的第一步" << endl;
+	}
+	virtual void test02()
+	{
+		cout << "Tea 的第二步" << endl;
+	}
+	virtual void test03()
+	{
+		cout << "Tea 的第三步" << endl;
+	}
+};
+void TestOverAll()
+{
+	Interface * c;
+	c = new Coffee;
+	c->Everyone();
+	delete c;
+	c = new Tea;
+	c->Everyone();
+}
+int main()
+{
+	TestOverAll();
+	system("pause");
+	return 0;
+}
+
+//虚析构和纯虚析构
+
+#include<iostream>
+using namespace std;
+#include<string>
+class Base
+{
+public:
+	Base()
+	{
+		cout << "Base 默认构造函数调用" << endl;
+	}
+	//virtual~Base()//虚析构
+	//{
+	//	cout << "Base 析构函数调用" << endl;
+	//}
+	virtual~Base() = 0;//纯虚析构
+};
+Base::~Base()//纯虚析构类外必须做实现
+{
+	cout << "Base 析构函数调用" << endl;
+}
+class Son:public Base
+{
+public:
+	Son()
+	{
+		cout << "Son 默认构造函数调用" << endl;
+	}
+	~Son()
+	{
+		if (m_Name != NULL)
+		{
+			delete m_Name;
+			m_Name = NULL;
+		}
+		cout << "Son 析构函数调用" << endl;
+	}
+	string * m_Name;
+};
+void test01()
+{
+	Base*base = new Son;
+	delete base;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//电脑组装案例（大致实现）
+
+#include<iostream>
+using namespace std;
+#include<string>
+class Cpu
+{
+public:
+	virtual void Achieve() = 0;
+};
+class Videocard
+{
+public:
+	virtual void Achieve() = 0;
+};
+class Memory
+{
+public:
+	virtual void Achieve() = 0;
+};
+class IntelCpu :public Cpu
+{
+public:
+	void Achieve()
+	{
+		cout << "Intel的Cpu 运行" << endl;
+	}
+};
+class IntelVideocard :public Videocard
+{
+public:
+	void Achieve()
+	{
+		cout << "Intel的Videocard 运行" << endl;
+	}
+}; 
+class IntelMemory :public Memory
+{
+public:
+	void Achieve()
+	{
+		cout << "Intel的Memory 运行" << endl;
+	}
+};
+class Computer01
+{
+public:
+	Computer01(Cpu* tempCpu, Videocard* tempVideocard, Memory* tempMemory)
+	{
+		ComCpu = tempCpu;
+		ComVideocard = tempVideocard;
+		ComMemory = tempMemory;
+		cout << "电脑开始运行" << endl;
+	}
+
+	void ComputerOperation()
+	{
+		ComCpu->Achieve();
+		ComVideocard->Achieve();
+		ComMemory->Achieve();
+	}
+	~Computer01()
+	{
+		if (ComCpu != NULL)
+		{
+			delete ComCpu;
+			ComCpu = NULL;
+		}
+		if (ComVideocard != NULL)
+		{
+			delete ComVideocard;
+			ComVideocard = NULL;
+		}
+		if (ComMemory != NULL)
+		{
+			delete ComMemory;
+			ComMemory = NULL;
+		}
+		cout << "电脑结束运行" << endl;
+	}
+	Cpu * ComCpu;
+	Videocard * ComVideocard;
+	Memory * ComMemory;
+};
+void test01()
+{
+	Computer01 Com01(new IntelCpu, new IntelVideocard, new IntelMemory);
+	Com01.ComputerOperation();
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//二进制读文件Or写文件
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<fstream>
+#define FINDNAME "aaa.txt"
+void test01()
+{
+	//long long Number = 2842386423128;
+	//ofstream ofs;
+	//ofs.open(FINDNAME, ios::out | ios::binary);
+	//ofs.write((char*)&Number, sizeof(Number));
+	//ofs.close();
+	ifstream ifs;
+	ifs.open(FINDNAME, ios::in | ios::binary);
+	long long Num;
+	ifs.read((char *)& Num, sizeof(Num));
+	cout << Num << endl;
+	ifs.close();
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//接受字符输入
+
+#include<conio.h>
+char mobile = _getch();
+
+//非阻塞地响应键盘输入事件
+
+do
+{
+} while (_kbhit());
+
+//光标定位
+
+#include<windows.h>
+void gotoxy(int y, int x)//光标定位函数
+{
+	COORD p;//定义结构体变量p
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);//获取当前函数句柄
+	p.X = x; p.Y = y;//将光标的目标移动位置传递给结构体
+	SetConsoleCursorPosition(handle, p);//移动光标
+}
+
+//记录局域代码运行时间
+
+#include<iostream>
+using namespace std;
+#include<time.h>
+int main()
+{
+	
+	clock_t startTime, endTime;
+	startTime = clock();//计时开始
+    for (long long i = 0; i < 2147483640; i++)
+	{
+		i++;
+	}
+	endTime = clock();//计时结束
+	cout << "The run time is: " << (double)(endTime - startTime) / CLOCKS_PER_SEC << "s" << endl;
+	system("pause");
+	return 0;
+}
+
+//计算整个程序运行的时间
+
+#include<iostream>
+#include<time.h>
+using namespace std;
+int main()
+{
+   for (long long i = 0; i < 2147483640; i++)
+   {
+       i++;
+   }
+   cout << "The run time is:" << (double)clock() /CLOCKS_PER_SEC<< "s" << endl;
+   system("pause");
+   return 0;
+}
+
+
+//i++ 谭浩强快乐数
+#include<iostream>
+using namespace std;
+int main()
+{
+	int i = 1;
+	cout << " ++i + ++i =" << ++i + ++i << endl; i = 1;
+	cout << " i++ + i++ =" << i++ + i++ << endl; i = 1;
+	cout << " ++i + i++ =" << ++i + i++ << endl; i = 1;
+	cout << " i++ + ++i =" << i++ + ++i << endl; i = 1;
+	system("pause");
+	return 0;
+}
+
+//函数模板
+
+#include<iostream>
+using namespace std;
+#include<string>
+//void func01(int&a, int&b)
+//{
+//	int temp = a;
+//	a = b;
+//	b = temp;
+//	cout << "int 型" << endl;
+//}
+//void func02(double&a, double&b)
+//{
+//	double temp = a;
+//	a = b;
+//	b = temp;
+//	cout << "double 型" << endl;
+//}
+template<class T>
+//或者//template<typename T>
+//class与typename作用一致
+void func03(T&a, T&b)
+{
+	T temp = a;
+	a = b;
+	b = temp;
+}
+int main()
+{
+	double a = 10; double b = 20;
+	//自动类型推导
+	func03(a, b);
+	//显示指定类型
+	func03<double>(a, b);
+	cout << "a = " << a << endl;
+	cout << "b = " << b << endl;
+	system("pause");
+	return 0;
+}
+
+//函数模板注意事项
+
+#include<iostream>
+using namespace std;
+template<class T>
+//或者//template<typename T>
+void func()
+{
+	cout << "func" << endl;
+}
+int main()
+{
+//如果函数中用不到T,就得显示指定类型，否则无法运行
+	func<int>();
+	system("pause");
+	return 0;
+}
+
+
+//函数模板案例---数组排列
+
+#include<iostream>
+using namespace std;
+#include<string>
+template<class T>
+void exc(T&a, T&b)
+{
+	T temp = a;
+	a = b;
+	b = temp;
+}
+template<class T>
+void exchange(T Arr, int num)//排序小到大
+{
+	for (int i = 0; i < num; i++)
+	{
+		int m = i;
+		for (int j = i + 1; j < num; j++)
+		{
+                     //大于是递增，小于是递减
+			if (Arr[m] > Arr[j])
+			{
+				m = j;
+			}
+		}
+		if (m != i)
+		{
+			exc(Arr[i], Arr[m]);
+		}
+	}
+}
+template<class T>
+void print(T Arr,int num)
+{
+	for (int i = 0; i < num; i++)
+	{
+		cout << Arr[i] << " ";
+	}
+	cout << endl;
+}
+void test01()
+{
+	char Arrchar[] = {'b','a','c','e','d'};
+//如果是写成 char Arrchar[] = "baced";那么num会多一个，原因未知，但是可用于递减
+	int num = sizeof(Arrchar) / sizeof(char);
+	exchange(Arrchar, num);
+	print(Arrchar, num);
+
+}
+void test02()
+{
+	int Arrint[] = {2,3,1,5,4};
+	int num = sizeof(Arrint) / sizeof(int);
+	exchange(Arrint, num);
+	print(Arrint, num);
+
+}
+int main()
+{
+	test01();
+	test02();
+	system("pause");
+	return 0;
+}
+
+//普通函数与函数模板区别
+
+#include<iostream>
+using namespace std;
+
+int func01(int a, int b)
+{
+	return a + b;
+}
+template<typename T>
+T func02(T a, T b)
+{
+	return a + b;
+}
+int main()
+{
+	int a = 10;
+	int b = 20;
+	char c = 'c';
+	cout << func01(a, b) << endl;//支持隐式转换
+	cout << func01(a, c) << endl;//支持隐式转换
+	cout << func02(a, b) << endl;//不支持隐式转换
+	cout << func02<int>(a, c) << endl;//支持隐式转换
+	system("pause");
+	return 0;
+}
+
+//普通函数与函数模板
+
+#include<iostream>
+using namespace std;
+#include<string>
+void func01(int a,int b)
+{
+	cout << "普通函数" << endl;
+}
+template<class T>
+void func01(T a, T b)
+{
+	cout << "a b 函数模板" << endl;
+}
+template<class T>
+void func01(T a, T b, T c)
+{
+	cout << "a b c 函数模板" << endl;
+}
+void test01()
+{
+	int a = 10; int b = 20; int c = 30;
+	func01(a, b);//普通函数的优先性
+	func01<>(a, b);//空模板参数列表强制调用函数模板
+	func01(a, b, c);//函数模板的重载
+
+}
+void test02()
+{
+	char a = 'a';char b = 'b';
+	func01(a, b);//函数模板的优先性，能产生更好的匹配
+
+}
+int main()
+{
+	test01();
+	test02();
+	system("pause");
+	return 0;
+
+}
+
+//模板的局限性
+
+#include<iostream>
+using namespace std;
+#include<string>
+class Person
+{
+public:
+	Person(string name, int age)
+	{
+		this->m_name = name;
+		this->m_age = age;
+	}
+	string m_name;
+	int m_age;
+};
+//判断是否相等的模板
+template<class T>
+void sameof(T& a, T& b)
+{
+	if (a == b)
+	{
+		cout << "两个值相等" << endl;
+	}
+	else
+	{
+		cout << "两个值不相等" << endl;
+	}
+}
+template<> void sameof(Person& a, Person& b)
+{
+	if (a.m_age == b.m_age&&a.m_name == b.m_name)
+	{
+		cout << "两个对象相等" << endl;
+	}
+	else
+	{
+		cout << "两个对象不相等" << endl;
+	}
+}
+void test01()
+{
+	int a = 1; int b = 1;
+	sameof(a, b);
+	Person c("张三", 66);
+	Person d("张三",66);
+	sameof(c, d);
+        //务必都用引用方式传递
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//类模板基本语法
+
+#include<iostream>
+using namespace std;
+#include<string>
+template<class Name,class Age>
+class Person
+{
+public:
+	Person(Name name,Age age)
+	{
+		m_Name = name;
+		m_Age = age;
+	}
+	void m_Print()
+	{
+		cout << "姓名 ：" << this->m_Name << "  " << "年龄 ：" << this->m_Age << endl;
+	}
+	Name m_Name;
+	Age m_Age;
+};
+void test01()
+{
+        //务必显示指定类型
+	Person<string, int>p1("张三", 3);
+	Person<string, int>p2("李四", 4);
+	p1.m_Print();
+	p2.m_Print();
+
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+
+//类模板与函数模板的区别
+
+#include<iostream>
+using namespace std;
+#include<string>
+template<class Name, class Age = int>
+class Person
+{
+public:
+	Person(Name name,Age age)
+	{
+		m_Name = name;
+		m_Age = age;
+	}
+	void m_Print()
+	{
+		cout << "姓名 ：" << this->m_Name << "  " << "年龄 ：" << this->m_Age << endl;
+	}
+	Name m_Name;
+	Age m_Age;
+};
+void test01()
+{
+	Person<string, int>p1("张三", 3);//类模板不允许自动类型推导
+	Person<string>p2("李四", 4);//类模板可以有默认参数
+	p1.m_Print();
+	p2.m_Print();
+
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//类模板中成员函数的创建时机
+
+#include<iostream>
+using namespace std;
+#include<string>
+class Person01
+{
+public:
+	void Print01()
+	{
+		cout << "Print01" << endl;
+	}
+};
+class Person02
+{
+public:
+	void Print02()
+	{
+		cout << "Print02" << endl;
+	}
+};
+template<class T>
+class myClass
+{
+	//类模板在调用时生成，因为T无默认值
+public:
+	void func01()
+	{
+		object.Print01();
+	}
+	void func02()
+	{
+		object.Print02();
+	}
+	T object;
+};
+void test01()
+{
+	Person01 p1;Person02 p2;
+	myClass<Person01>o1;
+	o1.func01();
+	//o1.func02();//Person01无Print02
+	myClass<Person02>o2;
+	//o2.func01();//Person02无Print01
+	o2.func02();
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//类模板对象做函数参数
+
+#include<iostream>
+using namespace std;
+#include<string>
+template<class T1,class T2>
+class Person
+{
+public:
+	void m_Func()
+	{
+		cout << "m_Func的调用" << endl;
+	}
+	T1 m_Name;
+	T2 m_Age;
+};
+//传入指定类型
+void func01(Person<string, int>p)
+{
+	p.m_Func();
+}
+//参数模板化
+template<class T1, class T2>
+void func02(Person<T1, T2>p)
+{
+	p.m_Func();
+}
+//类模板化
+template<class T>
+void func03(T&p)
+{
+	p.m_Func();
+}
+void test01()
+{
+	Person<string, int>p;
+	func01(p);
+	func02(p);
+	func03(p);
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//类模板与继承  
+
+#include<iostream>
+using namespace std;
+#include<string>
+template<class T>
+class Base{public:};
+template<class T1,class T2>
+class Son:public Base<T2>{public:};
+void test01()
+{
+	//子类继承父类模板时，要指定类型，否则无法分配内存
+	//如果想更灵活，需要把子类也写成模板，创建对象时传入两个类所有参数
+	Son<int, bool>p;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//类模板成员函数的类外实现
+
+#include<iostream>
+using namespace std;
+#include<string>
+template<class T1,class T2>
+class Person
+{
+public:
+	Person(T1 name, T2 age);
+	void m_Print();
+	T1 m_Name;T2 m_Age;
+};
+template<class T1, class T2>
+Person<T1, T2>::Person(T1 name, T2 age)
+{
+	this->m_Name = name;
+	this->m_Age = age;
+}
+template<class T1, class T2>
+void Person<T1, T2>::m_Print()
+{
+	cout << this->m_Name << " " << this->m_Age <<"岁"<< endl;
+}
+void test01()
+{
+	Person<string, int>p("张三", 66);
+	p.m_Print();
+}
+int main()
+{
+	test01();
+	system("pause");return 0;
+}
+
+//类模板分文件编写
+
+//一类解决方案
+
+//(头文件)person.h
+#pragma once
+#include<iostream>
+using namespace std;
+#include<string>
+template<class T1, class T2>
+class Person
+{
+public:
+	Person(T1 name, T2 age);
+	void m_Print();
+	T1 m_Name; T2 m_Age;
+};
+//(源文件)源.cpp
+#include<iostream>
+using namespace std;
+#include<string>
+#include"person.cpp"
+void test01()
+{
+	Person<string, int>p("张三", 66);
+	p.m_Print();
+}
+int main()
+{
+	test01();
+	system("pause");return 0;
+}
+//(源文件)person.cpp
+#include"person.h"
+template<class T1, class T2>
+Person<T1, T2>::Person(T1 name, T2 age)
+{
+	this->m_Name = name;
+	this->m_Age = age;
+}
+template<class T1, class T2>
+void Person<T1, T2>::m_Print()
+{
+	cout << this->m_Name << " " << this->m_Age << "岁" << endl;
+}
+
+//二类解决方案
+
+//(头文件)person.hpp()可自定义后缀，源文件包含时保持一致
+#pragma once
+#include<iostream>
+using namespace std;
+#include<string>
+template<class T1, class T2>
+class Person
+{
+public:
+	Person(T1 name, T2 age);
+	void m_Print();
+	T1 m_Name; T2 m_Age;
+};
+template<class T1, class T2>
+Person<T1, T2>::Person(T1 name, T2 age)
+{
+	this->m_Name = name;
+	this->m_Age = age;
+}
+template<class T1, class T2>
+void Person<T1, T2>::m_Print()
+{
+	cout << this->m_Name << " " << this->m_Age << "岁" << endl;
+}
+//(源文件)源.cpp
+#include<iostream>
+using namespace std;
+#include<string>
+#include"person.hpp"
+void test01()
+{
+	Person<string, int>p("张三", 66);
+	p.m_Print();
+}
+int main()
+{
+	test01();
+	system("pause");return 0;
+}
+
+//类模板和友元
+
+#include<iostream>
+using namespace std;
+#include<string>
+template<class T1, class T2>
+class Person;
+template<class T1, class T2>
+void func02(Person<T1, T2>p)
+{
+	cout << p.m_Name << " " << p.m_Age << endl;
+}
+template<class T1,class T2>
+class Person
+{
+public:
+	Person(T1 name,T2 age)
+	{
+		this->m_Name = name;
+		this->m_Age = age;
+	}
+	friend void func01(Person<T1,T2>p)
+	{
+		cout << p.m_Name << " " << p.m_Age << endl;
+	}
+	friend void func02<>(Person<T1, T2>p);
+	T1 m_Name;
+	T2 m_Age;
+};
+void test01()
+{
+	Person<string, int>p("张三", 66);
+	func01(p);//全局函数类内实现
+	func02(p);//全局函数类外实现
+}
+int main()
+{
+	test01();
+	system("pause");return 0;
+}
+
+//STL vector容器存放内置数据类型
+
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<algorithm>//仅在第三种遍历方式用到
+void Print(int it)
+{
+	cout << it << endl;
+}
+void test01()
+{
+	vector<int>val;
+	val.push_back(10);
+	val.push_back(20);
+	val.push_back(30);
+	val.push_back(40);
+	val.push_back(50);
+	val.push_back(60);
+	//第一种遍历方式
+	//vector<int>::iterator itBegin = val.begin();
+	//vector<int>::iterator itEnd = val.end();
+	//while (itBegin != itEnd)
+	//{
+	//	cout << *itBegin << endl;
+	//	++itBegin;
+	//}
+	//第二种遍历方式
+	//for (vector<int>::iterator it = val.begin(); it != val.end(); it++)
+	//{
+	//	cout << *it << endl;
+	//}
+	//第三种遍历方式
+	//for_each(val.begin(), val.end(),Print);
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//STL vector容器存放自定义数据类型
+
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<string>
+class Person
+{
+public:
+	string m_Name;
+	int m_Age;
+	Person(string name,int age)
+	{
+		this->m_Name = name;
+		this->m_Age = age;
+	}
+};
+void test01()
+{
+	//容器储存数据
+	vector<Person>val;
+	Person p1("aaa", 10);
+	Person p2("bbb", 20);
+	Person p3("ccc", 30);
+	Person p4("ddd", 40);
+	val.push_back(p1);
+	val.push_back(p2);
+	val.push_back(p3);
+	val.push_back(p4);
+	for (vector<Person>::iterator it = val.begin(); it != val.end(); it++)
+	{
+		cout << (*it).m_Name <<"   "<<(*it).m_Age << endl;
+	}
+	//或直接将it当指针用
+	//for (vector<Person>::iterator it = val.begin(); it != val.end(); it++)
+	//{
+	//	cout << it->m_Name << "   " << it->m_Age << endl;
+	//}
+}
+void test02()
+{
+	//容器储存数据地址
+	vector<Person*>val;
+	Person p1("aaa", 10);
+	Person p2("bbb", 20);
+	Person p3("ccc", 30);
+	Person p4("ddd", 40);
+	val.push_back(&p1);
+	val.push_back(&p2);
+	val.push_back(&p3);
+	val.push_back(&p4);
+	for (vector<Person*>::iterator it = val.begin(); it != val.end(); it++)
+	{
+		cout << (*it)->m_Name << "   " << (*it)->m_Age << endl;
+	}
+}
+int main()
+{
+	//test01();
+	test02();
+	system("pause");
+	return 0;
+}
+
+//容器嵌套容器（仿二维数组）
+
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<string>
+void test01()
+{
+	vector<vector<int>>V;
+	//生成小容器
+	vector<int>v1;
+	vector<int>v2;
+	vector<int>v3;
+	vector<int>v4;
+	vector<int>v5;
+	//小容器赋值
+	for (int i = 0; i < 5; i++)
+	{
+		v1.push_back(i + 1);
+		v2.push_back(i + 2);
+		v3.push_back(i + 3);
+		v4.push_back(i + 4);
+		v5.push_back(i + 5);
+	}
+	//小容器插入大容器
+	V.push_back(v1);
+	V.push_back(v2);
+	V.push_back(v3);
+	V.push_back(v4);
+	V.push_back(v5);
+	for (vector<vector<int>>::iterator IT = V.begin(); IT != V.end(); IT++)
+	{
+		for (vector<int>::iterator it = (*IT).begin(); it != (*IT).end(); it++)
+		{
+			cout << *it << " ";
+		}
+		cout << endl;
+	}
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//string容器-构造函数
+
+#include<iostream>
+using namespace std;
+#include<string>
+void test01()
+{
+	string s1("hello world");
+	const char*t1 = "hello world";
+	string s2(t1);
+	string s3(s2);
+	string s4(10, 'a');
+	cout << s1 << endl;
+	cout << s2 << endl;
+	cout << s3 << endl;
+	cout << s4 << endl;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//string容器-赋值操作
+
+#include<iostream>
+using namespace std;
+#include<string>
+void test01()
+{
+	string s1 = "hello world";
+	string s2 = s1;
+	string s3; s3 = 'a';
+	string s4; s4.assign("hello world");
+	string s5; s5.assign(s4);
+	string s6; s6.assign(10, 'a');
+	cout << s1 << endl;
+	cout << s2 << endl;
+	cout << s3 << endl;
+	cout << s4 << endl;
+	cout << s5 << endl;
+	cout << s6 << endl;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//string容器-字符串拼接
+
+#include<iostream>
+using namespace std;
+#include<string>
+void test01()
+{
+	string s1 = "a";
+	string s2 = "efg";
+	s1 += "bc";
+	s1 += 'd';
+	s1 += s2;
+	cout << s1 << endl;
+}
+void test02()
+{
+	string s1 = "a";
+	string s2 = "dezzzzzfg";
+	s1.append("bc");
+	s1.append("dezzzzzfg",2);//不能写成s1.append("s2",2);
+	s1.append(s2, 7, 2);
+	cout << s1 << endl;
+}
+int main()
+{
+	//test01();
+	test02();
+	system("pause");
+	return 0;
+}
+
+//string查找
+
+#include<iostream>
+using namespace std;
+#include<string>
+void test01()
+{
+	string s1 = "abcdefgcdef";
+	int place = s1.find("cd");//从左往右查找
+	cout << place << endl;
+	place = s1.rfind("cd");//从右往左查找
+	cout << place << endl;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//string替换
+
+#include<iostream>
+using namespace std;
+#include<string>
+void test01()
+{
+	string s1 = "abcdefgcdef";
+	s1.replace(0,3,"www");//0号位置起3个元素替换为"www"
+	cout << s1;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//string比较
+
+#include<iostream>
+using namespace std;
+#include<string>
+void test01()
+{
+	string s1 = "zww";
+	string s2 = "www";
+	if (s1.compare(s2) == 0)
+	{
+		cout << "s1 等于 s2" << endl;
+	}
+	else if(s1.compare(s2)>0)
+	{
+		cout << "s1 大于 s2" << endl;
+	}
+	else
+	{
+		cout << "s1 小于 s2" << endl;
+	}
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//string读取
+
+#include<iostream>
+using namespace std;
+#include<string>
+void test01()
+{
+	string s1 = "hello";
+	for (int i = 0; i < s1.size(); i++)
+	{
+		cout << s1[i] << " ";
+	}
+	cout << endl;
+	for (int i = 0; i < s1.size(); i++)
+	{
+		cout << s1.at(i) << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//string插入和删除
+
+#include<iostream>
+using namespace std;
+#include<string>
+void test01()
+{
+	string s1 = "hello";
+	string s2 = " world";
+	s1.insert(5,s2);//第五个位置插入s2
+	cout << s1 << endl;
+	s1.erase(5, 6);//第五个位置删除s2
+	cout << s1 << endl;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//string子串的获取
+
+#include<iostream>
+using namespace std;
+#include<string>
+void test01()
+{
+	string s1 = "hello";
+	string s2 = " world";
+	s2=s1.substr(1, 3);
+	cout << s2 << endl;
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//vector赋值操作
+
+#include<iostream>
+using namespace std;
+#include<vector>
+void test01()
+{
+	vector<int>val;
+	vector<int>val2;
+	vector<int>val3;
+	vector<int>val4;
+
+	for (int i = 0; i < 9; i++)
+	{
+		val.push_back(i);
+	}
+	for (vector<int>::iterator it = val.begin(); it != val.end(); it++)
+	{
+		cout << *it;
+	}
+	cout << endl;
+	val2 = val;//等号赋值
+	for (vector<int>::iterator it = val2.begin(); it != val2.end(); it++)
+	{
+		cout << *it;
+	}
+	cout << endl;
+	val3.assign(9,7);//a个b赋值
+	for (vector<int>::iterator it = val3.begin(); it != val3.end(); it++)
+	{
+		cout <<*it;
+	}
+	cout << endl;
+	val4.assign(val.begin(), val.end());//初末位置赋值（左闭右开）
+	for (vector<int>::iterator it = val4.begin(); it != val4.end(); it++)
+	{
+		cout << *it;
+	}
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//vector容器的容量和大小
+
+#include<iostream>
+using namespace std;
+#include<vector>
+void PrintVector(vector<int>&v)
+{
+	for (vector<int>::iterator it = v.begin(); it != v.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	vector<int>v;
+	for (int i = 0; i < 10; i++)
+	{
+		v.push_back(i);
+	}
+	PrintVector(v);
+	if (v.empty())
+	{
+		cout << "空的" << endl;
+	}
+	else
+	{
+		cout << "非空" << endl;
+		cout << "容量" << v.capacity() << endl;
+		cout << "已有" << v.size() << endl;
+	}
+	v.resize(15);
+	PrintVector(v);
+	v.resize(6,100);
+	PrintVector(v);
+	system("pause");
+	return 0;
+}
+
+//vector容器插入和删除
+
+#include<iostream>
+using namespace std;
+#include<vector>
+void PrintVector(vector<int>&v)
+{
+	for (vector<int>::iterator it = v.begin(); it != v.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	vector<int>v;
+	for (int i = 0; i < 10; i++)
+	{
+		v.push_back(i);
+	}
+	PrintVector(v);
+
+	//尾插
+	v.push_back(100);
+	cout << "尾插";
+	PrintVector(v);
+	//尾删
+	v.pop_back();
+	cout << "尾删";
+	PrintVector(v);
+	//插入
+	v.insert(v.begin(), 100);
+	v.insert(v.begin(), 2, 1000);
+	cout << "插入";
+	PrintVector(v);
+	//删除
+	v.erase(v.begin(), v.begin() + 3);
+	cout << "删除";
+	PrintVector(v);
+	//全删
+	v.clear();
+	cout << "清空";
+	PrintVector(v);
+	system("pause");
+	return 0;
+}
+
+//vector数据存取
+
+#include<iostream>
+using namespace std;
+#include<vector>
+void PrintVector(vector<int>&v)
+{
+	for (vector<int>::iterator it = v.begin(); it != v.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	vector<int>v;
+	for (int i = 0; i < 10; i++)
+	{
+		v.push_back(i);
+	}
+	PrintVector(v);
+
+	for (int i = 0; i < v.size(); i++)
+	{
+		cout << v.at(i) << " ";
+	}
+	cout << endl;
+	for (int i = 0; i < v.size(); i++)
+	{
+		cout << v[i] << " ";
+	}
+	cout << endl;
+	cout << v.front() << endl;//开头元素
+	cout << v.back() << endl;//结尾元素
+	system("pause");
+	return 0;
+}
+
+//vector互换空间
+
+#include<iostream>
+using namespace std;
+#include<vector>
+void PrintVector(vector<int>&v)
+{
+	for (vector<int>::iterator it = v.begin(); it != v.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	vector<int>v;
+	vector<int>v2;
+	for (int i = 0; i < 10; i++)
+	{
+		v.push_back(i);
+	}
+	PrintVector(v);
+	for (int i = 10; i > 0; i--)
+	{
+		v2.push_back(i);
+	}
+	PrintVector(v2);
+	v.swap(v2);
+	PrintVector(v);
+	PrintVector(v2);
+	vector<int>(v).swap(v);//内存收缩致元素个数 容=存
+	system("pause");
+	return 0;
+}
+
+//vector预留空间
+
+#include<iostream>
+using namespace std;
+#include<vector>
+int main()
+{
+	vector<int>v;
+	int *p = NULL;
+	int num = 0;//开辟次数
+	v.reserve(100000);//预留空间
+	for (int i = 0; i < 100000; i++)
+	{
+		v.push_back(i);
+		if (p != &v[0])
+		{
+			p = &v[0];
+			num++;
+		}
+	}
+	cout << "开辟次数：" << num << endl;
+	system("pause");
+	return 0;
+}
+
+//deque容器构造函数
+
+#include<iostream>
+using namespace std;
+#include<deque>
+void PrintDeque(deque<int>&d)
+{
+	for (int i = 0; i < 10; i++)
+	{
+		cout << d[i] << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	deque<int>d;
+	for (int i = 0; i < 10; i++)
+	{
+		d.push_back(i);
+	}
+	PrintDeque(d);
+	deque<int>d2(d.begin(), d.end());
+	PrintDeque(d2);
+	deque<int>d3 = d2;
+	PrintDeque(d3);
+	deque<int>d4(10, 100);
+	PrintDeque(d4);
+	system("pause");
+	return 0;
+}
+
+//deque大小操作
+
+#include<iostream>
+using namespace std;
+#include<deque>
+void Print(const deque<int>&d)
+{
+	for (deque<int>::const_iterator it = d.begin(); it != d.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	deque<int>d1;
+	for (int i = 0; i < 10; i++)
+	{
+		d1.push_back(i);
+	}
+	if (d1.empty())
+	{
+		cout << "空的" << endl;
+	}
+	else
+	{
+		cout << "非空" << endl;
+		cout << "元素个数：" << d1.size() << endl;
+	}
+	d1.resize(15);//0填充
+	Print(d1);
+	d1.resize(20, 100);//100填充
+	Print(d1);
+	system("pause");
+	return 0;
+}
+
+//deque插入和删除
+
+#include<iostream>
+using namespace std;
+#include<deque>
+void Print(const deque<int>&d)
+{
+	for (deque<int>::const_iterator it = d.begin(); it != d.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	deque<int>d1;
+	for (int i = 0; i < 10; i++)
+	{
+		d1.push_back(i);
+	}
+	d1.push_front(100);
+	d1.pop_front();
+
+	d1.insert(d1.begin(), 1);
+	d1.insert(d1.begin(), 3, 2);
+	Print(d1);
+	d1.erase(d1.begin(), d1.begin() + 3);
+	Print(d1);
+	d1.erase(d1.begin());
+	Print(d1);
+	d1.clear();
+	system("pause");
+	return 0;
+}
+
+//deque数据存取
+
+#include<iostream>
+using namespace std;
+#include<deque>
+int main()
+{
+	deque<int>d1;
+	for (int i = 0; i < 10; i++)
+	{
+		d1.push_back(i);
+	}
+	//非迭代器访问
+	for (int i = 0; i < 10; i++)
+	{
+		cout << d1.at(i) << " ";
+	}
+	cout << endl;
+	for (int i = 0; i < 10; i++)
+	{
+		cout << d1[i] << " ";
+	}
+	cout << endl;
+	cout << "首：" << d1.front() << "尾：" << d1.back() << endl;
+	system("pause");
+	return 0;
+}
+
+//deque排序操作
+
+#include<iostream>
+using namespace std;
+#include<deque>
+#include<algorithm>
+void Print(const deque<int>&d)
+{
+	for (deque<int>::const_iterator it = d.begin(); it < d.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	deque<int>d1;
+	d1.push_back(10);
+	d1.push_back(20);
+	d1.push_back(30);
+	d1.push_front(100);
+	d1.push_front(200);
+	d1.push_front(300);
+	Print(d1);
+	sort(d1.begin(), d1.end());
+	Print(d1);
+	system("pause");
+	return 0;
+}
+
+//stack常用接口
+
+#include<iostream>
+using namespace std;
+#include<stack>
+int main()
+{
+	stack<int>s;
+	s.push(10);
+	s.push(20);
+	s.push(30);
+	s.push(40);
+	cout << "栈的元素个数：" << s.size() << endl;
+	while (!s.empty())
+	{
+		cout <<"栈顶元素："<<s.top() << " ";
+		s.pop();
+	}
+	cout << endl;
+	cout << "栈的元素个数：" << s.size() << endl;
+	system("pause");
+	return 0;
+}
+
+//queue常用接口
+
+#include<iostream>
+using namespace std;
+#include<queue>
+int main()
+{
+	queue<int>q;//先进先出
+	q.push(10);
+	q.push(20);
+	q.push(30);
+	q.push(40);
+	cout << "元素个数：" << q.size() << endl;
+	while (!q.empty())
+	{
+		cout << "队头：" << q.front();
+		cout << "队尾：" << q.back();
+		q.pop();
+		cout << endl;
+	}
+	cout << "元素个数：" << q.size() << endl;
+	system("pause");
+	return 0;
+}
+
+//list容器
+
+#include<iostream>
+using namespace std;
+#include<list>
+void Print(const list<int>L)
+{
+	for (list<int>::const_iterator it = L.begin(); it != L.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+void test01()
+{
+	list<int>L(10, 1);//n个几构造
+	list<int>L2(10, 2);//n个几构造
+	Print(L);
+	Print(L2);
+	list<int>L3(L);//拷贝构造
+	Print(L3);
+	list<int>L4(L2.begin(), L2.end());//区间拷贝
+	Print(L4);
+	L.assign(5, 6);//清空后赋值
+	Print(L);
+	L.assign(L2.begin(), L2.end());//清空后区间赋值
+	Print(L);
+	L = L2;//等号赋值
+	Print(L);
+	L.swap(L2);//容器互换
+	cout << "L的元素个数：" << L.size() << endl;
+	if (L.empty())
+	{
+		cout << "容器为空" << endl;
+	}
+	else
+	{
+		cout << "容器不为空" << endl;
+	}
+	L.resize(3);//重新指定大小
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+//list容器插入删除
+
+#include<iostream>
+using namespace std;
+#include<list>
+void print(const list<int> L)
+{
+	for (list<int>::const_iterator it = L.begin(); it != L.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	list<int>L;
+	L.push_back(10);
+	L.push_back(10);
+	L.push_back(10);
+	L.push_front(20);
+	L.push_front(20);
+	L.push_front(20);
+	print(L);//打印
+	L.pop_back();
+	L.pop_front();
+	print(L);//打印
+	list<int>::iterator it;
+	it = L.begin();
+	L.insert(it,10);//插入一个元素
+	it = L.begin();
+	L.erase(++it);//删除第二个元素
+	print(L);//打印
+	L.remove(20);//清除所有20
+	print(L);//打印
+	L.clear();//清空
+	system("pause");
+	return 0;
+}
+
+//list容器数据存取
+
+#include<iostream>
+using namespace std;
+#include<list>
+int main()
+{
+	list<int>L;
+	L.push_back(10);
+	L.push_back(20);
+	L.push_back(30);
+	cout << L.front() << endl;
+	cout << L.back() << endl;
+	//L.at(0); L[0];不支持
+	list<int>::iterator it = L.begin();
+	it++; it--;//支持双向
+	//it = it + 1;不支持
+	system("pause");
+	return 0;
+}
+
+//list反转排序
+
+#include<iostream>
+using namespace std;
+#include<list>
+#include<algorithm>
+void printList(const list<int>&L)
+{
+	for (list<int>::const_iterator it = L.begin(); it != L.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+bool myCompare(int v1,int v2)
+{
+	return v1 > v2;
+}
+int main()
+{
+	list<int>L;
+	L.push_back(20);
+	L.push_back(10);
+	L.push_back(50);
+	L.push_back(30);
+	L.push_back(40);
+	printList(L);
+	L.reverse();//反转
+	printList(L);
+	L.sort();//排序
+	printList(L);
+	//从小到大排序
+	L.sort(myCompare);
+	printList(L);
+	//不支持随机访问的元素不支持标准算法
+	//错误
+	//sort(L.begin(), L.end());
+	system("pause");
+	return 0;
+}
+
+//list排序案例
+
+#include<iostream>
+using namespace std;
+#include<list>
+#include<algorithm>
+#include<string>
+class Person
+{
+public:
+	Person(string name, int age, int high)
+	{
+		this->m_Name = name;
+		this->m_Age = age;
+		this->m_High = high;
+	}
+	string m_Name;
+	int m_Age;
+	int m_High;
+};
+void printList(list<Person> & L)
+{
+	for (list<Person>::iterator it = L.begin(); it != L.end(); it++)
+	{
+		cout << (*it).m_Name << " ";
+	}
+	cout << endl;
+}
+bool myCompare(Person v1,Person v2)
+{
+	if (v1.m_Age == v2.m_Age)
+	{
+		return v1.m_High > v2.m_High;
+	}
+	else
+	{
+		return v1.m_Age < v2.m_Age;
+	}
+}
+int main()
+{
+	Person p1("张三", 20, 175);
+	Person p2("李四", 10, 100);
+	Person p3("王五", 30, 175);
+	Person p4("赵六", 20, 180);
+	list<Person>L;
+	L.push_back(p1);
+	L.push_back(p2);
+	L.push_back(p3);
+	L.push_back(p4);
+	L.sort(myCompare);
+	printList(L);
+	system("pause");
+	return 0;
+}
+
+//set容器
+
+#include<iostream>
+using namespace std;
+#include<set>
+void printList(set<int> & L)
+{
+	for (set<int>::iterator it = L.begin(); it != L.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	//set不允许插入相同数据
+	//set元素会自动排序
+	set<int>s;
+	s.insert(20);
+	s.insert(10);
+	s.insert(50);
+	s.insert(30);
+	s.insert(40);
+	printList(s);
+	set<int>s2(s);//拷贝
+	s2 = s;//赋值
+	s.size();//元素个数
+	s.empty();//是否为空
+	s.swap(s2);//容器互换
+	system("pause");
+	return 0;
+}
+
+
+//set插入和删除
+
+#include<iostream>
+using namespace std;
+#include<set>
+void printList(set<int> & L)
+{
+	for (set<int>::iterator it = L.begin(); it != L.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	set<int>s;
+	s.insert(20);
+	s.insert(10);
+	s.insert(30);
+	s.erase(20);//指定元素删除
+	s.erase(s.begin());//指定位置元素删除
+	s.erase(s.begin(), s.end());//全部删除
+	s.clear();//全部删除
+	system("pause");
+	return 0;
+}
+
+//set查找和统计
+
+#include<iostream>
+using namespace std;
+#include<set>
+void printList(set<int> & L)
+{
+	for (set<int>::iterator it = L.begin(); it != L.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	set<int>s;
+	s.insert(20);
+	s.insert(10);
+	s.insert(30);
+	set<int>::iterator it = s.find(10);
+	if (it != s.end())
+	{
+		cout << "找到元素：" << *it << endl;
+	}
+	else
+	{
+		cout << "未找到元素" << endl;
+	}
+	cout << "为10的元素个数：" << s.count(10) << endl;
+	system("pause");
+	return 0;
+}
+
+//set与multiset区别
+
+#include<iostream>
+using namespace std;
+#include<set>
+void printList(set<int> & L)
+{
+	for (set<int>::iterator it = L.begin(); it != L.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	set<int>s;//不能插入重复值
+	pair < set<int>::iterator, bool> ret = s.insert(10);
+	if (ret.second)
+	{
+		cout << "第一次插入成功" << endl;
+	}
+	else
+	{
+		cout << "第一次插入失败" << endl;
+	}
+	ret = s.insert(10);
+	if (ret.second)
+	{
+		cout << "第二次插入成功" << endl;
+	}
+	else
+	{
+		cout << "第二次插入失败" << endl;
+	}
+	multiset<int>s2;//能插入重复值
+	s2.insert(10);
+	s2.insert(10);
+	for (multiset<int>::iterator it = s2.begin(); it != s2.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}
+
+//pair对组创建
+
+#include<iostream>
+using namespace std;
+#include<string>
+int main()
+{
+	pair<string, int>p("Tom", 10);//第一种创建方式
+	cout << p.first << " " << p.second << endl;
+	pair<string, int>p2 = make_pair("Jon", 20);//第二种创建方式
+	cout << p2.first << " " << p2.second << endl;
+	system("pause");
+	return 0;
+}
+
+//set内置类型指定排序规则
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<set>
+class myCompare
+{
+public:
+	bool operator()(int a,int b)
+	{
+		return a > b;
+	}
+};
+int main()
+{
+	set<int, myCompare>s;//用仿函数改变排序规则
+	s.insert(10);
+	s.insert(30);
+	s.insert(20);
+	s.insert(40);
+	for (set<int>::iterator it = s.begin(); it != s.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}
+
+//set自定义类型指定排序规则
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<set>
+class Person
+{
+public:
+	Person(string name,int age)
+	{
+		this->m_Name = name;
+		this->m_Age = age;
+	}
+	string m_Name;
+	int m_Age;
+};
+class myCompare
+{
+public:
+	bool operator()(const Person a,const Person b)
+	{
+		return a.m_Age > b.m_Age;
+	}
+};
+int main()
+{
+	set<Person, myCompare>s;//用仿函数改变排序规则
+	Person p1("A", 10);
+	Person p2("B", 20);
+	Person p3("C", 30);
+	s.insert(p1);
+	s.insert(p2);
+	s.insert(p3);
+	for (set<Person, myCompare>::iterator it = s.begin(); it != s.end(); it++)
+	{
+		cout << (*it).m_Name << " " << (*it).m_Age << " ";
+	}
+	system("pause");
+	return 0;
+}
+
+//map构造和赋值
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<map>
+void Print(map<int, int>&m)
+{
+	for (map<int, int>::iterator it = m.begin(); it != m.end(); it++)
+	{
+		cout << it->first << " " << it->second << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	map<int, int>m;
+	//map中每一个元素都是pair类型 按照first索引自动升序排列
+	m.insert(pair<int, int>(1, 10));
+	m.insert(pair<int, int>(2, 20));
+	m.insert(pair<int, int>(3, 30));
+	m.insert(pair<int, int>(4, 40));
+	Print(m);
+	//两种拷贝方式
+	map<int, int>m2(m);
+	map<int, int>m3; m3 = m;
+	system("pause");
+	return 0;
+}
+
+//map大小和交换
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<map>
+void Print(map<int, int>&m)
+{
+	for (map<int, int>::iterator it = m.begin(); it != m.end(); it++)
+	{
+		cout << it->first << " " << it->second << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	map<int, int>m;
+	map<int, int>m2;
+	//map中每一个元素都是pair类型 按照first索引自动升序排列
+	m.insert(pair<int, int>(1, 10));
+	m.insert(pair<int, int>(2, 20));
+	m.insert(pair<int, int>(3, 30));
+	cout << "元素个数：" << m.size() << endl;
+	if (m.empty())
+	{
+		cout << "容器为空" << endl;
+	}
+	else
+	{
+		cout << "容器不为空" << endl;
+	}
+	m.swap(m2);//容器交换
+	system("pause");
+	return 0;
+}
+
+//map容器插入删除
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<map>
+void Print(map<int, int>&m)
+{
+	for (map<int, int>::iterator it = m.begin(); it != m.end(); it++)
+	{
+		cout << it->first << " " << it->second << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	map<int, int>m;
+	//四种方式插入
+	m.insert(pair<int, int>(1, 10));
+	m.insert(make_pair(2, 20));
+	m.insert(map<int, int>::value_type(3, 30));
+	m[4] = 40;//此种方式如果访问key值不存在的会创建出来value值为零的元素
+	Print(m);
+	//两种删除方式
+	m.erase(m.begin());
+	m.erase(2);//按照key值删除
+	Print(m);
+	//两种清空方式
+	m.erase(m.begin(), m.end());
+	m.clear();
+	Print(m);
+	system("pause");
+	return 0;
+}
+
+//map容器查找和统计
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<map>
+void Print(map<int, int>&m)
+{
+	for (map<int, int>::iterator it = m.begin(); it != m.end(); it++)
+	{
+		cout << it->first << " " << it->second << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	map<int, int>m;
+	m.insert(pair<int, int>(1, 10));
+	m.insert(pair<int, int>(2, 20));
+	m.insert(pair<int, int>(3, 30));
+	m.insert(pair<int, int>(4, 40));
+	map<int, int>::iterator it = m.find(3);
+	if (it != m.end())
+	{
+		cout << "找到了" << endl;
+	}
+	else
+	{
+		cout << "没找到" << endl;
+	}
+	cout <<"key为3的个数有："<<m.count(3) << endl;
+	system("pause");
+	return 0;
+}
+
+//map容器排序
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<map>
+class myCompare
+{
+public:
+	bool operator()(int a,int b)
+	{
+		return a > b;//降序
+	}
+};
+int main()
+{
+	map<int, int, myCompare>m;
+	m.insert(pair<int, int>(1, 10));
+	m.insert(pair<int, int>(2, 20));
+	m.insert(pair<int, int>(3, 30));
+	m.insert(pair<int, int>(4, 40));
+	//不能用函数来实现打印操作，原因不明
+	for (map<int, int, myCompare>::iterator it = m.begin(); it != m.end(); it++)
+	{
+		cout << it->first << " " << it->second << " " << endl;
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}

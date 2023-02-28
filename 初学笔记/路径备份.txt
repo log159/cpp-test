@@ -1,0 +1,2 @@
+$(VC_IncludePath);$(WindowsSDK_IncludePath);
+$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86
