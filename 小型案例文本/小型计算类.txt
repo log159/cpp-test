@@ -1,0 +1,74 @@
+//年利润
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	double Money = 2000.59;
+	double Rate = 0.02;
+	double temp = Money;
+	double Year = 365;
+	for (int i = 0; i < 365; i++)
+	{
+		Money = Money + (Money*Rate) / Year;
+		cout << Money << " " << endl;
+	}
+	cout << "利润: " << Money - temp << endl;
+	system("pause");
+	return 0;
+}
+
+//分形几何-小球分裂
+
+#include<iostream>
+using namespace std;
+class Community
+{
+public:
+	int m_Num;//数量
+	int m_splitNum;//分裂数目
+	int m_splitWhite;//分裂成白色的数量
+	int m_splitBlack;//分裂成黑色的数量
+
+};
+class White:public Community
+{
+public:
+	White()
+	{
+		m_Num = 1;//数量
+		m_splitNum = 2;//分裂数目
+		m_splitWhite = 1;//分裂成白色的数量
+		m_splitBlack = 1;//分裂成黑色的数量
+	}
+};
+class Black:public Community
+{
+public:
+	Black()
+	{
+		m_Num = 0;//数量
+		m_splitNum = 3;//分裂数目
+		m_splitWhite = 1;//分裂成白色的数量
+		m_splitBlack = 2;//分裂成黑色的数量
+	}
+};
+void test01()
+{
+	White white;Black black;//初始化
+	int arr[2];//临时记录增加了多少
+	for (int i = 0; i < 6; i++)
+	{
+		cout << "白色数量：" << white.m_Num << " 黑色数量：" << black.m_Num << " " << "共计：" << white.m_Num + black.m_Num << endl;
+		arr[0] = arr[1] = 0;
+		arr[0] = (white.m_Num * white.m_splitWhite) + (black.m_Num * black.m_splitWhite);
+		arr[1] = (white.m_Num * white.m_splitBlack) + (black.m_Num * black.m_splitBlack);
+		white.m_Num = arr[0];black.m_Num = arr[1];
+	}
+}
+int main()
+{
+	test01();
+	system("pause");
+	return 0;
+}

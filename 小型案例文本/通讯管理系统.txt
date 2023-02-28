@@ -1,0 +1,244 @@
+#include<iostream>
+using namespace std;
+#include<string>
+#define MAX 1000
+//  添加联系人 : 向通讯录中添加新人，信息包括（姓名、性别、年龄、联系电话、家庭住址）最多记录1000人
+//	显示联系人 : 显示通讯录中所有联系人信息
+//	删除联系人 : 按照姓名进行删除指定联系人
+//	查找联系人 : 按照姓名查看挡定联系人信息
+//	修改联系人 : 按照姓名重新修改指定联系人
+//	清空联系人 : 清空通讯录中所有信息
+//	退出通讯录 : 退出当前使用的通讯录
+struct ContactPerson
+{
+	string name;//姓名
+	string gender;//性别
+	string age;//年龄
+	string phone;//电话
+	string address;//地址
+};
+struct Addressbook
+{
+	struct ContactPerson Person[MAX];//联系人结构体数组
+	int size;//当前个数
+};
+//显示菜单
+void start()
+{
+	cout << "\t1、 添加联系人" << endl;
+	cout << "\t2、 显示联系人" << endl;
+	cout << "\t3、 删除联系人" << endl;
+	cout << "\t4、 查找联系人" << endl;
+	cout << "\t5、 修改联系人" << endl;
+	cout << "\t6、 清空联系人" << endl;
+	cout << "\t0、 退出通讯录" << endl;
+	return;
+}
+//添加联系人
+void AddPerson(Addressbook *P1)
+{
+	if (P1->size == MAX)
+	{
+		cout << "通讯录已满" << endl;
+		return;
+	}
+	cout << "输入姓名" << endl;
+	cin >> P1->Person[P1->size].name;
+
+	cout << "输入性别" << endl;
+	cin >> P1->Person[P1->size].gender;
+
+	cout << "输入年龄" << endl;
+	cin >> P1->Person[P1->size].age;
+
+	cout << "输入电话" << endl;
+	cin >> P1->Person[P1->size].phone;
+
+	cout << "输入地址" << endl;
+	cin >> P1->Person[P1->size].address;
+
+	P1->size++;
+	cout << "添加成功" << endl;
+	return;
+}
+//显示联系人
+void DisPlayPerson(Addressbook *P2)
+{
+	if (P2->size == 0)
+	{
+		cout << "通讯录为空" << endl;
+	}
+	for (int temp1 = 0; temp1 < P2->size; temp1++)
+	{
+		cout << "姓名  ：" << P2->Person[temp1].name << "\t"
+			<< "性别  ：" << P2->Person[temp1].gender << "\t"
+			<< "年龄  ：" << P2->Person[temp1].age << "\t"
+			<< "电话  ：" << P2->Person[temp1].phone << "\t"
+			<< "地址  ：" << P2->Person[temp1].address << endl;
+	}
+	return;
+}
+//遍历通讯录，并根据有无返回数值
+int Traverse(Addressbook*P0,string against)
+{
+	for (int temp2 = 0; temp2 < P0->size; temp2++)
+	{
+		if (P0->Person[temp2].name == against)
+		{
+			//cout << "位置  ：" << temp2;
+			return temp2;
+		}
+
+	}
+	//cout << "没找到" << endl;
+	return -1;
+}
+//删除联系人
+void DeletePerson(Addressbook*P3)
+{
+	cout << "请输入要删除的联系人姓名" << endl;
+	string against;
+	cin >> against;
+	int temp3 = Traverse(P3,against);
+	if (temp3 == -1)
+	{
+		cout << "查无此人" << endl;
+		return;
+	}
+	for (int temp4 = 0; temp4 < P3->size - temp3; temp4++)
+	{
+		P3->Person[temp3] = P3->Person[temp3+1];
+	}
+	//for (int i = temp3; i < P3->size; i++)
+	//{
+	//	P3->Person[i] = P3->Person[i + 1];
+	//}
+	P3->size--;
+	cout << "删除成功" << endl;
+	return;
+}
+//查找联系人
+void FindPerson(Addressbook*P4)
+{
+	cout << "请输入要查找的联系人姓名" << endl;
+	string against;
+	cin >> against;
+	int temp5 = Traverse(P4, against);
+	if (temp5 == -1)
+	{
+		cout << "查无此人" << endl;
+		return;
+	}
+	cout << "姓名  ：" << P4->Person[temp5].name << "\t"
+		<< "性别  ：" << P4->Person[temp5].gender << "\t"
+		<< "年龄  ：" << P4->Person[temp5].age << "\t"
+		<< "电话  ：" << P4->Person[temp5].phone << "\t"
+		<< "地址  ：" << P4->Person[temp5].address << endl;
+	return;
+}
+//修改联系人
+void ModifyPerson(Addressbook*P5)
+{
+	cout << "请输入要修改的联系人名字" << endl;
+	string against;
+	cin >> against;
+	int temp6 = Traverse(P5, against);
+	if (temp6 == -1)
+	{
+		cout << "查无此人" << endl;
+		return;
+	}
+	cout << "输入姓名" << endl;
+	cin >> P5->Person[temp6].name;
+
+	cout << "输入性别" << endl;
+	cin >> P5->Person[temp6].gender;
+
+	cout << "输入年龄" << endl;
+	cin >> P5->Person[temp6].age;
+
+	cout << "输入电话" << endl;
+	cin >> P5->Person[temp6].phone;
+
+	cout << "输入地址" << endl;
+	cin >> P5->Person[temp6].address;
+
+	cout << "修改成功" << endl;
+	return;
+}
+//清空通讯录
+void Empty(Addressbook*P6)
+{
+	cout << "确认清空?" << "   1、YES   2、NO" << endl;
+	int end;
+	cin >> end;
+	if (end == 1)
+	{
+		for (int i = 0; i < P6->size; i++)
+		{
+			P6->size = 0;
+		}
+		cout << "已清空" << endl;
+		return;
+	}
+	cout << "已取消" << endl;
+	return;
+}
+
+int main()
+{
+	Addressbook book;
+	book.size = 0;
+	while (true)
+	{
+		start();//打印菜单
+		int num = 0;//输入
+		cin >> num;
+
+		switch (num)
+		{
+		//添加联系人
+		case 1:
+			AddPerson(&book);
+			break;
+
+		//显示联系人
+		case 2:
+			DisPlayPerson(&book);
+			break;
+
+		//删除联系人
+		case 3:
+			DeletePerson(&book);
+			break;
+
+		//查找联系人
+		case 4:
+			FindPerson(&book);
+			break;
+
+		//修改联系人
+		case 5:
+			ModifyPerson(&book);
+			break;
+
+		//清空联系人
+		case 6:
+			Empty(&book);
+			break;
+
+		//退出通讯录
+		case 0:
+			cout << "再见" << endl;
+			system("pause");
+			return 0;
+
+		default :
+			cout << "Please enter a correct number !" << endl;
+		}
+		system("pause");
+		system("cls");
+	}
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,71 @@
+#include<iostream>
+using namespace std;
+#include<map>
+#include<vector>
+#include<string>
+#include<ctime>
+#define cehua 0
+#define meishu 1
+#define yanfa 2
+class Person
+{
+public:
+	string m_Name;//姓名
+	int m_Money;//工资
+};
+void createPerson(vector<Person> & v)
+{
+	srand((unsigned int)time(NULL));
+	string everyName = "ABCDEFGHIJ";
+	for (int i = 0; i < 10; i++)
+	{
+		Person person;
+		person.m_Name = "职工";
+		person.m_Name += everyName[i];
+		person.m_Money = rand() % 10000 + 10000;//10000~19999
+		v.push_back(person);
+	}
+}
+void department(vector<Person>&v, multimap<int, Person>&m)
+{
+	srand((unsigned int)time(NULL));
+	for (vector<Person>::iterator it = v.begin(); it != v.end(); it++)
+	{
+		int tempNum = rand() % 3;
+		m.insert(make_pair(tempNum, *it));
+	}
+}
+void Print(multimap<int, Person>&m)
+{
+	cout << "策划部门：" << endl;
+	int Num = m.count(cehua);
+	multimap<int, Person>::iterator it = m.find(cehua);
+	for (int i = 0; it != m.end() && i < Num; it++, i++)
+	{
+		cout << it->second.m_Name << " 工资：" << it->second.m_Money << endl;
+	}
+	cout << "美术部门：" << endl;
+	Num = m.count(meishu);
+	it = m.find(meishu);
+	for (int i = 0; it != m.end() && i < Num; it++, i++)
+	{
+		cout << it->second.m_Name << " 工资：" << it->second.m_Money << endl;
+	}
+	cout << "研发部门：" << endl;
+	Num = m.count(yanfa);
+	it = m.find(yanfa);
+	for (int i = 0; it != m.end() && i < Num; it++, i++)
+	{
+		cout << it->second.m_Name << " 工资：" << it->second.m_Money << endl;
+	}
+}
+int main()
+{
+	multimap<int, Person>m;
+	vector<Person>v;
+	createPerson(v);//随机创建10名员工
+	department(v, m);//分配部门放到multimap中
+	Print(m);//分部门打印
+	system("pause");
+	return 0;
+}

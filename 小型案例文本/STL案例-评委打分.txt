@@ -1,0 +1,65 @@
+#include<iostream>
+using namespace std;
+#include<string>
+#include<vector>
+#include<deque>
+#include<algorithm>
+#include<ctime>
+class Person
+{
+public:
+	Person(string name)
+	{
+		this->m_Name = name;
+	}
+	string m_Name;//姓名
+	int m_Score;//平均分
+};
+void AddPerson(vector<Person>&v)//添加选手
+{
+	string name = "选手";
+	string name2 = "ABCDE";
+	for (int i = 0; i < 5; i++)
+	{
+		Person p(name + name2[i]);
+		v.push_back(p);
+	}
+}
+void PushScore(vector<Person>&v)//评委打分
+{
+	deque<int>n; int num = 0;
+	for (vector<Person>::iterator it = v.begin(); it != v.end(); it++)
+	{
+		num = 0;
+		for (int i = 0; i < 10; i++)
+		{
+			int score= rand() % 41 + 60;
+			n.push_back(score);
+		}
+		sort(n.begin(), n.end());//排序
+		n.pop_front();
+		n.pop_back();
+		for (deque<int>::iterator dit = n.begin(); dit != n.end(); dit++)
+		{
+			num += *dit;
+		}
+		(*it).m_Score = num / n.size();
+	}
+}
+void Print(vector<Person>&v)
+{
+	for (vector<Person>::iterator it = v.begin(); it != v.end(); it++)
+	{
+		cout << (*it).m_Name << "  平均分：" << (*it).m_Score << " " << endl;
+	}
+}
+int main()
+{
+	srand((unsigned)time(NULL));
+	vector<Person>v;
+	AddPerson(v);//添加选手
+	PushScore(v);//打分
+	Print(v);
+	system("pause");
+	return 0;
+}

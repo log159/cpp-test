@@ -1,0 +1,324 @@
+#include<iostream>
+using namespace std;
+#include<string>
+#include<stack>
+#include<vector>
+#include<stdexcept>
+#include <sstream>
+#include<Windows.h>
+#include"Oper.h"
+#include"Brace.h"
+const string allsymbol = "(){}[]+-*/1234567890";
+const string symbol_figure = "1234567890";
+const string symbol_numeral = "+-*/";
+const string symbol_brackets = "(){}[]";
+const string symbol_brackets_left = "({[";
+const string symbol_brackets_right = ")}]";
+vector<Oper>v_Oper;
+vector<Brace>v_Brace;
+void init_v()
+{
+	v_Oper.push_back(Oper('+', 1));
+	v_Oper.push_back(Oper('-', 1));
+	v_Oper.push_back(Oper('*', 2));
+	v_Oper.push_back(Oper('/', 2));
+
+	v_Brace.push_back(Brace('('));
+	v_Brace.push_back(Brace(')','('));
+	v_Brace.push_back(Brace('{'));
+	v_Brace.push_back(Brace('}','{'));
+	v_Brace.push_back(Brace('['));
+	v_Brace.push_back(Brace(']','['));
+}
+
+int calculateFun(const string & str)
+{
+	string needStr = str;
+
+	//除去空格
+	string::size_type pos = 0;
+	while ((pos = needStr.find_first_of(" ", pos)) != string::npos)
+		needStr.replace(pos, 1, "");
+
+	//包含非法符号处理
+	if (needStr.find_first_not_of(allsymbol) != string::npos)
+		throw runtime_error("包含非法符号");
+	if (needStr.size() == 0)
+		throw runtime_error("无可执行内容");
+
+	//开头符号不能为+-*/)}]
+	if (needStr.at(0) == ')' || needStr.at(0) == '}' || needStr.at(0) == ']')
+		throw runtime_error("开头符号不能为)}]");
+	for (int i = 0; i < symbol_numeral.size(); ++i)
+	{
+		if (needStr.at(0) == symbol_numeral.at(i))
+			throw runtime_error("开头符号不能为+-*/");
+	}
+	//结尾符号不能为+-*/({[
+	if (needStr.at(needStr.size() - 1) == '(' || needStr.at(needStr.size() - 1) == '{' || needStr.at(needStr.size() - 1) == '[')
+		throw runtime_error("结尾符号不能为({[");
+	for (int i = 0; i < symbol_numeral.size(); ++i)
+	{
+		if (needStr.at(needStr.size() - 1) == symbol_numeral.at(i))
+			throw runtime_error("结尾符号不能为+-*/");
+	}
+	//四则运算符号不能连续多个
+	pos = 0;
+	int left = 0, right = 0;
+	while (pos != needStr.size() - 1)
+	{
+		if ((symbol_numeral.find(needStr.at(pos)) != string::npos) && (symbol_numeral.find(needStr.at(pos + 1)) != string::npos))
+			throw runtime_error("四则符号不能连续多个");
+		++pos;
+	}
+	//开头括号异常处理 如(+
+	if (symbol_brackets.find(needStr.at(0)) != string::npos)
+		if (symbol_numeral.find(needStr.at(1)) != string::npos)
+			throw runtime_error("开头括号异常");
+	//结尾括号异常处理 如+)
+	if (symbol_brackets.find(needStr.at(needStr.size() - 1)) != string::npos)
+		if (symbol_numeral.find(needStr.at(needStr.size() - 2)) != string::npos)
+			throw runtime_error("结尾括号异常");
+
+	//左括号
+	pos = 1;
+	while ((pos = needStr.find_first_of(symbol_brackets_left, pos)) != string::npos)
+	{
+		if (!(pos<=0)&&symbol_figure.find(needStr.at(pos - 1)) != string::npos)
+			throw runtime_error("左括号左边不能是数字");
+		if (symbol_numeral.find(needStr.at(pos + 1)) != string::npos|| symbol_brackets_right.find(needStr.at(pos + 1)) != string::npos)
+			throw runtime_error("左括号右边不能是四则运算符或右括号");
+		++pos;
+		if (pos >= needStr.size() - 1)
+			break;
+	}
+	//右括号
+	pos = 1;
+	while ((pos = needStr.find_first_of(symbol_brackets_right, pos)) != string::npos)
+	{
+		if (!(pos + 1>=needStr.size())&&symbol_figure.find(needStr.at(pos + 1)) != string::npos)
+			throw runtime_error("右括号右边不能是数字");
+		if (symbol_numeral.find(needStr.at(pos - 1)) != string::npos|| symbol_brackets_left.find(needStr.at(pos - 1)) != string::npos)
+			throw runtime_error("右括号左边不能是四则运算符或左括号");
+		++pos;
+		if (pos >= needStr.size() - 1)
+			break;
+	}
+	vector<string>v_;//后缀表达式存储
+	stack<char>s_;//栈
+
+	for(pos=0;pos != needStr.size();++pos)
+	{
+		//数字输出
+		if (symbol_figure.find(needStr.at(pos))!=string::npos)
+		{
+			int tempPos = pos;
+			string tempNum = "";
+
+			while (true)
+			{
+				tempNum.push_back(needStr.at(tempPos));
+
+				++tempPos;
+				if (tempPos == needStr.size() || symbol_figure.find(needStr.at(tempPos)) == string::npos)
+				{
+					v_.push_back(tempNum);
+					pos = tempPos - 1;
+					break;
+				}
+			}
+		}
+		//括号压栈或匹配出栈
+		else if (symbol_brackets.find(needStr.at(pos)) != string::npos)
+		{
+			//左括号压栈
+			if (symbol_brackets_left.find(needStr.at(pos)) != string::npos)
+			{
+				s_.push(needStr.at(pos));
+			}
+			//右括号匹配出栈
+			else if(symbol_brackets_right.find(needStr.at(pos)) != string::npos)
+			{
+				Brace tempRight;
+				for (auto & val : v_Brace)
+				{
+					if (val.m_C == needStr.at(pos))
+					{
+						tempRight = val;
+						break;
+					}
+				}
+				while (true)
+				{
+					if (s_.empty())
+						throw runtime_error("意外栈空，括号缺失或不匹配");
+					if (symbol_brackets_left.find(s_.top()) != string::npos)
+					{
+						if (tempRight.getSame(s_.top()))
+						{
+							s_.pop();
+							break;
+						}
+						else
+						{
+							throw runtime_error("括号缺失不匹配");
+						}
+					}
+					else
+					{
+						string str = "";
+						str.push_back(s_.top());
+						v_.push_back(str);
+						s_.pop();
+					}
+				}
+			}
+			else
+			{
+				throw runtime_error("括号压栈出栈错误");
+			}
+		}
+		//四则运算压栈或出栈
+		else if (symbol_numeral.find(needStr.at(pos)) != string::npos)
+		{
+			Oper tempOper;
+			for (auto & val : v_Oper)
+			{
+				if (val.m_C == needStr.at(pos))
+				{
+					tempOper = val;
+					break;
+				}
+			}
+			//左括号 或 栈空 直接压栈
+			if (s_.empty() || symbol_brackets_left.find(s_.top()) != string::npos)
+			{
+				s_.push(tempOper.m_C);
+			}
+			else
+			{
+				Oper tempS;
+				for (auto & val : v_Oper)
+				{
+					if (val.m_C == s_.top())
+					{
+						tempS = val;
+						//优先级高 直接压栈 1次
+						if (tempS.m_N < tempOper.m_N)
+						{
+							s_.push(tempOper.m_C);
+						}
+						else
+						{
+							//优先级低或相等 先出栈n次在压栈 遇到括号、运算级低的(四则运算中不是最高就已经是最低的了)、栈空 压栈
+							while (true)
+							{
+								string str = "";
+								str.push_back(s_.top());
+								v_.push_back(str);
+								s_.pop();
+								//遇到括号 或栈空
+								if (s_.empty()||symbol_brackets_left.find(s_.top()) != string::npos)
+								{
+									s_.push(tempOper.m_C);
+									break;
+								}
+							}
+
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+	//全部出栈
+	while (true)
+	{
+		if (s_.empty())
+		{
+			break;
+		}
+		string str = "";
+		str.push_back(s_.top());
+		v_.push_back(str);
+		s_.pop();
+
+	}
+	cout << "求知算式：|" << needStr <<"|"<< endl;
+	cout << "转化为后缀表达式：|";
+	for (auto&val:v_)
+	{
+		cout << val << "|";
+	}
+	cout << endl;
+	stack<int>s_end_;
+	int tempNum_ = 0;
+
+	for (auto it=v_.begin();it!=v_.end();++it)
+	{
+		//数字压栈
+		if (symbol_figure.find(it->at(0)) != string::npos)
+		{
+			istringstream ss(*it);
+			ss >> tempNum_;
+			s_end_.push(tempNum_);
+		}
+		//符号出栈两次计算在压栈
+		else if(symbol_numeral.find(it->at(0)) != string::npos)
+		{
+			bool findOper = false;
+			for (auto itPop = v_Oper.begin();itPop!=v_Oper.end();++itPop)
+			{
+				if (itPop->m_C == it->at(0))
+				{
+					findOper = true;
+					int popNum1, popNum2, val_Num;
+					popNum1=s_end_.top();
+					s_end_.pop();
+					popNum2 = s_end_.top();
+					s_end_.pop();
+					val_Num=itPop->getNum(popNum2, popNum1);
+					s_end_.push(val_Num);
+				}
+			}
+			if (findOper == false)
+			{
+				throw runtime_error("四则运算符未找到");
+			}
+		}
+		else
+		{
+			throw runtime_error("未知异常");
+		}
+	}
+	return s_end_.top();
+}
+
+int main()
+{
+	SetConsoleTitle("计算器 1.0");//标题
+	init_v();//初始化符号属性
+	while (true)
+	{
+		system("cls");
+		cout << "计算器 1.0" << endl;
+		cout<<"目前只能处理整数：" << endl;
+		string myEquation = "";
+		cin >> myEquation;
+		int VALUE;
+		try
+		{
+			VALUE = calculateFun(myEquation);
+		}
+		catch (runtime_error s) {
+			cout << s.what() << endl;
+			system("pause");
+			continue;
+		}
+		cout << "求值结果是：<" << VALUE << ">" << endl;
+		system("pause");
+	}
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,165 @@
+#include<opencv2/opencv.hpp>
+#include <opencv2/core/utils/logger.hpp>
+#include<iostream>
+#include <string>
+#include<fstream>
+#include<ctime>
+#include<vector>
+#include <windows.h>
+using namespace std;
+using namespace cv;
+#define max 10
+//隐藏光标
+void HideCursor()
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO CursorInfo;
+	GetConsoleCursorInfo(handle, &CursorInfo);//获取控制台光标信息
+	CursorInfo.bVisible = false; //隐藏控制台光标
+	SetConsoleCursorInfo(handle, &CursorInfo);//设置控制台光标状态
+}
+//坐标移动
+void gotoxy(int y, int x)
+{
+	COORD p;//定义结构体变量p
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);//获取当前函数句柄
+	p.X = x; p.Y = y;//将光标的目标移动位置传递给结构体
+	SetConsoleCursorPosition(handle,p);//移动光标
+}
+//时间缓冲
+void Time(double time)
+{
+	clock_t startTime, endTime;//计时
+	double Time = 0;
+	while (Time < time)
+	{
+		startTime = clock();//计时开始
+		endTime = clock();//计时结束
+		Time += (double)(endTime - startTime) / CLOCKS_PER_SEC;
+	}
+}
+//字符转换
+string to_String(int n)
+{
+	int m = n;char s[max];char ss[max];
+	int i = 0, j = 0;
+	if (n < 0){
+		m = 0 - m;j = 1;ss[0] = '-';
+	}
+	while (m > 0){
+		s[i++] = m % 10 + '0';m /= 10;
+	}
+	s[i] = '\0';i = i - 1;
+	while (i >= 0){
+		ss[j++] = s[i--];
+	}
+	ss[j] = '\0';
+	return ss;
+}
+//写文件
+void OFS_MUCH(Mat &image,string STR)
+{
+	ofstream ofs;
+	string s = "E://badappletxt//" + STR;
+	ofs.open(s);
+	int color_find;
+	for (int i = 0; i < image.rows; i+=3) {
+		for (int j = 0; j < image.cols; j+=3) {
+			Vec3b bgr = image.at<Vec3b>(i, j);
+			color_find = bgr[0]; //printf("%d", color_find);
+			if (color_find > 100){
+				ofs << "■";
+			}
+			else{
+				ofs << "  ";
+			}
+		}
+		ofs << endl;
+	}
+	ofs.close();
+}
+//读文件到vector<string>
+void IFS_MUCH(string STR, vector<string>&v_str)
+{
+	ifstream ifs;
+	ifs.open(STR, ios::in);
+	string str;
+	string strEvery = "";
+	while (getline(ifs,str)){
+		strEvery += str;
+	}
+	ifs.close();
+	v_str.push_back(strEvery);
+}
+//生成
+void test01()
+{
+	string strtemp01 = "E://badapplepng//序列 ";
+	string strtemp02 = ".png";
+	string next;
+	int a = 10000;
+	Mat image;
+	while (true)
+	{
+		string b = to_String(a);
+		next = strtemp01 + b + strtemp02;
+		image = imread(next);
+		OFS_MUCH(image,b);//写文件
+		if (a == 15476) { return; }a++;
+	}
+}
+//读取
+void test02()
+{
+	vector<string>v_str; v_str.reserve(10000);
+	utils::logging::setLogLevel(utils::logging::LOG_LEVEL_SILENT);//不再输出日志
+	HideCursor();//隐藏光标
+	string strtemp01 = "E://badappletxt//";
+	//string strtemp02 = ".txt";
+	string next;string b,c;int a = 10000;
+	while (true)
+	{
+		b = to_String(a);
+		c = to_String(a - 10000);
+		SetConsoleTitle((c+" / 5476").c_str());
+		next = strtemp01 + b;
+		IFS_MUCH(next,v_str);//读文件
+		if (a == 15476) { break; }a++;
+
+	}
+	SetConsoleTitle("Bad Apple");
+
+	for (vector<string>::iterator it = v_str.begin(); it != v_str.end(); it++)
+	{
+		gotoxy(0, 0);
+		printf("%s", (*it).c_str());
+		//cout << *it;
+	}
+	
+	v_str.clear();
+}
+void test03()
+{
+	utils::logging::setLogLevel(utils::logging::LOG_LEVEL_SILENT);//不再输出日志
+	HideCursor();
+	string strtemp01 = "E://badapple//序列 0";
+	string strtemp02 = ".png";
+	string next; string b; int a = 10000;
+	while (true)
+	{
+		b = to_String(a);
+		next = strtemp01 + b + strtemp02;
+		Mat image = imread(next);
+		imshow("BadApple",image);
+		waitKey(40);
+		if (a == 13188) { system("pause"); return; }a++;
+	}
+}
+int main()
+{
+	//test01();
+	test02();
+	//test03();
+	system("pause");
+	return 0;
+}

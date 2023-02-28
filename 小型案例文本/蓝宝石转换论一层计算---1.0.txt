@@ -1,0 +1,197 @@
+//繁琐穷举
+#include<iostream>
+using namespace std;
+int main()
+{	                                                   //血     攻    防    魔防
+	long long war[4] = { 100000,100,100,100 };//      war[0] war[1] war[2] war[3]
+	long long foe[5][3] =
+	{
+		{1238,2837,44},//绿史莱姆
+		{566,491,38},//骷髅人
+		{100000,104,99},//黑史莱姆
+		{666,120,0},//小蝙蝠
+		{1889,1332,0},//红史莱姆
+
+
+			      //血量      攻击     防御
+			  //foe[0][0] foe[0][1] foe[0][2]
+			  //foe[1][0] foe[1][1] foe[1][2]
+			  //foe[2][0] foe[2][1] foe[2][2]
+			  //foe[3][0] foe[3][1] foe[3][2]
+			  //foe[4][0] foe[4][1] foe[4][2]
+	};
+	long long temp = 0;//临时变量
+	long long temp2 = 0;//临时变量2
+	long long temp3 = 0;//临时变量3
+	long long temp4 = 0;//临时变量4
+
+	//int who = 0;//记录筛选次数
+
+	long long end = 0;//最终计数及比较
+	long long E = 0;//记录最优路线
+
+	long long sort[5];//用于排序
+
+	int change = sizeof(sort) / sizeof(sort[0]);
+
+	for (long long L = 12345; L <= 54321; L++)//大循环
+	{
+		temp4 = 0;//累计损耗清零
+
+		war[2] = 100;//累计防御初始化
+
+		bool truth = 1;//排除错误路线
+
+
+		sort[0] = L / 10000;
+		sort[1] = L / 1000 % 10;
+		sort[2] = L / 100 % 10;
+		sort[3] = L / 10 % 10;
+		sort[4] = L % 10;
+		//for (int a = 0; a <= 4; a++){cout<<"sort["<<a<<"] = "<<sort[a]<<endl;}//输出一维数组
+		int un = change - 1;
+		for (int A = 0; A < change; A++)//从小到大排序一次
+		{
+			for (int a = 0; a < un; a++)
+			{
+				if (sort[a] > sort[a + 1])
+				{
+					int temp = sort[a + 1];
+					sort[a + 1] = sort[a];
+					sort[a] = temp;
+				}
+
+				//for (int i = 0; i < 5; i++)//输出当前排列
+				//{
+				//	cout << sort[i] << " ";
+				//}
+				//cout << endl;
+			}
+			un--;
+		}
+
+		for (int f = 0; f < 5; f++)
+		{
+			if (sort[f] == sort[f + 1])
+			{
+				truth = 0;
+			}
+			else if (sort[f] == 0 || 5 < sort[f])
+			{
+				truth = 0;
+			}
+		}
+			//for (int c = 0; c < 5; c++)//输出当前排列
+			//{
+			//	cout << "sort[c] = " << sort[c] << " ";
+			//}
+	    	//who++;
+		    //cout << "循环次数---第" << who << "次" << endl;
+
+		if (truth == true)
+		{
+			//cout << "L = " << L << endl;
+
+			int z = 0;//最终单个顺序
+			sort[0] = (L / 10000) - 1;
+			sort[1] = (L / 1000 % 10) - 1;
+			sort[2] = (L / 100 % 10) - 1;
+			sort[3] = (L / 10 % 10) - 1;
+			sort[4] = (L % 10) - 1;
+
+			//for (int a = 0; a < 5; a++)//输出当前排列
+			//{
+			//	cout << "sort[a] = " << sort[a] << " ";
+			//}
+			//cout << endl;
+
+			for (int i = 0; i < 5; i++)//对整体的一次运算
+			{
+				//cout << "i = " << i << endl;//当前战斗次数
+				switch (i)
+				{
+				case 0: z = sort[0]; break;
+				case 1: z = sort[1]; break;
+				case 2: z = sort[2]; break;
+				case 3: z = sort[3]; break;
+				case 4: z = sort[4]; break;
+				}
+
+				if (war[1] > foe[z][2])//己攻大于敌防(战斗前提)
+				{
+					if (foe[z][1] <= war[2]) { temp3 = war[0]; goto FLAG; }//防止受到伤害为负数
+					temp = war[1] - foe[z][2];//取到真实伤害(对怪)
+					temp2 = foe[z][0] % temp;//判断回合是否为整数
+					temp = foe[z][0] / temp;//大概的回合数
+					//cout << "大概回合" << temp << endl;
+					if (temp2 == 0) { temp--; }//整除与不整除;真被动回合
+					//cout << "真实回合" << temp << endl;
+					temp3 = war[0] - temp * (foe[z][1] - war[2]);//大概剩余的血
+					//cout << "大概剩余的血" << temp3 << endl;
+					if (z == 3)//连击
+					{
+						temp3 = war[0] - 6 * temp * (foe[z][1] - war[2]);//大概剩余的血
+					}
+
+					if (temp3 <= -war[3]) { truth = 0; break; }//魔防加净余小等于零
+					else if (temp * (foe[z][1] - war[2]) <= war[3]) { temp3 = war[0]; }//魔防大于净伤
+					else { temp3 += war[3]; }//正常概要
+					//真实剩余temp3
+				FLAG:
+					temp4 += war[0] - temp3;
+					if (z == 1)//固伤&领域
+					{
+						temp4 += 200;
+					}
+					else if (z == 4)
+					{
+						temp4 += 13740;
+					}
+
+					//cout << "血量剩余" << war[0] - temp4 << endl;
+				}
+				else { truth = 0; break; }
+
+				war[2] += 1;//任意路线防御加一，可更改
+				//cout << "对整体完成一次运算" << endl;
+
+			}
+			if (truth == true)
+			{
+				if (war[0] - temp4 > end)
+				{
+					//记录当前排序，与下一组对比，错误路线在之前排除
+					end = war[0] - temp4;
+					//取到最优路线
+					E = L;
+				}
+			}
+		}
+	}
+
+	cout << "最大剩余" << end << endl;
+
+	cout << "最优路线" << E << endl;
+	sort[0] = E / 10000;
+	sort[1] = E / 1000 % 10;
+	sort[2] = E / 100 % 10;
+	sort[3] = E / 10 % 10;
+	sort[4] = E % 10;
+	cout << "顺序 :" << endl;
+	for (int w = 0; w < 5; w++)
+	{
+		//cout << sort[w] << " ";
+		switch (sort[w])
+		{
+		case 3: cout << "黑史莱姆   "; break;
+		case 2: cout << "骷髅人   "; break;
+		case 1: cout << "绿史莱姆   "; break;
+		case 4: cout << "小蝙蝠   "; break;
+		case 5: cout << "红史莱姆   "; break;
+		}
+	}
+	cout << endl;
+
+	system("pause");
+	return 0;
+}

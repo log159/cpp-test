@@ -1,0 +1,92 @@
+//繁琐算法
+//能实现从小到大排列（作用不大）
+#include<iostream>
+using namespace std;
+int main()
+{
+	int record = 0;//记录总数
+	int*Record = &record;
+	while (true)//测试循环
+	{
+		cout << "输入" << endl;
+		int a; cin >> a;//a 排序个数(临时) temp01 排序个数(常量)
+		int temp01 = a;//临时变量用于数组赋值
+		int temp02 = a;//临时变化用于数组逆置(循环次数)
+
+		int arr[100];//{1,2,3,4.....n}原数组
+		for (int i01 = a - 1; i01 >= 0; i01--)
+		{
+			arr[i01] = temp01;
+			temp01--;
+		}
+
+		int Arr[100];//{n,(n-1),....3,2,1}逆置数组
+		for (int i02 = 0; i02 < a; i02++)
+		{
+			temp02--;
+			Arr[i02] = arr[temp02];
+		}
+
+		int ARR[100];//根据排序的个数初始化零,最终输出{(0~n-1),(0~n-2),....(0~3),(0~2),(0~1),(0~0)}全部集合
+		for (int i03 = 0; i03 < a; i03++)
+		{
+			ARR[i03] = 0;
+		}
+
+		int overarr[100];
+		bool over = 1;
+		while (over)//大循环
+		{
+			//for (int i = 0; i < a; i++)//输出
+			//{
+			//	cout << ARR[i] << " ";//输出{(0~n-1),(0~n-2),....(0~3),(0~2),(0~1),(0~0)}全部集合
+			//}
+			//cout << endl;
+
+			int temp03 = a;//临时变量用于初始化
+			for (int i04 = a - 1; i04 >= 0; i04--)//初始化数组{1,2,3,4.....n}
+			{
+				arr[i04] = temp03;
+				temp03--;
+			}
+
+			for (int i05 = 0; i05 < a; i05++)
+			{
+				overarr[i05] = arr[ARR[i05]];
+				for (int i06 = 0; i06 < a - ARR[i05] - 1; i06++)
+				{
+					arr[ARR[i05] + i06] = arr[ARR[i05] + i06 + 1];
+				}
+			}
+
+			for (int i = 0; i < a; i++)//输出
+			{
+				cout << overarr[i] << " ";
+			}
+			cout << endl;
+			*Record += 1;
+
+			ARR[a - 1]++;//第n项+1
+			for (int I = a - 1; I >= 0; I--)
+			{
+
+				if (ARR[I] == Arr[I])
+				{
+					if (ARR[0] == Arr[0])
+					{
+						over = 0;
+					}
+					ARR[I] = 0;
+					ARR[I - 1]++;
+				}
+			}
+		}
+
+		cout << endl;//换行
+		cout << "总数：" << record << endl;
+		system("pause");
+		*Record = 0;
+		system("cls");
+	}
+	return 0;
+}

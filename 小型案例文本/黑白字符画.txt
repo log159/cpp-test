@@ -1,0 +1,201 @@
+#include<opencv2/opencv.hpp>
+#include <opencv2/core/utils/logger.hpp>
+#include<iostream>
+#include <string>
+#include<fstream>
+#include<ctime>
+#include<vector>
+#include <windows.h>
+using namespace std;
+using namespace cv;
+#define max 10
+//隐藏光标
+void HideCursor()
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO CursorInfo;
+	GetConsoleCursorInfo(handle, &CursorInfo);//获取控制台光标信息
+	CursorInfo.bVisible = false; //隐藏控制台光标
+	SetConsoleCursorInfo(handle, &CursorInfo);//设置控制台光标状态
+}
+//坐标移动
+void gotoxy(int y, int x)
+{
+	COORD p;//定义结构体变量p
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);//获取当前函数句柄
+	p.X = x; p.Y = y;//将光标的目标移动位置传递给结构体
+	SetConsoleCursorPosition(handle, p);//移动光标
+}
+//时间缓冲
+void Time(double time)
+{
+	clock_t startTime, endTime;//计时
+	double Time = 0;
+	while (Time < time)
+	{
+		startTime = clock();//计时开始
+		endTime = clock();//计时结束
+		Time += (double)(endTime - startTime) / CLOCKS_PER_SEC;
+	}
+}
+//字符转换
+string to_String(int n)
+{
+	int m = n; char s[max]; char ss[max];
+	int i = 0, j = 0;
+	if (n < 0) {
+		m = 0 - m; j = 1; ss[0] = '-';
+	}
+	while (m > 0) {
+		s[i++] = m % 10 + '0'; m /= 10;
+	}
+	s[i] = '\0'; i = i - 1;
+	while (i >= 0) {
+		ss[j++] = s[i--];
+	}
+	ss[j] = '\0';
+	return ss;
+}
+void SetFont(int size)
+{
+	//hello imX2G
+	CONSOLE_FONT_INFOEX cfi; //hello imX2G
+	cfi.cbSize = sizeof cfi; //hello imX2G
+	//cfi.nFont = 0; //hello imX2G
+	//cfi.dwFontSize.X = 0; //hello imX2G
+	cfi.dwFontSize.Y = size;  //设置字体大小
+	cfi.FontFamily = FF_DONTCARE; //hello imX2G
+	cfi.FontWeight = FW_NORMAL; //字体粗细 FW_BOLD
+	wcscpy_s(cfi.FaceName, L"黑体");  //设置字体，必须是控制台已有的
+	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi); //hello imX2G
+	//HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE); //hello imX2G
+	//CONSOLE_FONT_INFO consoleCurrentFont; //hello imX2G
+	//GetCurrentConsoleFont(handle, FALSE, &consoleCurrentFont); //hello imX2G
+}
+void DocContral()
+{
+	HWND target;        // 目标窗口句柄
+	HWND parent;        // 目标父窗口句柄
+	INT width, height;  // 窗口新宽高
+	//width = 800;
+	//height = 618;
+	width = 718;//674
+	height = 430;//
+	//std::cout << "\n请输入窗口宽度：";
+	//std::cin >> width;
+	//std::cout << "请输入窗口高度：";
+	//std::cin >> height;
+	// 获取窗口句柄
+	target = GetForegroundWindow();
+	// 合法性判断
+	if (target != NULL && target != INVALID_HANDLE_VALUE) {
+		// 获取顶层窗口句柄
+		parent = GetParent(target);
+		while (parent != NULL && parent != INVALID_HANDLE_VALUE)
+		{
+			target = parent;
+			parent = GetParent(target);
+		}
+		// 获取窗口原始大小
+		RECT rect;
+		GetWindowRect(target, &rect);
+		// 重新设置窗口大小
+		MoveWindow(target, rect.left, rect.top, width, height, true);
+	}
+}
+//写文件
+void OFS_MUCH(Mat &image, string STR)
+{
+	ofstream ofs;
+	string s = "E://cxktxt//" + STR + ".txt";//
+	ofs.open(s);
+	int color_find;
+	for (int i = 0; i < image.rows; i += 3) {
+		for (int j = 0; j < image.cols; j += 3) {
+			Vec3b bgr = image.at<Vec3b>(i, j);
+			color_find = bgr[0]; //printf("%d", color_find);
+			if (color_find > 100) {
+				ofs << "■";
+			}
+			else {
+				ofs << "  ";
+			}
+		}
+		ofs << endl;
+	}
+	ofs.close();
+}
+//读文件到vector<string>
+void IFS_MUCH(string STR, vector<string>&v_str)
+{
+	ifstream ifs;
+	ifs.open(STR, ios::in);
+	string str;
+	string strEvery = "";
+	gotoxy(0, 0);
+	while (getline(ifs, str)) {
+		strEvery += str;
+		//printf("%s", str.c_str());
+	}
+	ifs.close();
+	v_str.push_back(strEvery);
+	//system("pause");
+}
+//生成
+void test01()
+{
+	string strtemp01 = "E://cxkpng//";//
+	string strtemp02 = ".png";//
+	string next;
+	int a = 10000;
+	Mat image;
+	while (true)
+	{
+		string b = to_String(a);
+		next = strtemp01 + b + strtemp02;
+		image = imread(next);
+		OFS_MUCH(image, b);//写文件
+		if (a == 11774) { return; }a++;//
+	}
+}
+//读取
+void test02()
+{
+	SetFont(3);
+	DocContral();
+	vector<string>v_str; v_str.reserve(10000);
+	utils::logging::setLogLevel(utils::logging::LOG_LEVEL_SILENT);//不再输出日志
+	HideCursor();//隐藏光标
+	string strtemp01 = "cxktxt//";//
+	string strtemp02 = ".txt";
+	string next; string b, c; int a = 10000;
+	while (true)
+	{
+		b = to_String(a);
+		c = to_String(a - 10000);
+		SetConsoleTitle(("读取中 " + c + " / 1774").c_str());//
+		next = strtemp01 + b + strtemp02;
+		IFS_MUCH(next, v_str);//读文件
+		if (a == 11774) { break; }a++;//
+
+	}
+	SetConsoleTitle("cxk");
+
+	for (vector<string>::iterator it = v_str.begin(); it != v_str.end(); it++)
+	{
+		gotoxy(0, 0);
+		printf("%s", (*it).c_str());
+		//cout << *it;
+		//system("pause");
+		Time(0.013);
+	}
+
+	v_str.clear();
+}
+int main()
+{
+	//test01();
+	test02();
+	system("pause");
+	return 0;
+}
