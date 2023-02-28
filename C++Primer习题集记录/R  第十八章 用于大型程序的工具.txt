@@ -1,0 +1,272 @@
+#include<iostream>
+using namespace std;
+template<typename T>
+void print(T&&A)
+{
+	cout << A << endl;
+}
+int main(int argc, char *argv[])
+{
+	int a = 10;
+	//引用的目的是不创建新对象
+	print(a);//折叠为左值引用
+	print(10);//右值引用
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<exception>
+class A
+{
+public:
+	int a;
+	A()try :a(10) {}
+	catch (const std::bad_alloc &e)//内存分配不足时会报错
+	{
+		std::cout << "Allocation failed: " << e.what() << '\n';
+	}
+};
+int main(int argc, char *argv[])
+{
+
+	A a;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<exception>
+using namespace std;
+class A
+{
+public:
+	A()
+	{
+		cout << "A 构造函数调用" << endl;
+	}
+	~A()
+	{
+		cout << "A 析构函数调用" << endl;
+	}
+};
+class B:public A
+{
+public:
+	B()
+	{
+		cout << "B 构造函数调用" << endl;
+	}
+	~B()
+	{
+		cout << "B 析构函数调用" << endl;
+	}
+};
+void test01()
+{
+	B b;//构造和析构调用时机
+}
+int main(int argc, char *argv[])
+{
+	test01();
+	system("pause");
+	return 0;
+}
+
+using namespace std;//using 指示 命名空间全局可见
+using std::cout;//using 声明 仅cout可见
+
+#include<iostream>
+namespace N
+{
+	int a = 0;
+}
+int a = 10;
+int main(int argc, char *argv[])
+{
+
+	using N::a;
+	std::cout << a << std::endl;//N::a
+	std::cout << ::a << std::endl;//全局a
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+namespace N
+{
+	void print()
+	{
+	}
+	void print(int)
+	{
+		std::cout << "int" << std::endl;
+	}
+}
+void print(double)
+{
+	std::cout << "double" << std::endl;
+}
+//using N::print;//3个print并列
+void f()
+{
+	using N::print;//print(double)被 N::print 屏蔽
+	print(1.1);
+}
+int main(int argc, char *argv[])
+{
+	f();
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+class A
+{
+public:
+	A() { cout << "A 构造函数" << endl; }
+	virtual~A() { cout << "A 析构函数" << endl; }//虚析构是子类释放自身数据时用的 往往是因为设计问题导致
+};
+class AX:public A
+{
+public:
+	AX() { cout << "AX 构造函数" << endl; }
+	~AX() { cout << "AX 析构函数" << endl; }
+};
+
+void f()
+{
+	A * a = new AX;
+	delete a;
+}
+int main(int argc, char *argv[])
+{
+	f();
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+class A
+{
+public:
+	A() { cout << "A 构造函数" << endl; }
+	virtual~A() { cout << "A 析构函数" << endl; }//虚析构是子类释放自身数据时用的 往往是因为设计问题导致
+};
+class AX:private A
+{
+public:
+	void set() { A*aBase = this; }//类内可以转换
+	AX() { cout << "AX 构造函数" << endl; }
+	~AX() { cout << "AX 析构函数" << endl; }
+};
+
+void f()
+{
+	AX * a = new AX;
+	A aa;
+	a->set();
+	//A *aBase = a;//类外不可转换
+	delete a;
+}
+int main(int argc, char *argv[])
+{
+	f();
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+class _A
+{
+public:
+	_A() { cout << "_A 构造函数" << endl; }
+	~_A() { cout << "_A 析构函数" << endl; }
+};
+class A:public _A
+{
+public:
+	A() { cout << "A 构造函数" << endl; }
+	~A() { cout << "A 析构函数" << endl; }
+};
+class A2
+{
+public:
+	A2() { cout << "A2 构造函数" << endl; }
+	~A2() { cout << "A2 析构函数" << endl; }
+};
+class B :public A, A2
+{
+public:
+	B() { cout << "B 构造函数" << endl; }
+	~B() { cout << "B 析构函数" << endl; }
+
+};
+void f()
+{
+	B * b = new B;
+	delete b;
+	//在多继承中构造函数释放时机与析构函数对称
+}
+int main(int argc, char *argv[])
+{
+	f();
+	system("pause");
+	return 0;
+}
+
+//继承中也是默认私有继承
+class B:public a,c//public 继承 a private 继承 c
+{
+}
+
+#include<iostream>
+using namespace std;
+class _A
+{
+public:
+	void print() {}
+	_A() { cout << "_A 构造函数" << endl; }
+	~_A() { cout << "_A 析构函数" << endl; }
+};
+class A:public _A
+{
+public:
+	A() { cout << "A 构造函数" << endl; }
+	~A() { cout << "A 析构函数" << endl; }
+};
+class A2
+{
+public:
+	void print(int a){}
+	A2() { cout << "A2 构造函数" << endl; }
+	~A2() { cout << "A2 析构函数" << endl; }
+
+};
+class B :public A,public A2
+{
+public:
+	B() { cout << "B 构造函数" << endl; }
+	~B() { cout << "B 析构函数" << endl; }
+
+};
+void f()
+{
+	B * b = new B;
+	b->A2::print(10);//如果继承中函数名重名则必须加作用域 如果不重名则可识别无需作用域
+	delete b;
+}
+int main(int argc, char *argv[])
+{
+	f();
+	system("pause");
+	return 0;
+}
+
+//虚继承解决菱形继承二义性问题
+class A:virtual public class B
+{
+}

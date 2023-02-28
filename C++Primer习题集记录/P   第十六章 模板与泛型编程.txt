@@ -1,0 +1,357 @@
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+template<class I, class T>
+I find(I beg, I end, T & fid)
+{
+	while (beg != end)
+	{
+		if (*beg == fid)
+		{
+			return beg;
+		}
+		++beg;
+	}
+}
+int main(int argc,char *argv[])
+{
+	vector<int>v1 = { 1,2,3,4,5,6,7,8 };
+	vector<string>v2 = { "hello","world","C++" };
+	cout << *find(v1.begin(), v1.end(), 6) << endl;
+	cout << *find(v2.begin(), v2.end(), "world") << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+//类模板
+template<int a, int b>
+class A
+{
+public:
+	A():num(a*b){}
+	A(char c):ch(c){}
+	int num;
+	char ch;
+};
+int main(int argc,char *argv[])
+{
+	A<1, 2>a('s');
+	system("pause");
+	return 0;
+}
+
+//const成员函数重载调用时机
+
+当对象是const对象时；
+
+当指向对象的指针是const时；
+
+当对象的引用是const引用时
+
+当只有const版本的成员函数时
+
+调用的将是const成员函数
+
+#include<iostream>
+using namespace std;
+class A
+{
+public:
+	void func()const
+	{
+		cout << "const" << endl;
+	}
+	void func()
+	{
+		cout << "normal" << endl;
+	}
+};
+int main(int argc,char *argv[])
+{
+	const A a;
+	a.func();
+	A a2;
+	a2.func();
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+template<int T>class A;
+template<int T>
+ostream& operator<<(ostream&, A<T>&);
+template<int T>
+istream& operator>>(istream&, A<T>&);
+template<int T>
+class A
+{
+public:
+	//感觉是没必要的友元函数声明 且会出错
+	//friend ostream& operator<< <T>(ostream&out, A<T>&a);
+	//friend istream& operator>> <T>(istream&put, A<T>&a);
+	int m_A;
+};
+template<int T>
+ostream& operator<<(ostream&out,A<T>&a)
+{
+	out << a.m_A;
+	return out;
+}
+template<int T>
+istream& operator>>(istream&put, A<T>&a)
+{
+	put >> a.m_A;
+	return put;
+}
+int main(int argc,char *argv[])
+{
+	A<10> a;
+	cin >> a;
+	cout << a << endl;
+	system("pause");
+	return 0;
+}
+
+//成员变量可类内初始化
+//成员常量可类内初始化
+//类内定义的静态常量必须类内初始化
+
+#include<iostream>
+using namespace std;
+//template<typename T, U>;//不合法 应为typename T, typename U
+//template<typename T>T test01(int &T)//不合法 //模板参数名不得复用
+//{
+//	T = 10;
+//}
+//inline template<typename T>T test01(T&);//不合法 //模板函数声明时不得内联
+//template<typename T>test02(T);//不合法 无返回值
+typedef char C;
+template<typename C>C test03(C){}//合法 C 定义为 char 覆盖了类型的别名
+
+int main(int argc, char *argv[])
+{
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+template<typename T>
+void num(T&v)
+{
+	for (typename T::size_type i = 0; i < v.size(); ++i)
+	{
+		cout << v.at(i);
+	}
+}
+int main(int argc, char *argv[])
+{
+	vector<int>v = { 1,2,3,4,5 };
+	num(v);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+template<typename T>
+class A{};
+void test01(A<char>){}//实例化
+class B
+{
+public:
+	A<int>a;//实例化
+	A<double>b;//实例化
+};
+int main(int argc, char *argv[])
+{
+	system("pause");
+	return 0;
+}
+
+{
+//用括号可以指定作用域 其中的对象为临时对象
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+template<typename T>
+void test01(T,int){}
+template<typename T>
+void test02(T, T){}
+int main(int argc, char *argv[])
+{
+	//模板只支持 非const到const和函数名到指针的转换
+	char c='c';
+	double d=1.0;
+	float f=2.0;
+	test01(c, 'c');
+	test01(d, f);
+	test02(c, 'c');
+	//test02(d, f);//错误 无法判断T的类型
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+template<typename T>
+auto func(T it)->decltype(*it)//尾置返回值类型
+{
+	return *it;
+}
+int main(int argc, char *argv[])
+{
+	vector<int>v = { 1,2,3,4 };
+	cout<<func(v.begin() + 1);
+	system("pause");
+	return 0;
+}
+
+Class A
+{
+    A()
+    {// do something}
+};
+A GetA()
+{
+    return A();
+}
+int main()
+{
+    A a1 = GetA();   // a1是左值 执行完后临时对象销毁
+    A&& a2 = GetA(); // a2是右值引用 执行完后临时对象不被销毁 生命周期随a2
+    return 0;
+}
+
+1.所有右值引用折叠到右值引用上仍然是一个右值引用。（A&& && 变成 A&&）
+
+2.所有的其他引用类型之间的折叠都将变成左值引用。 （A& & 变成 A&; A& && 变成 A&; A&& & 变成 A&）
+
+#include<iostream>
+using namespace std;
+template<typename T>
+void print(T&&t)
+{
+	cout << typeid(t).name() << endl;
+}
+int main(int argc, char *argv[])
+{
+	int i = 0;
+	const int i2 = 10;
+	print(i);//int && 引用折叠为 int & 
+	print(i2);//const int && 引用折叠为 const int &
+	print(20);//右值引用与右值引用折叠 还是右值引用 int&&
+	system("pause");
+	return 0;
+}
+
+	i = 10;//返回一个左值
+	i == 10;//返回一个右值
+
+int&不能创建容器 引用不能提供地址无法创建指针
+
+函数模板中的T不会忽视顶层const
+
+左值引用引用传参后依旧是左值引用
+
+	/*
+	参数模板 T
+	传入int 为 int
+	传入const int 为 int
+	传入int& 为 int
+
+	传入 int* 为 int*
+	传入 const int * 为const int *
+
+	参数模板 const T
+	传入 int 为 const int
+	传入 int* 为 const int *
+	*/
+
+#include<iostream>
+using namespace std;
+#include<string>
+//可变参数模板
+template<typename T>
+ostream&
+print(ostream&os,const T&t)
+{
+	return os << t << endl;
+}
+template<typename T,typename... Types>
+ostream& 
+print(ostream&os,const T&t ,const Types&...other)
+{
+	os << t << ",";
+	return print(os,other...);
+}
+int main(int argc, char *argv[])
+{
+	int i = 10;
+	string str = "hello";
+	print(cout,str,i,1,2,3,4,4);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+//可变参数模板
+template<typename T>
+ostream&
+print(ostream&os,const T&t)
+{
+
+	cout <<endl<< "2个参数" << endl;
+	return os << t << endl;
+}
+template<typename T,typename... Types>
+ostream& 
+print(ostream&os,const T&t ,const Types&...other)
+{
+	cout << endl << "3个参数" << endl;
+
+	os << t << ",";
+	return print(os,other...);//仅仅在最后一次打印时调用 2个参数的print
+}
+int main(int argc, char *argv[])
+{
+	int i = 10;
+	string str = "hello";
+	print(cout, str, i, 1, 2, 3, 4, 4);
+	system("pause");
+	return 0;
+}
+
+当我们将一个右值引用传入函数时，他在实参中有了命名，所以继续往下传或者调用其他函数时，根据C++ 标准的定义，这个参数变成了一个左值。那么他永远不会调用接下来函数的右值版本，这可能在一些情况下造成拷贝。为了解决这个问题 C++ 11引入了完美转发，根据右值判断的推倒，调用forward 传出的值，若原来是一个右值，那么他转出来就是一个右值，否则为一个左值。
+这样的处理就完美的转发了原有参数的左右值属性，不会造成一些不必要的拷贝
+https://blog.csdn.net/coolwriter/article/details/80970718
+
+数组指针放入容器
+	vector<A*>v;
+	v.push_back(new A[3]);
+	v.push_back(new A[2]);
+	v.push_back(new A[2]);
+	cout << endl;
+
+	delete[] v[0];
+	cout << endl;
+	delete[] v[1];
+	cout << endl;
+	delete[] v[2];
+	cout << endl;
+
+	//string到char*的转换
+	string str = "hello";
+	char*ch = &str[0];
+	cout << ch << endl;

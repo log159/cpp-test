@@ -1,0 +1,314 @@
+dynamic_cast<type_id>//目标二义性会阻止转化
+static_cast<type_id>//可强转 危险
+
+#include<iostream>
+using namespace std;
+class A
+{};
+class B :public A
+{
+public:
+	int num;
+};
+
+int main(int argc, char *argv[])
+{
+	//反复转化指针并不会丢失堆区数据
+	B*b = new B;
+	b->num = 10;
+	cout << b->num << endl;
+	A*a = b;
+	B*b2 = static_cast<B*>(a);
+	cout << b2->num << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+class A
+{
+public:
+	A(){}
+	virtual~A(){}
+};
+class B :public A
+{
+public:
+	int num = 10;
+	B(){}
+	~B(){}
+};
+int main(int argc, char *argv[])
+{
+	A*a = new B;
+	B *b = dynamic_cast<B*>(a);
+	cout << b->num << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<algorithm>
+#include<functional>
+bool empty_if_string(const string&str)
+{
+	return str.empty();
+}
+int main(int argc, char *argv[])
+{
+	//统计空字符串个数
+	vector<string>v = { "","123","546","","" };
+	auto f = mem_fn(&string::empty);
+	cout << count_if(v.begin(), v.end(), f) << endl;
+	system("pause");
+	return 0;
+}
+
+//函数指针
+#include<iostream>
+using namespace std;
+class A
+{
+public:
+	A(){}
+	int print() { cout << "int" << endl; return 0; }
+	double print(double) { cout << "double" << endl; return 1.0; }
+
+	~A(){}
+};
+typedef int(A::*Pt)();
+typedef double(A::*Pt2)(double);
+int main(int argc, char *argv[])
+{
+	A a;
+	Pt p = &A::print;
+	Pt2 p2 = &A::print;
+	(a.*p)();
+	(a.*p2)(1.0);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+class A
+{
+public:
+	void printprintprint(int);
+	A(){}
+	~A(){}
+};
+void A::printprintprint(int a)
+{
+	cout << a << endl;
+}
+typedef void(A::*P)(int);
+int main()
+{
+	A a;
+	P p = &A::printprintprint;
+	(a.*p)(10);
+	system("pause");
+	return 0;
+
+}
+
+#include <iostream>
+#include <memory>
+#include <functional>
+using namespace std::placeholders;
+using namespace std;
+void fun1(int n1, int n2, int n3)
+{
+	cout << n1 << " " << n2 << " " << n3 << endl;
+}
+int main()
+{
+	//_1表示这个位置是新的可调用对象的第一个参数的位置
+	//_2表示这个位置是新的可调用对象的第二个参数的位置  
+	auto f1 = bind(fun1, _2, 22, _1);
+	f1(44, 55);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<algorithm>
+#include<functional>
+class Book
+{
+public:
+	double price;
+	Book(double a) :price(a){}
+};
+bool find_if_more(const Book&book, double t)
+{
+	return book.price > t;
+}
+typedef vector<Book>::iterator v_it;
+vector<Book>::iterator find_first_more_iter(v_it be,v_it ed,double t)
+{
+	auto f = bind(find_if_more, placeholders::_1, t);
+	return find_if(be, ed, f);
+}
+int main()
+{
+	vector<Book>v;
+	v.push_back(Book(4.3));
+	v.push_back(Book(10.3));
+	v.push_back(Book(5.2));
+	v.push_back(Book(7.4));
+	v.push_back(Book(13.3));
+	v.push_back(Book(8.6));
+	//查找第一个大于 t的元素
+	cout << (*find_first_more_iter(v.begin(), v.end(), 10.0)).price << endl;
+	system("pause");
+	return 0;
+
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<algorithm>
+#include<functional>
+class Book
+{
+public:
+	double price;
+	Book(double a) :price(a){}
+};
+bool find_if_more(const Book&book, double t)
+{
+	return book.price > t;
+}
+typedef vector<Book>::iterator v_it;
+vector<Book>::iterator find_first_more_iter(v_it be,v_it ed,double t)
+{
+	auto f = bind(find_if_more, placeholders::_1, t);
+	return find_if(be, ed, f);
+}
+int main()
+{
+	vector<Book>v;
+	v.push_back(Book(4.3));
+	v.push_back(Book(10.3));
+	v.push_back(Book(5.2));
+	v.push_back(Book(7.4));
+	v.push_back(Book(13.3));
+	v.push_back(Book(8.6));
+	//查找第一个大于 t的元素
+	cout << (*find_first_more_iter(v.begin(), v.end(), 10.0)).price << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+class T
+{
+public:
+	T(){}
+	T(const T&t) :tok(t.tok) {};//tok可赋值
+	enum { A, B, C }tok;
+};
+int main()
+{
+	T t1;
+	t1.tok = T::C;
+	T t2(t1);
+	cout << t2.tok;
+	system("pause");
+	return 0;
+}
+
+//枚举
+enum E
+{
+	A, B, C, D
+};
+int main()
+{
+	enum E e;
+	e = B;
+	cout << e;
+	system("pause");
+	return 0;
+}
+
+共用体表示几个变量共用一个内存位置，在不同的时间保存不同的数据类型和不同长度的变量。在union中，
+所有的共用体成员共用一个空间，并且同一时间只能储存其中一个成员变量的值。
+
+#include<iostream>
+using namespace std;
+class A
+{
+public:
+	int a_;
+	A() { cout << "A 构造" << endl; }
+	~A() { cout << "A 析构" << endl; }
+};
+class T
+{
+public:
+	T():tok(NO) { cout << "T 构造" << endl; }
+	~T() { cout << "T 析构" << endl; }
+	T& operator=(const A&a)
+	{
+		if (tok == YES)
+		{
+			m_A = a;
+		}
+		else if(tok == NO)
+		{
+			//new (&m_A)A(a);//意义不明
+			m_A = a;
+		}
+		tok = YES;
+		return *this;
+	}
+	enum{NO,YES}tok;
+	A m_A;
+};
+int main()
+{
+	{
+		T t;
+		{
+			A a;
+			a.a_ = 10;
+			t = a;
+			cout << t.m_A.a_ << endl;
+		}
+		cout << t.m_A.a_ << endl;
+	}
+	cout << endl;
+	T *y = new T;
+	//貌似等价
+	y->~T();
+	delete y;
+	system("pause");
+	return 0;
+}
+
+//C语言不支持函数重载
+extern "C" void print()
+{
+	cout << "C void" << endl;
+}
+extern "C" void print(int)
+{
+	cout << "C int" << endl;
+}
+int main()
+{
+	print();
+
+	system("pause");
+	return 0;
+}

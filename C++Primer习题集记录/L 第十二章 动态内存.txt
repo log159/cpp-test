@@ -1,0 +1,324 @@
+#pragma once
+#ifndef STRBLOB
+#define STRBLOB
+#include<iostream>
+#include<initializer_list>
+#include<stdexcept>
+#include<string>
+#include<vector>
+#include<memory>
+using namespace std;
+typedef vector<string>::size_type size_type;
+class StrBlob
+{
+public:
+	StrBlob();
+	StrBlob(initializer_list<string>li);
+	size_type size() { return v_ptr->size();}
+	bool empty()const { return v_ptr->empty(); }
+	//插入删除元素
+	void push_back(const string &str) { v_ptr->push_back(str); }
+	void pop_back();
+	string& back()const;
+	string& front()const;
+
+private:
+	//shared_ptr 创建多个对象可以共享内存 类内储存的只是指针
+	shared_ptr<vector<string>>v_ptr;
+	void emptyif()const;
+
+};
+inline StrBlob::StrBlob():v_ptr(make_shared<vector<string>>()){}
+inline StrBlob::StrBlob(initializer_list<string> li):v_ptr(make_shared<vector<string>>(li)){}
+inline void StrBlob::emptyif()const
+{
+	if (0 >= v_ptr->size())
+		throw out_of_range("无可访问内容");
+}
+inline void StrBlob::pop_back()
+{
+	this->emptyif();
+	v_ptr->pop_back(); 
+}
+inline string & StrBlob::back()const
+{
+	this->emptyif();
+	return v_ptr->back();
+}
+inline string & StrBlob::front()const
+{
+	this->emptyif();
+	return v_ptr->front();
+}
+#endif
+
+//----------------------------- main---------------------------------
+	//string 共享类
+	StrBlob b1({ "hello","world" });
+	StrBlob b2 = b1;
+	b1.push_back("C++");
+	cout << "b1 size = " << b1.size() << endl;
+	cout << "b2 size = " << b2.size() << endl;
+	cout << b1.back() << endl;
+	cout << b2.back() << endl;
+
+#include<iostream>
+#include<algorithm>
+using namespace std;
+#include<initializer_list>
+class A
+{
+public:
+	 A(initializer_list<int>li) { cout << "list" << endl; }//explicit 防止隐式转换
+	~A(){cout << "析构函数" << endl;}
+};
+class B
+{
+public:
+	B(A a) { cout << "A" << endl; }
+};
+int main(int argc,char *argv[])
+{
+	A a({ 1,2,3 });
+	B b({1,2,3});//如果 A构造不加explicit 则隐式转换为 A 
+	system("pause");
+	return 0;
+}
+
+	vector<int>*pv = new (nothrow)vector<int>;
+	pv->push_back(10);
+	pv->push_back(20);
+	pv->push_back(30);
+	for (auto&val : *pv)
+		cout << val << " ";
+	delete pv;
+	pv = nullptr;
+
+#include<iostream>
+using namespace std;
+#include<vector>
+shared_ptr<vector<int>> new_vector_int()
+{
+	return make_shared<vector<int>>();
+}
+void read(shared_ptr<vector<int>>&ptr)
+{
+	ptr->push_back(10);
+	ptr->push_back(20);
+	ptr->push_back(30);
+}
+void print(shared_ptr<vector<int>>&ptr)
+{
+	for (auto&val : *ptr)
+	{
+		cout << val << " ";
+	}
+	cout << endl;
+}
+int main(int argc,char *argv[])
+{
+	auto it = new_vector_int();
+	read(it);
+	print(it);
+	//无需释放内存
+	system("pause");
+	return 0;
+}
+
+	int * p = new int(100);
+	int * r = new int(10);
+	p = r;
+	//产生的两个问题隐患
+	//1、内存泄漏 r 指向的内存 无法管理
+	//2、空悬指针 p释放掉
+
+	//process 未知是什么接口
+	process(shared_ptr<int>(p));
+	//process(shared_ptr<int>(p.get()));不能实现共享
+
+	auto p = new int(40);
+	auto sp = make_shared<int>();
+	process(sp);
+	process(new int());//new 的堆区对象创建了shared_ptr<int>
+	process(p);//不合法 int*不能转换为 shared_ptr<int>
+	process(shared_ptr<int>(p));//合法但是错误 执行完后 p指针空悬
+
+	auto p = make_shared<int>();
+	auto sp = p.get();
+	delete sp;//导致p空悬
+
+	//智能指针的一些用途
+#include<iostream>
+#include<vector>
+#include<memory>
+using namespace std;
+class A
+{
+public:
+};
+void end(A *a)
+{
+	cout << "已断开" << endl;
+}
+void start(A & a)
+{
+	cout << "已连接" << endl;
+	shared_ptr<A>p(&a, end);
+	cout << "end" << endl;
+}
+int main(int argc,char *argv[])
+{
+	A a;
+	start(a);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<memory>
+using namespace std;
+class A
+{
+public:
+};
+void start(A & a)
+{
+	cout << "已连接" << endl;
+	shared_ptr<A>p(&a, [](A*p) {cout << "已断开" << endl; });
+	cout << "end" << endl;
+}
+int main(int argc,char *argv[])
+{
+	A a;
+	start(a);
+	system("pause");
+	return 0;
+}
+
+	typedef unique_ptr<int> Inptr;
+	int p1 = 10, *p2 = &p1;
+	int * p3 = new int(2048);
+	//Inptr P1(p1);//不能转化
+	Inptr P2(p2);//未定义行为 智能指针释放掉了堆区指针对象
+	Inptr P3(p3);//正确
+	Inptr P4(P2.get());//指针存在空悬隐患
+
+	char *ch=new char[10];
+	int i = 0;
+	char c;
+	while (cin.get(c))
+	{
+		if (isspace(c))//空格 制表 空白
+		{
+			break;
+		}
+		ch[i] = c;
+		if (i >= 10)
+		{
+			cout << "full char arr" << endl;
+			break;
+		}
+		++i;
+	}
+	for (int i=0;i<10;i++)
+	{
+		cout << ch[i] << endl;
+	}
+	delete[] ch;
+
+	const char*c1 = "hello";
+	const char*c2 = "world";
+	char*r = new char[strlen(c1) + strlen(c2) + 1];
+	strcpy(r, c1);//c1拷贝到 r
+	strcat(r, c2);//c2 连接到 r
+	cout << r << endl;
+	string s1 = "hello";
+	string s2 = "world";
+	strcpy(r, (s1 + s2).c_str());//s1+s2拷贝到 r
+	cout << r << endl;
+	delete[] r;
+
+#include<iostream>
+#include<vector>
+#include<memory>
+#include<string>
+#include<stdexcept>
+using namespace std;
+int main(int argc,char *argv[])
+{
+	allocator<string>all;
+	auto const p = all.allocate(100);//内存分配
+	string s;
+	string * q = p;
+	while (cin >> s && q != p + 100)
+	{
+		all.construct(q++, s);//构建
+	}
+	const size_t size = q - p;
+	for (size_t i = 0; i < size; ++i)
+	{
+		cout << p[i] << endl;
+	}
+	while (q != p)
+	{
+		all.destroy(--q);//销毁内存
+	}
+	all.deallocate(p, 100);//删除游标引用
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<memory>
+#include<string>
+#include<stdexcept>
+#include<fstream>
+#include<sstream>
+using namespace std;
+vector<string>v_str;
+string cleanUp(const string&str)
+{
+	string s;
+	for (int i = 0; i < str.size(); ++i)
+	{
+		if (!ispunct(str[i]))
+		{
+			s.push_back(str[i]);
+		}
+		else
+		{
+			s.push_back(' ');
+		}
+	}
+	return s;
+}
+void findWord(const string&fileName)
+{
+	ifstream ifs(fileName);
+	if (!ifs)
+	{
+		throw out_of_range("文件打开失败");
+	}
+	string s;
+	while (getline(ifs,s))
+	{
+		istringstream strline(cleanUp(s));
+		string word;
+		while (strline>>word)
+		{
+			v_str.push_back(word);
+		}
+	}
+}
+int main(int argc,char *argv[])
+{
+	findWord("01.txt");
+	for (auto&val : v_str)
+	{
+		cout << val << endl;
+	}
+	system("pause");
+	return 0;
+}

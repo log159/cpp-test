@@ -1,0 +1,501 @@
+#include<iostream>
+using namespace std;
+#include<map>
+#include<vector>
+#include<fstream>
+#include<string>
+#include<algorithm>
+int main()
+{
+	fstream fs("test02.txt");
+	if (!fs) {
+		cout<<"打开文件失败" << endl;
+		system("pause");
+		exit(0);
+	}
+	vector<string>v;
+	string va;
+	while(fs >> va)
+	{
+		v.push_back(va);
+	}
+	cout << "size:" << v.size() << endl;
+	for (auto&val : v)
+	{
+		cout << val << endl;
+	}
+	cout << endl;
+	cout << "3 含有："<<count(v.begin(), v.end(), "3") << endl;//统计元素在容器中出现次数
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<numeric>//accumulate头文件
+class A
+{
+public:
+	int m_A;
+};
+class acc
+{
+public:
+	int operator()(int t1, const A & t2)
+	{
+		return (t1 + t2.m_A);
+	}
+};
+int main()
+{
+	vector<A>v;
+	A a1; a1.m_A = 10;
+	A a2; a2.m_A = 20;
+	A a3; a3.m_A = 30;
+	v.push_back(a1);
+	v.push_back(a2);
+	v.push_back(a3);
+	for (auto&val : v)
+	{
+		cout << val.m_A << endl;
+	}
+	//提供第四参数仿函数作为<指针>来实现求和
+	cout <<"和："<< accumulate(v.begin(), v.end(), 0, acc()) << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	const char *p1[] = { "hello","world","C++" };
+	const char *p2[] = {strdup(p1[0]),strdup(p1[1]) ,strdup(p1[2]) };
+	const char *p3[] = { p1[0],p1[1],p1[2] };
+	cout << equal(begin(p1), end(p1), p2) << endl;//因为是拷贝的内容 所以不一样
+	cout << equal(begin(p1), end(p1), p3) << endl;//因为是赋值的指针 所以一样
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<algorithm>
+#include<string.h>
+#include<vector>
+int main()
+{
+	vector<int>v;
+	v.push_back(10);
+	v.push_back(20);
+	v.push_back(20);
+	v.push_back(20);
+	v.push_back(30);
+	v.push_back(40);
+	//     起始位置   个数  修改为
+	fill_n(v.begin(), v.size(), 1);
+	for (auto&val : v)
+		cout << val << endl;
+
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<algorithm>
+#include<string.h>
+#include<vector>
+#include<list>
+int main()
+{
+	vector<int>v;
+	v.push_back(10);
+	v.push_back(20);
+	v.push_back(20);
+	v.push_back(20);
+	v.push_back(30);
+	v.push_back(40);
+	list<int>l;
+	l.push_back(100);
+	//插入器解决容器copy时大小不够问题
+	//copy后插入容器末尾
+	copy(v.begin(), v.end(), back_inserter(l));
+	cout << "vector" << endl;
+	for (auto&val : v)
+		cout << val << " ";
+	cout << endl;
+	cout << "list" << endl;
+	for (auto&val : l)
+		cout << val << " ";
+	cout << endl;
+	system("pause");
+	return 0;
+}
+
+vector<int>v;
+	v.push_back(10);
+	v.push_back(10);
+	v.push_back(10);
+	fill_n(v.begin(), 2, 0);
+	for (auto&val : v)
+	{
+		cout << val << " ";
+	}
+	cout << endl;
+	vector<int>v2;
+	v2.push_back(10);
+	v2.push_back(10);
+	v2.push_back(10);
+	fill_n(back_inserter(v2), 4, 0);
+	for (auto&val : v2)
+	{
+		cout << val << " ";
+	}
+
+#include<iostream>
+using namespace std;
+#include<algorithm>
+#include<string.h>
+#include<vector>
+#include<list>
+int main()
+{
+	vector<int>v;
+	v.push_back(10);
+	v.push_back(10);
+	v.push_back(20);
+	v.push_back(20);
+	v.push_back(30);
+	v.push_back(40);
+	//unique 将重复元素交换到容器末尾 并返回第一个被交换到末尾的迭代器
+	const auto&it=unique(v.begin(), v.end());
+	for (auto&val : v)
+	{
+		cout << val << " ";
+	}
+	cout << "it-1 is" << *(it-1) << endl;
+	cout <<"it is"<< *it << endl;
+	cout << "it+1 is" << *(it+1) << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<algorithm>
+#include<vector>
+#include<list>
+class A
+{
+public:
+	A(int a):m_A(a){}
+	int m_A;
+};
+//二元谓词
+inline bool compareA(const A&a1, const A&a2)
+{
+	return a1.m_A > a2.m_A;
+}
+int main()
+{
+	vector<A>v;
+	v.push_back(A(10));
+	v.push_back(A(20));
+	v.push_back(A(0));
+	v.push_back(A(50));
+	v.push_back(A(30));
+	sort(v.begin(), v.end(),compareA);
+	for (auto&val : v)
+		cout << val.m_A << " ";
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<algorithm>
+#include<vector>
+#include<list>
+class A
+{
+public:
+	A(int a):m_A(a){}
+	int m_A;
+};
+//一元谓词
+inline bool compareA(const A&a)
+{
+	return a.m_A >= 5;
+}
+int main()
+{
+	vector<A>v;
+	v.push_back(A(3));
+	v.push_back(A(8));
+	v.push_back(A(20));
+	v.push_back(A(4));
+	v.push_back(A(10));
+	//提供一元谓词 返回值为true排前面 返回迭代器位置为第一个返回值为false的元素
+	const auto&val = partition(v.begin(), v.end(),compareA);
+	for (auto it = v.begin(); it != val; ++it)
+		cout << it->m_A << " ";
+	system("pause");
+	return 0;
+}
+
+//lambda 表达式
+
+	auto L = [](int a,int b) {
+		return a + b;
+	};
+	cout << L(2, 4) << endl;
+
+	int A = 10;
+	auto L = [A](int a) {
+		return a + A;
+	};
+	cout << L(2) << endl;
+
+//lambda在排序中的应用
+	sort(v.begin(), v.end(), [](const A&a1, const A&a2) {return a1.m_A > a2.m_A; });
+
+partition 符合条件的在前面排
+stable_partition 符合条件的在前面排 不改变相对位置
+
+int i = 10;
+	auto f = [&i]()mutable->bool {
+		if (i > 0) 
+		{
+			--i; return false; 
+		} 
+		else 
+		{
+			return true; 
+		}
+	};
+	bool a;
+	while (true)
+	{
+		a = f();
+		cout << a << endl;
+		if (a)
+		{
+			break;
+		}
+	}
+	cout << "i = " << i << endl;
+
+using namespace std::placeholders;
+class A
+{
+public:
+	A(int a):m_A(a){}
+	int m_A;
+};
+bool biggies(const A&a, int s)
+{
+	return a.m_A > s;
+}
+int main()
+{
+	vector<A>s;
+	s.push_back(A(30));
+	s.push_back(A(20));
+	s.push_back(A(3));
+	s.push_back(A(4));
+	s.push_back(A(8));
+	//_n在 using namespace std::placeholders;
+	//_1暂时理解成 *it 与 5 对应biggies参数
+	cout<<"大于 5 的有："<<count_if(s.begin(), s.end(), bind(biggies,_1,5));
+
+using namespace std::placeholders;
+bool biggies(string &str_v, string &str)
+{
+	return str_v.size() > str.size();
+}
+int main()
+{
+	vector<string>s;
+	s.push_back("www");
+	s.push_back("wwww");
+	s.push_back("wwwww");
+	s.push_back("www");
+	s.push_back("wwwwwww");
+	string str = "1111";
+	auto it=find_if(s.begin(), s.end(), bind(biggies, _1, str));
+	cout << "大于str大小的是：" << *it << endl;
+
+vector<int>s = { 1,2,3,4,5,5,5,6,7,8,5,4,4,4,2,2,1 };
+	sort(s.begin(), s.end());//顺序排序
+	auto it = unique(s.begin(),s.end());//重复元素放到末尾
+	s.erase(it, s.end());//删除重复元素
+	cout << "删除重复元素后升序排列" << endl;
+	for (auto&val : s)
+	{
+		cout << val << endl;
+	}
+
+	vector<int>s = { 1,2,3,4,5,5,5,6,7,5,4,4,2,2,1 };
+	vector<int>t;
+	t.reserve(11);
+	unique_copy(s.cbegin(), s.cend(), back_inserter(t));
+	//并不会删除元素 t拷贝的仍然和s元素个数相同
+	cout << " t 最大容量和当前容量" << t.capacity() << " " << t.size() << endl;
+	for (auto&val : t)
+	{
+		cout << val << endl;
+	}
+
+//注：要使用unique务必为顺序排序
+
+	vector<int>s = { 1,1,2,2,3,4,5 };
+	list<int>t;
+	//头插不是所有容器适用 list适用 vector不适用
+	copy(s.begin(), s.end(), front_inserter(t));
+	for (auto&val : t)
+	{
+		cout << val << " ";
+	}
+
+	
+	//设数组 1 2 3 4 5
+	//front_inserter(t);//效果 5 4 3 2 1 原来的元素
+	//back_inserter(t);//效果 原来的元素 1 2 3 4 5
+	//inserter(t, t.begin());//效果 1 2 3 4 5 原来的元素
+	//inserter(t, t.end());//效果 原来的元素 1 2 3 4 5
+
+	fstream in(argv[1]);
+	if (!in)
+	{
+		cout << "文件打开失败" << endl;
+		system("pause");
+		return 0;
+	}
+	istream_iterator<string>in_it(in);//流迭代器
+	istream_iterator<string>eof;
+	vector<string>v;
+	while (in_it != eof)
+	{
+		v.push_back(*in_it++);
+	}
+	for (auto&val : v)
+	{
+		cout << val << " ";
+	}
+	cout << endl;
+
+	vector<int>v = { 1,1,1,2,2,3,3,4,5,5,5 };
+	vector<int>::iterator it = v.begin();
+	while (it!=v.end())
+	{
+		auto isId = *it;
+		auto r = find_if(it + 1, v.end(), [isId](const int&num) {return isId != num;});
+		cout << accumulate(it, r,0) << endl;
+		it = r;
+	}
+
+#include<iterator>
+#include<fstream>
+int main(int argc,char *argv[])
+{
+	ifstream ifs("01.txt"); if (!ifs) { return 0; }
+	istream_iterator<int>ifs_it(ifs);
+	istream_iterator<int>eof;
+	ofstream ofs02("02.txt"); if (!ofs02) { return 0; }
+	ostream_iterator<int>ofs02_it(ofs02," ");
+	ofstream ofs03("03.txt"); if (!ofs03) { return 0; }
+	ostream_iterator<int>ofs03_it(ofs03,"\n");
+	//迭代器第二个参数表示间隔方式
+	while (ifs_it!=eof)
+	{
+		//奇数放到02.txt
+		if (*ifs_it & 1)
+		{
+			*ofs02_it = *ifs_it;
+		}
+		//偶数放到03.txt
+		else
+		{
+			*ofs03_it = *ifs_it;
+		}
+		++ifs_it;
+	}
+	system("pause");
+	return 0;
+}
+
+	//反向迭代器 后向前推进依旧是++
+	vector<int>v = { 1,2,3,4,5,6,7 };
+	for (auto it = v.crbegin(); it != v.crend(); ++it)
+	{
+		cout << *it << " ";
+	}
+
+
+	//反向迭代器查找末尾零
+	list<int>v = { 1,2,0,3,4,0,5,6,9,0,7 };
+	auto cr_it=find(v.crbegin(), v.crend(), 0);
+	//考虑到反向迭代器转为普通迭代器后需要被访问到
+	cout << "Base后会向右推进一个位置：" << *cr_it.base() << endl;
+	int p = 0;
+	for (auto it = v.begin(); it != cr_it.base(); ++it,++p);
+	//此时 p 为 0 的尾后位置
+	--p;
+	cout <<"最后一个零位置是："<< p << endl;
+
+	//普通迭代器查找末尾零
+	list<int>v = { 1,2,0,3,4,0,5,6,9,0,7 };
+	bool isfind = false;
+	int p = 0, endp = -1;
+	for (auto it = v.begin(); it != v.end();++it, ++p)
+		if (*it == 0)
+			endp = p,isfind = true;
+	if (isfind)
+		cout << endp << endl;
+	else
+		cout << "没找到" << endl;
+
+	vector<int>v= { 0,1,2,3,4,5,6,7,8 };
+	int b = 3, e = 7;
+	list<int>copy_v;
+	//[3,7]位置元素反向插入迭代器
+	copy(v.crbegin() + (v.size() - e-1), v.crbegin() + (v.size() - b),back_inserter(copy_v));
+	for(auto&val:copy_v)
+		cout << val << " ";
+	cout << endl;
+
+	//指定初始位置的迭代器
+	vector<int>::iterator it(v.begin() + 3);
+	//指定初始位置的反向迭代器
+	vector<int>::reverse_iterator it(v.begin() + 3);//这里用begin 会转为 crbegin
+
+	vector<int>v= { 0,1,2,3,4,5,6,7,8 };
+	vector<int>v2;
+	replace(v.begin(),v.end(),2,9);//起始位置迭代器 终止位置迭代器  oldnum 替换为 newnum 
+	replace_if(v.begin(), v.end(), compateNum, 9);//起始位置迭代器 终止位置迭代器  谓词 替换为 newnum
+	replace_copy(v.begin(), v.end(), v2.begin(), 4, 9);//起始位置迭代器 终止位置迭代器 目标位置迭代器 oldnum 替换为 newnum
+	replace_copy_if(v.begin(), v.end(), v2.begin(), compateNum, 9);//起始位置迭代器 终止位置迭代器 目标位置迭代器 谓词 替换为 newnum
+	for(auto&val:v)
+		cout << val << " ";
+
+#include<iostream>
+#include<algorithm>
+#include<list>
+using namespace std;
+int main(int argc,char *argv[])
+{
+	//删除重复字符
+	list<char>v_str = { 'w','w','r','l','e','r','u','y','y' };
+	v_str.sort();
+	auto it = unique(v_str.begin(), v_str.end());
+	v_str.erase(it,v_str.end());
+	for (auto&val : v_str)
+	{
+		cout << val << " ";
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,343 @@
+#include<iostream>
+using namespace std;
+#include"Sales_item.h"
+int main()
+{
+	Sales_item book, book2;
+	cin >> book;
+	while (cin >> book2)
+	{
+		if (book.isbn == book2.isbn)
+		{
+			book += book2;
+		}
+		else
+		{
+			cout << book << endl;
+			book = book2;
+		}
+	}
+	system("pause");
+	return 0;
+}
+
+仿函数通常有下面四个作用：
+1）作为排序规则，在一些特殊情况下排序是不能直接使用运算符<或者>时，可以使用仿函数。
+2）作为判别式使用，即返回值为bool类型。
+3）同时拥有多种内部状态，比如返回一个值得同时并累加。
+4）作为算法for_each的返回值使用。
+
+#pragma once
+#include<iostream>
+#include<string>
+using namespace std;
+class MySales_item
+{
+public:
+	string isbn;//ISBN
+	unsigned int units_sold = 0;//销售数量
+	double revenue = 0;//总额
+	MySales_item() :units_sold(0),revenue(0.0){}
+	MySales_item(istream&);
+	MySales_item & operator+=(const MySales_item &);
+	friend istream & operator>>(istream&, MySales_item &);
+	friend ostream & operator<<(ostream&, MySales_item &);
+	double avg()const;
+
+};
+inline bool operator==(const MySales_item & book1, const MySales_item & book2)
+{
+	return book1.isbn == book2.isbn;
+}
+inline bool operator!=(const MySales_item & book1, const MySales_item & book2)
+{
+	return book1.isbn != book2.isbn;
+}
+inline MySales_item::MySales_item(istream&is)
+{
+	is >> *this;
+}
+inline MySales_item & MySales_item::operator+=(const MySales_item&book)
+{
+	this->revenue += book.revenue;
+	this->units_sold += book.units_sold;
+	return *this;
+}
+inline MySales_item operator+(const MySales_item & book1,const MySales_item & book2)
+{
+	MySales_item t(book1);
+	t += book2;
+	return t;
+}
+inline double MySales_item::avg()const
+{
+	return this->revenue / this->units_sold;
+}
+
+inline istream & operator>>(istream & in, MySales_item&book)
+{
+	cout << "ISBN：";in >> book.isbn;
+	cout << "销量：";in >> book.units_sold;
+	cout << "单价：";double oneMoney;in >> oneMoney;
+	book.revenue = oneMoney * book.units_sold;
+	return in;
+}
+inline ostream & operator<<(ostream&out, MySales_item&book)
+{
+	out << "ISBN：" << book.isbn << " 销量：" << book.units_sold << " 平均单价："
+		<< book.avg() <<" 总价："<<book.revenue<< endl;
+	return out;
+}
+
+
+default 函数。程序员只需在函数声明后加上=default;，就可将该函数声明为 default 函数，编译器将为显式声明的 default 函数自动生成函数体。
+
+//函数定义在类内部会隐式内联
+
+//正确
+class Y;
+class X
+{
+public:
+	Y *y;
+};
+class Y
+{
+	X x;
+};
+
+//编译报错
+"X::y”使用未定义的 class Y
+class Y;
+class X
+{
+public:
+	Y y;
+};
+class Y
+{
+	X *x;
+};
+
+class Y;
+class X
+{
+public:
+	friend class Y;
+	X() = default;
+	X(int a, int b, int c) :m_A(a), m_B(b), m_C(c){}
+	int m_A;
+protected:
+	int m_B;
+private:
+	int m_C;
+};
+class Y
+{
+public:
+	void test()
+	{
+		//友元破坏封装
+		X x(10, 20, 30);
+		x.m_A = 1;
+		x.m_B = 2;
+		x.m_C = 3;
+	}
+};
+
+typedef string Type;
+class X
+{
+public:
+	typedef double Type;
+	X() = default;
+
+	Type test01();
+};
+//Type二义性 不兼容
+//Type X::test01()
+//{
+//}
+
+class A
+{
+public:
+	A(int b, int a) :m_B(b), m_A(a){}
+	//m_A比m_B先初始化
+	//初始化顺序仅与成员在类中出现的顺序有关
+	int m_A,m_B;
+};
+
+class A
+{
+public:
+	//实例化时引起二义性
+	A(int a=0){}
+	A() = default;
+};
+
+class A
+{
+public:
+//委托构造
+	int m_A;
+	char m_C;
+	A() :m_A(10), m_C('c') { init(); }
+	A(int a) :A() { m_A = a; }
+	A(char c) :A() { m_C = c; }
+	void init() {}
+};
+
+//委托环，引发编译错误
+	A() :m_A(10), m_C('c') { init(); }
+	void init() { A(); }
+
+//委托树
+
+受委托函数
+默认构造
+受委托函数
+默认构造
+cin输入构造
+ISBN：02
+销量：10
+单价：10
+受委托函数
+仅确定书的ISBN的构造
+请按任意键继续. . .
+
+	MySales_item book;
+	MySales_item book2(cin);
+	MySales_item book3("03");
+	system("pause");
+
+	MySales_item(string i, unsigned int u, double r) :isbn(i), units_sold(u), revenue(r) { cout << "受委托函数" << endl; }
+	MySales_item() :MySales_item("", 0, 0) { cout << "默认构造" << endl; }
+	MySales_item(istream & is) :MySales_item() { cout << "cin输入构造" << endl; is >> *this; }
+	MySales_item(const string book) :MySales_item(book, 0, 0) { cout << "仅确定书的ISBN的构造" << endl; }
+
+//string 传参事项
+"字符串" 参数列表不能是 string&str
+
+#include<iostream>
+using namespace std;
+class A
+{
+public:
+	A(int a):m_A(a){}
+	int m_A;
+};
+class B
+{
+public:
+	A a;//因为a没有默认构造导致b不能默认初始化
+};
+int main()
+{
+	B b;
+	system("pause");
+	return 0;
+}
+
+//没有默认构造不能作为容器元素
+
+1.对于内置类型（如int,double,char,bool等）和复合类型（数组，指针），定义任何函数体之外的内置类型或复合类型变量将被初始化0，对于函数体内的内置类型的对象，若没有初始化，其值是未定义的。
+
+#include<iostream>
+using namespace std;
+class A
+{
+public:
+	int m_A;
+	bool m_B;
+};
+A a_1;
+int main()
+{
+	A a_2;
+	cout << "a_1：" << a_1.m_A << " " << a_1.m_B << endl;//全局域被初始化
+	//cout << "a_2：" << a_2.m_A << " " << a_2.m_B << endl;//局域未初始化
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+class A
+{
+public:
+	A(){}
+	string m_S;
+	A(string s):m_S(s){}
+	void test01(A a){}
+	void test02(A&a){}
+	void test03(const A&a)const{}
+};
+int main()
+{
+	string s = "123";
+	A a;
+	a.test01(s);
+	//a.test02(s);//编译不通过 s 转为临时对象 a ，临时对象无法引用
+	a.test03(s);
+	system("pause");
+	return 0;
+}
+
+聚合类是一种没有用户定义的构造函数，没有私有（private）和保护（protected）非静态数据成员，没有基类，没有虚函数。
+所有成员都是public
+没有定义构造函数
+没有类内初始值
+没有基类，也没有虚函数
+
+#include<iostream>
+using namespace std;
+#include<string>
+struct A
+{
+	int a;
+	int b;
+	char c;
+};
+int main()
+{
+	A a = { 1,2,'c' };//聚合类特殊初始化法则
+	cout << a.a << " " << a.b << " " << a.c << endl;
+	system("pause");
+	return 0;
+}
+
+字面值的常量类有两种定义：
+
+数据成员都是字面值类型(算术类型，引用和指针，以及字面值常量类)的聚合类是字面值常量类。
+或者满足如下的定义：
+数据成员都必须是字面值类型(算术类型，引用和指针，以及字面值常量类)。
+类必须至少含有一个constexpr构造函数。
+如果一个数据成员含有类内初始值，则内置类型的初始值必须是一条常量表达式。或者如果成员属性某种类类型，则初始值必须使用成员自己的constexpr构造函数。
+类必须使用析构函数的默认定义，该成员负责销毁类的对象。
+
+//字面值常量类
+数据成员必须都必须是字面值类型。
+类必须至少含有一个constexpr构造函数。
+如果一个数据成员含有类内初始值，则初始值必须是常量表达式；如果成员属于某种类，初始值必须使用该类的constexpr构造函数。
+类必须使用析构函数的默认定义。
+满足条件1，就可以在编译阶段求值，这一点和聚合类一样。
+满足条件2，就可以创建这个类的constexpr类型的对象。
+满足条件3，就可以保证即使有类内初始化，也可以在编译阶段解决。
+满足条件4，就可以保证析构函数没有不能预期的操作。
+
+//字面值常量类
+class A
+{
+private:
+	int b = 20;
+	const int a = 10;
+public:
+	constexpr A(){}
+	constexpr int test() { return a; }
+};
+
+//静态成员可以作为默认实参
+//类内静态成员集体共享
+//静态变量不能类内初始化
+//静态常量必须类内初始化

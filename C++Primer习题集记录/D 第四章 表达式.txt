@@ -1,0 +1,337 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+int main()
+{
+	vector<int>v;
+	v.push_back(10);
+	cout << *v.begin();//10
+	cout << *v.begin() + 1;//11
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+using namespace std;
+int main()
+{
+	vector<int>v;
+	v.push_back(10);
+	//成员函数选择运算符‘.’ 函数调用运算符‘()’  解引用运算符 ‘*’
+	//添加括号是否正确
+	cout << "*v.begin()=" << *v.begin() << endl;
+	cout << "*(v.begin())=" << *(v.begin()) << endl;
+	cout <<"*v.begin() + 1="<< *v.begin() + 1 << endl;
+	cout << "(*(v.begin())) + 1=" << (*(v.begin())) + 1 << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	//结果一致 验证算数运算符优先级
+	int a = 12 / 3 * 4 + 5 * 15 + 24 % 4 / 2;
+	int b = ((12 / 3) * 4) + (5 * 15) + ((24 % 4) / 2);
+	cout << a << endl;
+	cout << b << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	int a = -30 * 3 + 21 / 5;
+	int b = -30+ 3 *21/ 5;
+	int c = 30 / 3 * 21 % 5;
+	int d = -30 / 3 * 21 % 4;
+	cout << a << endl;
+	cout << b << endl;
+	cout << c << endl;
+	cout << d << endl;
+	//附：-m%n=-(m%n) m%(-n)=m%n
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+#include<math.h>
+int main()
+{
+	int a = pow(2, 31);
+	a -= 1;//int型超过2的31次方会溢出产生未定义值
+	cout << a;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	const char * c = "hello";
+	if (c&&*c)
+	{
+		cout << "指针c非空，且字符串c非空字符串" << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	int num;
+	while (cin >> num && num != 42)
+	{
+		cout << "不是42" <<endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	int a;
+	double b;
+	//赋值运算符有右结合性
+	a = b = 3.5;//a=3 b=3.5
+	cout << "a = " << a << " b = " << b << endl;
+	b = a = 3.5;//a=3 b=3
+	cout << "a = " << a << " b = " << b << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	int i = 0;
+	//=号左侧必须是左值 右侧可以是左值或右值
+	//if(1=i){}//报错
+	if(i=1){}
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	int a;
+	double b;
+	int *p;
+	//a = b = p = 0;//报错 指针数据类型无法赋值给double和int
+	a = b = 0;
+	p = 0;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int* getPtr()
+{
+	int *a = new int(10);
+	int *p = a;
+	return p;
+}
+int main()
+{
+	int *p;
+	//要加括号 赋值运算符优先级低于不相等运算符
+	if ((p = getPtr()) != NULL)
+	{
+		cout << *p << endl;
+	}
+	int i;
+	if (i = 1024)
+	{
+		cout << "恒成立 此赋值运算返回的是1024 无法判断i与1024大小关系" << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+main()
+{
+	int a = 0;
+	//以下都是判断a和a+1是否存在零
+	if (a++ && a/*此时a已经加1*/)//尽量不这么用
+	{
+		cout << "a和a+1都不是0" << endl;
+	}
+	if (a && (a + 1))
+	{
+		cout << "a和a+1都不是0" << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+using namespace std;
+int main()
+{
+	srand((unsigned)time(NULL));
+	vector<int>v;
+	for (int i = 0; i < 10; ++i)
+	{
+		v.push_back(rand() % 10);
+	}
+	cout << "当前容器元素" << endl;
+	for (auto&val : v)
+	{
+		cout << val << " ";
+	}
+	cout << endl;
+	for (auto&val : v)
+	{
+		val = (val % 2 != 0) ? val * 2 : val;
+	}
+	cout << "奇数翻倍后容器元素" << endl;
+	for (auto&val : v)
+	{
+		cout << val << " ";
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+int main()
+{
+	string str;
+	int grade;
+	while (cin >> grade && grade >= 0 && grade <= 100)
+	{
+		str = grade > 90 ? "优秀" : 
+			grade > 75 ? "良好" : 
+			grade >= 60 ? "一般" : "不及格";
+	}
+	cout << str << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+int main()
+{
+	string str;
+	int grade;
+	while (cin >> grade && grade >= 0 && grade <= 100)
+	{
+		if (grade > 90)
+			str = "优秀";
+		else if (grade > 75)
+			str = "良好";
+
+		else if (grade >= 60)
+			str = "一般";
+		else
+			str = "不及格";
+	}
+	cout << str << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+struct P
+{
+	int a;
+}*p;
+int test()
+{
+	return 10;
+}
+int main()
+{
+	int x = 10, y = 3;
+	int num=sizeof x + y;//sizeof优先级大于加法运算符 num为7
+	sizeof p->a;//成员选择运算符优先级高于sizeof
+	sizeof x > y;//sizeof优先级大于关系运算符优先级
+	sizeof test();//函数调用运算符优先级大于sizeof运算符优先级
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+int main()
+{
+	constexpr int size_arr = 5;
+	int arr[size_arr] = { 1,2,3,4,5 };
+	for (int*p = arr, s = 0; s != size_arr, p != arr + size_arr; ++p, ++s)
+	{
+		cout << *p << " " << arr[s] << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	bool condition = true;
+	int x = 10, y = 1;
+	condition ? ++x, ++y : --x, --y;
+	//因为逗号运算符的优先级低于条件运算符
+	//所以两者等价
+	(condition ? ++x, ++y : --x), --y;
+	cout << "x = " << x << endl;
+	cout << "y = " << y << endl;
+
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	int a = 3;
+	double b = 1.3;
+	a *= static_cast<int>(b);//类型转化(不能有底层const)
+	//底层const用const_cast
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+int main()
+{
+	int i; double d; const int *pi; char *pc; void *pv;
+	pv = static_cast<void *>(const_cast<int*>(pi));
+	i = static_cast<int>(*pc);
+	pv = static_cast<void*>(&d);
+	pc = static_cast<char*>(pv);
+	system("pause");
+	return 0;
+}

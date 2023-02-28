@@ -1,0 +1,193 @@
+istream& f(istream&in)
+{
+	int v;
+	while (in >> v, !in.eof())
+	{
+		if (in.bad())//IO流错误
+		{
+			throw runtime_error("have error");
+		}
+		if (in.fail())//数据错误 输入了非数字
+		{
+			cout << "fail" << endl;
+			cout << cin.rdstate() << endl;//查看错误状态
+			in.clear();//清理错误符
+			in.sync();//清理缓冲区
+			in.ignore(1024,'\n');//略过 参数1代表跳过个数 参数二遇到后停止跳过
+			continue;
+		}
+		cout << v << endl;
+	}
+	in.clear();
+	return in;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<fstream>
+#include<vector>
+int main()
+{
+	fstream ifs("01.txt");
+	if (!ifs)
+	{
+		cout << "未打开" << endl;
+		system("pause");
+		return -1;
+	}
+	vector<string>v;
+	string line = "";
+	while (getline(ifs, line))//或 while (ifs>>line)
+	{
+		cout << line << endl;
+		v.push_back(line);
+	}
+	for (auto &val : v)
+	{
+		cout << val << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+//cmd指令传参 *.exe 文件名1 对应argv[1] 文件名2 对应argv[2]
+#include<iostream>
+using namespace std;
+#include<string>
+#include<fstream>
+#include<vector>
+int main(int argc,char*argv[])
+{
+	fstream ifs(argv[1]);
+	if (!ifs)
+	{
+		cout << "打开失败" << endl;
+	}
+	string line = "";
+	while (getline(ifs, line))//或 while (ifs>>line)
+	{
+		cout << line << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+//类文件读写
+#include<iostream>
+using namespace std;
+#include<fstream>
+#include<ostream>
+class A
+{
+public:
+	int a = 10;
+	double b = 10.222f;
+	char c = 'c';
+};
+int main(int argc,char*argv[])
+{
+	A a;
+	//ofstream ofs("01.txt",ios::out|ios::app);
+	//ofs.write((char*)&a, sizeof(a));
+	//ofs.close();
+	ofstream ifs("01.txt");
+	ifs.write((char *)&a, sizeof(a));
+	ifs.close();
+	cout << a.a << " "<<a.b << " " << a.c << endl;
+	system("pause");
+	return 0;
+}
+
+
+//ostringstream istringstream
+#include<iostream>
+using namespace std;
+#include<string>
+#include<fstream>
+#include<ostream>
+#include<sstream>
+istream& f(istream&in)
+{
+	string v;
+	while (in >> v, !in.eof())
+	{
+		if (in.bad())//IO流错误
+		{
+			throw runtime_error("have error");
+		}
+		if (in.fail())//数据错误 输入了非数字
+		{
+			cout << "fail" << endl;
+			cout << cin.rdstate() << endl;//查看错误状态
+			in.clear();//清理错误符
+			in.sync();//清理缓冲区
+			in.ignore(1024, '\n');//略过 参数1代表跳过个数 参数二遇到后停止跳过
+			continue;
+		}
+		cout << v << endl;
+	}
+	in.clear();
+	return in;
+}
+int main(int argc,char*argv[])
+{
+	ostringstream msg;
+	msg << "C++ Primer 5" << endl;
+	istringstream in(msg.str());
+	f(in);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<fstream>
+#include<ostream>
+#include<sstream>
+#include<vector>
+istream& f(istream&in)
+{
+	string v;
+	while (in >> v, !in.eof())
+	{
+		cout << v << endl;
+	}
+	in.clear();
+	return in;
+}
+class Person
+{
+public:
+	string m_Name;
+	vector<string>m_Phones;
+};
+int main(int argc,char*argv[])
+{
+	istringstream in;
+	string str,word;
+	vector<Person>v_Person;
+	while (getline(cin,str))//姓名 电话1 电话2 电话3.......
+	{
+		Person p;
+		in.clear();
+		in.str(str);
+		in >> p.m_Name;
+		while (in >> word)
+		{
+			p.m_Phones.push_back(word);
+		}
+		v_Person.push_back(p);
+	}
+	for (auto&val : v_Person)
+	{
+		cout << val.m_Name << endl;
+		for (auto&val2 : val.m_Phones)
+		{
+			cout << val2 << endl;
+		}
+	}
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,1308 @@
+using 声明符
+#include<iostream>
+#include<string>
+using std::cout;
+using std::endl;
+using std::istream;
+using std::ostream;
+using std::string;
+int main()
+{
+
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	string line;
+	while (getline(cin, line))//将键盘输入数据输入到字符串可包括空格 Enter结束
+	{
+		cout << line << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	char c;
+	while (cin>>c)//将键盘输入数据输入到字符串可包括空格 Enter结束
+	{
+		cout << c << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	string line1, line2;
+	char selectChar;
+	cin >> selectChar;
+	if (selectChar == '1')
+	{
+		cout << "输入：hello world" << endl;
+		cin >> line1;
+		cout << "line1：" << line1 << endl;//string型遇到空格就停止保存 且忽视开头空格
+	}
+	//cin.clear();//清空缓存区
+	//cin.sync();//写入缓存
+	if (selectChar == '2')
+	{
+		cout << "输入：hello world" << endl;
+		while (getline(cin, line2))
+		{
+			//第一次输入无效 会先打印一次
+			cout << "line2：" << line2 << endl;//string型可包含空格 包括开头空格
+		}
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	//比较字符串大小
+	string line1, line2;
+	cin >> line1 >> line2;
+	if (line1 == line2)
+	{
+		cout << "相等" << endl;
+	}
+	else if (line1 < line2)
+	{
+		cout << "line2 大" << endl;
+	}
+	else
+	{
+		cout << "line1 大" << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	//比较字符串长度
+	string line1, line2;
+	cin >> line1 >> line2;
+	auto num1 = line1.size();
+	auto num2 = line2.size();
+	if (num1 == num2)
+	{
+		cout << "相等" << endl;
+	}
+	else if (num1 < num2)
+	{
+		cout << "line2 大" << endl;
+	}
+	else
+	{
+		cout << "line1 大" << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	//字符串拼接
+	string line1, line2;
+	while (cin >> line1)
+	{
+		line2 += line1;
+		cout << "拼接后的字符：" << line2 << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	//字符串拼接 并加空格
+	string line1, line2;
+	char cont = 'y';
+	while (cin >> line1)
+	{
+		if (!line2.size())
+		{
+			line2 += line1;
+		}
+		else
+		{
+			line2 += " " + line1;
+		}
+		cout << "继续：y " << endl;
+		cin >> cont;
+		if (cont == 'y')
+		{
+		}
+		else
+		{
+			break;
+		}
+	}
+	cout <<"line2："<< line2 << endl;//开头没有 空格
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	//字符串替换
+	string s;
+	getline(cin,s);
+	for (auto & c : s)//范围for语句 处理所有字符
+	{
+		c = 'X';
+	}
+	cout << s << endl;//替换后字符串所有字符为'X'
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	//字符串替换
+	string s;
+	getline(cin,s);
+	for (int i=0;i<s.size();i++)
+	{
+		s[i] = 'X';
+	}
+	cout << s << endl;//替换后字符串所有字符为'X'
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	//字符串替换
+	string s;
+	getline(cin,s);
+	int i = 0;
+	while (s[i] != '\0')
+	{
+		s[i] = 'X';
+		i++;
+	}
+	cout << s << endl;//替换后字符串所有字符为'X'
+	system("pause");
+	return 0;
+}
+
+C 库函数 int ispunct(int c) 检查所传的字符是否是标点符号字符。
+标点符号字符可以是非字母数字（正如 isalnum 中的一样）的任意图形字符（正如 isgraph 中的一样）。
+
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+int main()
+{
+	string s;
+	getline(cin,s);
+	for (auto & c : s)
+	{
+		if (!ispunct(c))//根据输入数据顺序输出 去除标点
+		{
+			cout << c << endl;
+		}
+	}
+	cout << s << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+int main()
+{
+	string s;
+	getline(cin,s);
+	for (decltype(s.size())i=0;i<s.size();i++)
+	{
+		if (!ispunct(s[i]))//根据输入数据顺序输出 去除标点
+		{
+			cout << s[i];
+		}
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+int main()
+{
+	const string s;//字符串常量不可修改
+	//getline(cin,s);
+	for(auto & c:s)
+	{
+		//c = 'X';
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+int main()
+{
+	vector<vector<int>>v;
+	vector<string>s1;
+	//s1 = v;//赋值出错类型不一致
+	vector<string>s2(10, "null");
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+int main()
+{
+	vector<int>v1;//数量 0
+	vector<int>v2(10);//元素数量 10 初值 0
+	vector<int>v3(10, 42);//元素数量 10 初值 42
+	vector<int>v4{ 10 };//元素数量 1 初值 10
+	vector<int>v5{ 10,42 };//元素数量 10 初值 42
+	vector<string>v6{ 10 };//元素数量 10 初值 ""
+	vector<string>v7{ 10,"null" };//元素数量10 初值 "null"
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+using namespace std;
+int main()
+{
+	vector<int>v;
+	int i = 0;
+	while (cin >> i)
+	{
+		v.push_back(i);
+	}
+	//范围 for 语句遍历 vector
+	for (auto & c : v)
+	{
+		cout << c << " ";
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+int main()
+{
+	vector<string>v;
+	string i;
+	while (cin >> i)//不保留首字空格
+	{
+		v.push_back(i);
+	}
+	//范围 for 语句遍历 vector
+	for (auto & c : v)
+	{
+		cout << c << " ";
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+int main()
+{
+	vector<string>v;
+	string i;
+	while (cin >> i)//不保留首字空格
+	{
+		v.push_back(i);
+	}
+	//范围 for 语句遍历 vector
+	for (auto & c : v)
+	{
+		cout << c << " ";
+	}
+	//迭代器遍历vector
+	for (vector<string>::iterator it = v.begin(); it != v.end(); it++)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+template<class T>
+void printVector(vector<T>&v)
+{
+	for (auto c : v)
+	{
+		cout << c << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	vector<int>v1;//数量 0
+	vector<int>v2(10);//元素数量 10 初值 0
+	vector<int>v3(10, 42);//元素数量 10 初值 42
+	vector<int>v4{ 10 };//元素数量 1 初值 10
+	vector<int>v5{ 10,42 };//元素数量 10 初值 42
+	vector<string>v6{ 10 };//元素数量 10 初值 ""
+	vector<string>v7{ 10,"null" };//元素数量10 初值 "null"
+	printVector(v1);
+	printVector(v2);
+	printVector(v3);
+	printVector(v4);
+	printVector(v5);
+	printVector(v6);
+	printVector(v7);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+template<class T>
+void printVector(vector<T>&v)
+{
+	for (auto c : v)
+	{
+		cout << c << " ";
+	}
+	cout << endl;
+}
+int main()
+{
+	vector<string>v_str;
+	string str;
+	while (cin >> str)
+	{
+		v_str.push_back(str);
+	}
+	for (auto &c : v_str)
+	{
+		for (auto &b : c)
+		{
+			b = toupper(b);//字母小写转大写
+		}
+		cout << c << endl;
+	}
+
+	system("pause");
+	return 0;
+}
+
+	vector<int>v;
+	//v[0] = 10;//错 下标只能访问已经存在的元素 不能添加元素
+	v.push_back(10);//对
+
+//定义vector 5 个 10
+	//一
+	vector<int>v1;
+	for (int i = 0; i < 5; i++){
+		v1.push_back(10);
+	}
+	//二
+	vector<int>v2(5);
+	for (auto & c : v2){
+		c = 42;
+	}
+	//三
+	vector<int>v3{ 10,10,10,10 ,10 };
+	//四
+	vector<int>v4 = { 10 ,10 ,10 ,10 ,10 };
+	//五
+	vector<int>v5(5, 10);
+
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+//template<class T>
+//void printVector(vector<T>&v)
+//{
+//	for (auto c : v)
+//	{
+//		cout << c << " ";
+//	}
+//	cout << endl;
+//}
+int main()
+{
+	//相邻两项相加
+	vector<int>v;
+	int t;
+	while (cin >> t)
+	{
+		v.push_back(t);
+	}
+	if (v.size() == 1)
+	{
+		cout << "只有一个数：" << v[0] << endl;
+	}
+	for (decltype(v.size()) i = 0; i < v.size(); i++)
+	{
+		if ((i + 1) == v.size())
+		{
+			break;
+		}
+		cout << "第 ：" << i + 1 << " 个 和 第：" << i + 2 << " 个 和：" << v[i] + v[i + 1] << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+//template<class T>
+//void printVector(vector<T>&v)
+//{
+//	for (auto c : v)
+//	{
+//		cout << c << " ";
+//	}
+//	cout << endl;
+//}
+int main()
+{
+	//首尾相加
+	vector<int>v;
+	int t;
+	while (cin >> t)
+	{
+		v.push_back(t);
+	}
+	if (v.size() == 0)
+	{
+		cout << "没有数字！" << endl;
+		system("pause");
+		return 0;
+	}
+	if (v.size() == 1)
+	{
+		cout << "只有一个数：" << v[0] << endl;
+		system("pause");
+		return 0;
+	}
+	for (decltype(v.size()) i = 0; i < v.size(); i++)
+	{
+		if ((v.size() - 1)-i <= i)
+		{
+			if (v.size() % 2 != 0)
+			{
+				cout << "你输入的个数是奇数！ 最后会剩下：" << v[(v.size() - 1) / 2] << endl;
+			}
+			else
+			{
+				cout << "你输入的个数是偶数！ 所有数都能相加到！" << endl;
+			}
+			break;
+		}
+		cout << "第 ：" << i + 1 << " 个 和 第：" << v.size() - i << " 个 和：" << v[i] + v[(v.size() - 1) - i] << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+template<class T>
+void printVector(vector<T>&v)
+{
+	if (v.cbegin()!= v.cend())//不修改元素用cbegin和cend
+	{
+		for (auto it = v.cbegin(); it != v.cend(); it++)//这里是 auto 不是 auto&
+		{
+			cout << *it << " ";
+		}
+	}
+	cout << endl;
+}
+int main()
+{
+
+	vector<int>v1;//数量 0
+	vector<int>v2(10);//元素数量 10 初值 0
+	vector<int>v3(10, 42);//元素数量 10 初值 42
+	vector<int>v4{ 10 };//元素数量 1 初值 10
+	vector<int>v5{ 10,42 };//元素数量 10 初值 42
+	vector<string>v6{ 10 };//元素数量 10 初值 ""
+	vector<string>v7{ 10,"null" };//元素数量10 初值 "null"
+	printVector(v1);
+	printVector(v2);
+	printVector(v3);
+	printVector(v4);
+	printVector(v5);
+	printVector(v6);
+	printVector(v7);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+template<class T>
+void printVector(vector<T>&v)//打印
+{
+	if (v.cbegin()!= v.cend())//不修改元素用cbegin和cend
+	{
+		for (auto it = v.cbegin(); it != v.cend(); it++)//这里是 auto 不是 auto&
+		{
+			cout << *it << " ";
+		}
+	}
+	cout << endl;
+}
+int main()
+{
+
+	vector<string>v_str;
+	string s;
+	while (getline(cin, s))
+	{
+		v_str.push_back(s);
+	}
+	//用迭代器将容器中元素的字母都改为大写
+	for (auto it = v_str.begin(); it != v_str.end(); it++)
+	{
+		for (auto it2 = it->begin(); it2 != it->end();it2++)
+		{
+			*it2 = toupper(*it2);
+		}
+	}
+	printVector(v_str);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+#include<ctime>
+using namespace std;
+template<class T>
+void printVector(vector<T>&v)//打印
+{
+	if (v.cbegin()!= v.cend())//不修改元素用cbegin和cend
+	{
+		for (auto it = v.cbegin(); it != v.cend(); it++)//这里是 auto 不是 auto&
+		{
+			cout << *it << " ";
+		}
+	}
+	cout << endl;
+}
+int main()
+{
+	vector<int>v;
+	//给容器放入10个随机数
+	srand((unsigned)time(NULL));
+	for (int i = 0; i < 10; i++)
+	{
+		v.push_back(rand()%10);
+	}
+	printVector(v);
+	//用迭代器给容器内容翻倍
+	for (auto it = v.begin(); it != v.end(); it++)
+	{
+		(*it) *= 2;
+	}
+	printVector(v);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+#include<ctime>
+using namespace std;
+template<class T>
+void printVector(vector<T>&v)//打印
+{
+	if (v.cbegin()!= v.cend())//不修改元素用cbegin和cend
+	{
+		for (auto it = v.cbegin(); it != v.cend(); it++)//这里是 auto 不是 auto&
+		{
+			cout << *it << " ";
+		}
+	}
+	cout << endl;
+}
+int main()
+{
+	srand((unsigned)time(NULL));
+	vector<int>v;
+	//给容器放入10个随机数
+	for (int i = 0; i < 10; i++)
+	{
+		int r = rand() % 10 + 10;
+		v.push_back(r);
+	}
+	printVector(v);
+	//迭代器打印相邻元素和
+	auto beg = v.begin();
+	auto end = v.end();
+	for (auto it = beg; it != end-1; it++)
+	{
+		cout << (*it) + (*(it + 1)) << " ";
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+#include<ctime>
+using namespace std;
+int main()
+{
+	vector<int>v;
+	int i = 0;
+	while (cin >> i)
+	{
+		v.push_back(i);
+	}
+	//迭代器打印首尾元素和
+	auto beg = v.begin();
+	auto end = v.end();
+	for (auto it = beg; it != beg+(end-beg)/2; it++)
+	{
+		cout << (*it) + *(beg + (end - it) - 1) << " ";
+	}
+	if (v.size() % 2 != 0)
+	{
+		cout << "输入的是奇数，剩余：" << *(beg + (end - beg) / 2) << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+#include<string>
+#include<ctime>
+using namespace std;
+template<class T>
+void printVector(vector<T>&v)//打印
+{
+	if (v.cbegin()!= v.cend())//不修改元素用cbegin和cend
+	{
+		for (auto it = v.cbegin(); it != v.cend(); it++)//这里是 auto 不是 auto&
+		{
+			cout << *it << " ";
+		}
+	}
+	cout << endl;
+}
+int main()
+{
+	vector<int>v(10);
+	int i = 0;
+	auto it = v.begin();
+	while (cin >> i)//输入合理分数范围
+	{
+		if (0 <= i&&i < 101)
+		{
+			++*(it + i / 10);
+		}
+		else
+		{
+			cout << "输入值无效" << endl;
+		}
+	}
+	printVector(v);//各分段成绩人数（从低到高）
+	system("pause");
+	return 0;
+}
+
+	unsigned buf_size = 1024;
+	int arr1[10 * 2 + 1];//合法常量表达式
+	//int arr2[buf_size];//非常量 不合法
+	//int arr3[buf_size()];//非定义为constexpr 不合法
+	//char arr4[5] = "hello";//初始化添加\0 超出范围 不合法
+
+#include<iostream>
+#include<string>
+using namespace std;
+int int_out[10];//初始化为零
+string str_out[10];//空字符
+int main()
+{
+	int int_in[10];//不被定义
+	string str_in[10];//空字符
+	cout << int_out[0] << endl;
+	cout << str_out[0] << endl;
+	cout << int_in[0] << endl;
+	cout << str_in[0] << endl;
+	/*总结 全局变量int初始为零 局域变量不初始化
+	sring 自带空字符初始化*/
+	system("pause");
+	return 0;
+}
+
+//友元函数和运算符重载
+#include<iostream>
+using namespace std;
+ 
+class book {
+public:
+    int getBookNo () {
+        return bookNo;
+    }
+    friend istream& operator>> (istream& in, book& b);
+    friend ostream& operator<< (ostream& out, book b);
+private:
+    int bookNo;
+};
+ 
+istream& operator>> (istream& in, book& b) {
+    in >> b.bookNo;
+    return in;
+}
+ostream& operator<< (ostream& out, book b) {
+    out << b.bookNo;
+    return out;
+}
+ 
+int main () {
+    book b;
+    cout << "input book number: ";
+    cin >> b;
+    // cout << "book number is " << b.getBookNo() << endl;
+    cout << b;
+}
+
+size_t是标准C库中定义的，在64位系统中为long long unsigned int，非64位系统中为long unsigned int
+
+#include<iostream>
+#include<string>
+#include<map>
+using namespace std;
+int main()
+{
+	//constexpr 定义常量表达式
+	constexpr size_t array_size = 10;
+	int ia[array_size];
+	for (size_t ix = 0; ix <= array_size; ++ix)//最后的ix越界但是不访问 程序结束时报错
+	{
+		ia[ix] = ix;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+#include<map>
+using namespace std;
+int main()
+{
+	//constexpr 定义常量表达式
+	constexpr int array_size = 10;
+	int ia[array_size];
+	for (int ix = 0; ix < array_size; ++ix)
+	{
+		ia[ix] = ix;
+	}
+	//遍历数组
+	for (auto & c : ia)
+	{
+		cout << c <<" ";
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	//constexpr 定义常量表达式
+	constexpr int array_size = 10;
+	int arr1[array_size], arr2[array_size];
+	for (int i = 0; i < array_size; ++i)
+	{
+		arr1[i] = i;
+	}
+	//数组拷贝
+	for (int i = 0; i < array_size; ++i)
+	{
+		arr2[i] = arr1[i];
+	}
+	for (auto & c : arr2)
+	{
+		cout << c <<" ";
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+using namespace std;
+int main()
+{
+	//constexpr 定义常量表达式
+	constexpr int array_size = 10;
+	vector<int>v1, v2;
+	for (int i = 0; i < array_size; ++i)
+	{
+		v1.push_back(i);
+	}
+	//容器拷贝
+	for (int i = 0; i < array_size; ++i)
+	{
+		v2.push_back(v1[i]);
+	}
+	for (auto & c : v2)
+	{
+		cout << c << " ";
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<vector>
+using namespace std;
+int main()
+{
+	//constexpr 定义常量表达式
+	constexpr int array_size = 10;
+	int arr[array_size] = { 1,2,3,4,5,6,7,8,9,10 };
+	//遍历
+	for (auto &val : arr){
+		cout << val << " ";
+	}
+	cout << endl;
+	//通过指针将数组元素值改为零
+	int *p = begin(arr);//begin和end是编译器提供的函数
+	while (p != end(arr)){
+		*p = 0;
+		p++;
+	}
+	//遍历
+	for (auto &val : arr){
+		cout << val << " ";
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}
+
+//判断数组或容器是否相等
+#include<iostream>
+#include<vector>
+using namespace std;
+constexpr int array_size = 5;
+template<typename T>
+void isSame(T p_arr1,T p_arr2)
+{
+	for(int i = 0;i < array_size; i++)
+	{
+		if (p_arr1[i] != p_arr2[i])
+		{
+			cout << "不相等" << endl;
+			return;
+		}
+	}
+	cout << "相等" << endl;
+	return;
+}
+int main()
+{
+	//constexpr 定义常量表达式
+	int arr1[array_size] = { 1,2,3,4,5 };
+	int arr2[array_size] = { 1,2,3,4,6 };
+	vector<int>v1{ 1,2,3,4,5 };
+	vector<int>v2{ 1,2,3,4,5 };
+	//数组
+	cout << "数组" << endl;
+	isSame(arr1, arr2);
+	//容器
+	auto v1_it = v1.cbegin();
+	auto v2_it = v2.cbegin();
+	cout << "容器" << endl;
+	isSame(v1_it, v2_it);
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+using namespace std;
+int main()
+{
+	srand((unsigned)time(NULL));
+	int arr1[10], arr2[10];
+	for (int i=0;i<10;i++)
+	{
+		arr1[i] = rand() % 10;
+		cout << arr1[i] << " ";
+	}
+	cout << endl;
+	for (int i = 0; i < 10; i++)
+	{
+		int c;
+		if (cin >>c)
+		{
+			arr2[i] = c;
+		}
+	}
+	int* p1 = arr1;
+	int* p2 = arr2;
+	while (p1 != end(arr1) && p2 != end(arr2))
+	{
+		if (*p1 != *p2)
+		{
+			cout << "不相等" << endl;
+			system("pause");
+			return -1;
+		}
+		p1++;
+		p2++;
+	}
+	cout << "相等" << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+using namespace std;
+int main()
+{
+	srand((unsigned)time(NULL));
+	vector<int>v1;
+	v1.reserve(5);
+	vector<int>v2;
+	v2.reserve(5);
+	for (int i=0;i<5;i++)
+	{
+		int r = rand() % 10;
+		v1.push_back(r);
+		cout << r << " ";
+	}
+	cout << endl;
+	for (int i = 0; i < 5; i++)
+	{
+		int c;
+		if (cin >>c)
+		{
+			v2.push_back(c);
+		}
+	}
+	auto it1 = v1.begin();
+	auto it2 = v2.begin();
+	while (it1 != end(v1) && it2 != end(v2))
+	{
+		if (*it1 != *it2)
+		{
+			cout << "不相等" << endl;
+			system("pause");
+			return -1;
+		}
+		it1++;
+		it2++;
+	}
+	cout << "相等" << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+using namespace std;
+int main()
+{
+	//末尾加入\0表示结尾，不然遍历结果不可预期，或者直接写成字符串"helllo"
+	const char ch[] = { 'h','e','l','l','o','\0' };
+	const char*c = ch;
+	while (*c)
+	{
+		cout << *c;
+		c++;
+	}
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+using namespace std;
+int main()
+{
+	srand((unsigned)time(NULL));
+	int a[10];
+	for (int i = 0; i < 10; i++)
+	{
+		a[i] = rand() % 10;
+	}
+	vector<int>v(begin(a), end(a));//以数组初始化容器
+	for (auto & val : v)
+	{
+		cout << val << " ";
+	}
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+using namespace std;
+int main()
+{
+	srand((unsigned)time(NULL));
+	vector<int>vInt;
+	for (int i = 0; i < 10; i++)
+	{
+		vInt.push_back(rand() % 100);
+	}
+	int a[10];
+	auto it = vInt.begin();
+	for (auto&val : a)//容器初始化数组
+	{
+		val = *it;
+		it++;
+	}
+	cout << "数组元素遍历：" << endl;
+	for (auto&val : a)
+	{
+		cout << val << " ";
+	}
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+using namespace std;
+int main()
+{
+	srand((unsigned)time(NULL));
+	int ia[3][4];
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			ia[i][j] = rand() % 10;
+		}
+	}
+	cout << "范围for遍历二维数组" << endl;
+	for (int (&row)[4] : ia)
+	{
+		for (int &col : row)
+		{
+			cout << col << " ";
+		}
+		cout << endl;
+	}
+	cout << "下标遍历二维数组" << endl;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			cout << ia[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << "指针遍历二维数组" << endl;
+	int (*p)[4] = ia;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			cout<<*(*(p + i) + j)<<" ";
+		}
+		cout << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+using namespace std;
+using intArr = int[4];//类型别名声明
+int main()
+{
+	srand((unsigned)time(NULL));
+	int ia[3][4];
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			ia[i][j] = rand() % 10;
+		}
+	}
+	cout << "范围for遍历二维数组" << endl;
+	for (intArr&row : ia)
+	{
+		for (int &col : row)
+		{
+			cout << col << " ";
+		}
+		cout << endl;
+	}
+	cout << "下标遍历二维数组" << endl;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			cout << ia[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << "指针遍历二维数组" << endl;
+	intArr*p = ia;
+	for (int i = 0; i < 3; i++)//1种
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			cout<<*(*(p + i) + j)<<" ";
+		}
+		cout << endl;
+	}
+	for (intArr*p = ia; p < ia + 3; p++)//2种
+	{
+		for (int *q = *p; q < *p + 4; q++)
+		{
+			cout << *q << " ";
+		}
+		cout << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+using namespace std;
+int main()
+{
+	//auto改进
+	srand((unsigned)time(NULL));
+	int ia[3][4];
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			ia[i][j] = rand() % 10;
+		}
+	}
+	cout << "范围for遍历二维数组" << endl;
+	for (auto&row : ia)
+	{
+		for (int &col : row)
+		{
+			cout << col << " ";
+		}
+		cout << endl;
+	}
+	cout << "下标遍历二维数组" << endl;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			cout << ia[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << "指针遍历二维数组" << endl;
+	auto p = ia;
+	for (int i = 0; i < 3; i++)//1种
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			cout<<*(*(p + i) + j)<<" ";
+		}
+		cout << endl;
+	}
+	for (auto p = ia; p < ia + 3; p++)//2种
+	{
+		for (int *q = *p; q < *p + 4; q++)
+		{
+			cout << *q << " ";
+		}
+		cout << endl;
+	}
+	system("pause");
+	return 0;
+}

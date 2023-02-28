@@ -1,0 +1,214 @@
+	list<char>v_str = { 'w','w','r','l','e','r','u','y','y' };
+	map<char, size_t>m;
+	//map初始化时 size_t或int初始为0
+	//字母也作为key值也支持排序
+	for (auto&val : v_str)
+	{
+		++m[val];
+	}
+	for (auto&val : m)
+	{
+		cout << val.first << " " << val.second << endl;
+	}
+
+#include<iostream>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<string>
+using namespace std;
+void add_families(map<string, vector<string>>&families,const string&name)
+{
+	if (families.find(name) == families.end())
+	{
+		families[name] = vector<string>();
+	}
+}
+void add_number(map<string, vector<string>>&families, const string&name,const string&num)
+{
+	if (families.find(name) == families.end())
+	{
+		cout << "没找到" << endl;
+	}
+	else
+	{
+		families.at(name).push_back(num);
+	}
+}
+int main(int argc,char *argv[])
+{
+	map<string, vector<string>>families;
+	add_families(families, "张");
+	add_number(families, "张", "三");
+	add_number(families, "张", "伟");
+	add_families(families, "李");
+	add_number(families, "李", "四");
+	add_number(families, "李", "伟");
+	for (auto it = families.begin(); it != families.end(); ++it)
+	{
+		cout << it->first << endl;
+		for (vector<string>::iterator it_n = it->second.begin(); it_n != it->second.end(); ++it_n)
+		{
+			cout << *it_n << endl;
+		}
+	}
+	system("pause");
+	return 0;
+}
+
+	//只记录非重复元素
+	set<string>v;
+	v.insert("www");
+	v.insert("qqq");
+	v.insert("sas");
+	v.insert("www");
+	v.insert("eee");
+	v.insert("www");
+	for (auto&val : v)
+	{
+		cout << val << endl;
+	}
+
+	//重载了<和>才能作为map的key值
+	list<int>L = { 1,2,3 };
+	list<int>::iterator it = L.begin();
+	list<int>::iterator is = L.end();
+	map<list<int>::iterator, int>m;
+	m.insert(make_pair(it, 1));//生成失败
+
+	vector<pair<string, int>>v;
+	v.push_back({ "张三",10 });
+	cout << (*v.begin()).first << " " << (*v.begin()).second << endl;
+
+#include<iostream>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<string>
+using namespace std;
+void add_families(map<string, vector<pair<string, string>>>&families,const string&name)
+{
+	families[name] = vector<pair<string, string>>();
+}
+void add_number(map<string, vector<pair<string,string>>>&families, const string&name,const string&num,const string &birthday)
+{
+	families[name].push_back({ num,birthday });
+}
+int main(int argc,char *argv[])
+{
+	map<string, vector<pair<string,string>>>families;
+	add_families(families, "张");
+	add_number(families, "张", "三","1999");
+	add_number(families, "张", "伟","2006");
+	add_families(families, "李");
+	add_number(families, "李", "四","1980");
+	add_number(families, "李", "伟","2030");
+	for (auto it = families.begin(); it != families.end(); ++it)
+	{
+		cout << it->first << endl;
+		for (vector<pair<string,string>>::iterator it_n = it->second.begin(); it_n != it->second.end(); ++it_n)
+		{
+			cout << it_n->first << " " << it_n->second << endl;
+		}
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<algorithm>
+#include<set>
+using namespace std;
+class A
+{
+public:
+	A(int a) :m_A(a){}
+	int m_A;
+};
+bool funcA(const A&a1,const A&a2)
+{
+	return a1.m_A < a2.m_A;
+}
+typedef bool (*pf)(const A&, const A&);
+
+int main(int argc,char *argv[])
+{
+	//set 自动排列 对于类排序 规则指定 funcA 声明参数pf
+	//更简单的方式：在类中重载 < 指定排序规则
+	set<A, pf>s(funcA);
+	s.insert(A(10));
+	s.insert(A(20));
+	s.insert(A(30));
+	s.insert(A(25));
+	s.insert(A(16));
+
+	for (auto&val:s)
+	{
+		cout << val.m_A << " ";
+	}
+	system("pause");
+	return 0;
+}
+
+	vector<string>v = { "w","q","r","s","x","w","h","d" };
+	map<string, size_t>m;
+	for (auto&val : v)
+	{
+		auto isfind = m.insert({ val,1 });
+		//isFind是一个对组
+		if (!isfind.second)//代表插入不成功
+		{
+			isfind.first->second++;
+		}
+	}
+	for (auto&val : m)
+	{
+		cout << val.first << " " << val.second << endl;
+	}
+
+equal_range函数用于在序列中表示一个数值的第一次出现与最后一次出现的后一位。得到相等元素的子范围
+
+#include<iostream>
+#include<algorithm>
+#include<map>
+#include<string>
+using namespace std;
+int main(int argc,char *argv[])
+{
+	multimap<string, string>m;
+	m.insert(pair<string,string>("张三", "123"));
+	m.insert(pair<string, string>("李四", "123"));
+	m.insert(pair<string, string>("王五", "123"));
+	m.insert(pair<string, string>("王五", "123"));
+	m.insert(pair<string, string>("张三", "123"));
+	auto pos = m.equal_range("王五");
+	if (pos.first == pos.second)
+	{
+		cout << "No Find" << endl;
+	}
+	else
+	{
+		m.erase(pos.first, pos.second);
+	}
+	for (auto&val : m)
+	{
+		cout << val.first << " " << val.second << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+	//m.lower_bound;查找元素的开始位置
+	//m.upper_bound;查找元素的最后位置
+
+	//无序关联容器map 包含#include<unordered_map>
+	unordered_map<char, size_t>m;
+	vector<char>v = { 's','w','d','s','s','d','f' };
+	for (auto&val : v)
+	{
+		m[val]++;
+	}
+	for (auto&val : m)
+	{
+		cout << val.first << " " << val.second << endl;
+	}

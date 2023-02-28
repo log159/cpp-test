@@ -1,0 +1,499 @@
+#include<iostream>
+int main()
+{
+	unsigned u = 10, u2 = 42;
+	std::cout <<"u = "<< u << std::endl;
+	std::cout <<"u2 = "<< u2 << std::endl;
+	std::cout << "u - u2 = " << u - u2 << std::endl;
+	int i = 10, i2 = 42;
+	std::cout << "i = " << i << std::endl;
+	std::cout << "i2 = " << i2 << std::endl;
+	std::cout << "i - i2 = " << i - i2 << std::endl;
+	//std::cout << "i - 2*u = " << i - 2*u << std::endl;//结果错误
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int main()
+{
+	int a = 9, b = 7;
+	//int a2 = 09, b2 = 07;//编译报错因为0开头的八进制不应该有“09”
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int main()
+{
+	//输出2M然后换行
+	std::cout << "2\x4d\012";//字母用16进制 换行符用8进制
+	//输出2、制表符、M 后换行
+	std::cout << "2\tM\n";
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int main()
+{
+	//std::cin >> int a;//错 不能在定义变量时赋值
+	//int b = { 3.14 };//错 （某些编译器可以）
+	int c = 3.14;//精度丢失
+	//double d = e = 9.99;//错 定义多变量时不能连续赋值
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+std::string global_str;
+int global_int;
+//全局域int 未赋值初始为零
+//作用域int 未赋值不初始化
+int main()
+{
+	std::string local_str;
+	int local_int;
+	std::cout << global_str;//空字符串
+	std::cout << global_int;//0
+	std::cout << local_str;//空字符串
+	//std::cout << local_int;//未定义变量访问报错
+	system("pause");
+	return 0;
+}
+
+//变量声明与引用 num需要已被定义 作用范围为定义位置到文件尾
+extern int num;
+
+#include<iostream>
+int main()
+{
+	//没有赋予初始值就为声明而非定义
+	int a=10;//定义
+	int b;//声明
+	extern int c;//声明
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int main()
+{
+	//注释掉的都非法
+	//int double = 10;//关键字不能做变量名
+	int _;
+	//int cath-1;//-不能出现在变量名
+	//int 1_or_2;//数字不能开头
+	double Double;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int i = 10;
+int main()
+{
+	int i = 100;
+	int j = i;//局部作用域重新定义全局作用域
+	std::cout << "j = " << j << std::endl;//100
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int main()
+{
+	//同理内层局部变量重新定义外层局部定义域变量
+	int i = 100;
+	for (int i = 0; i == 0; ++i)
+	{
+		std::cout << "i = " << i << std::endl;//0
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int main()
+{
+	//注释掉的错误
+	int v1 = 1.1;
+	//int &v2 = 1.1;//引用需要绑定一个对象而非一个值
+	int &v3 = v1;
+	//int &v4;//引用必须初始化
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int main()
+{
+	//引用绑定一次后就可当作原变量使用
+	//以下语法都合法 修改a1值等同于修改a值 与指针作用类似
+	int a = 0, &a1 = a;
+	double b = 1.3, &b1 = b;
+	a = b;
+	a = b1;
+	a1 = b;
+	a1 = b1;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int main()
+{
+	int *p;//*为指针声明符
+	p = nullptr;//可用nullptr、0、NULL初始化指针值
+	int a = 10;
+	p = &a;
+	std::cout << *p;//*为解引用运算符
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int main()
+{
+	int i = 0;
+	//double * p = &i;//类型不一致 报错
+	//int * p = i;//应该以地址赋值 报错
+	int * p = &i;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+int main()
+{
+	int i = 0;
+	int * p = &i;
+	int * p1 = nullptr;//指针初始化为空
+	if (p)//表示判断指针是否为空
+	{
+		std::cout << "p Pass" << std::endl;
+	}
+	if (*p)//表示解引用值是否为 false/0
+	{
+		std::cout << "*p Pass" << std::endl;
+	}
+	if (p1)//表示判断指针是否为空
+	{
+		std::cout << "p1 Pass" << std::endl;
+	}
+	system("pause");
+	return 0;
+}
+
+	//简单异常情况
+	string str = "qwertyui";
+	//char a = str[100];//程序崩溃
+	//char b = str.at(100);//抛出异常
+
+try{
+    // 可能抛出异常的语句
+}catch(exceptionType variable){
+    // 处理异常的语句
+}
+
+try和catch都是 C++ 中的关键字，后跟语句块，不能省略{ }。try 中包含可能会抛出异常的语句，一旦有异常抛出就会被后面的 catch 捕获。从 try 的意思可以看出，它只是“检测”语句块有没有异常，如果没有发生异常，它就“检测”不到。catch 是“抓住”的意思，用来捕获并处理 try 检测到的异常；如果 try 语句块没有检测到异常（没有异常抛出），那么就不会执行 catch 中的语句。
+
+这就好比，catch 告诉 try：你去检测一下程序有没有错误，有错误的话就告诉我，我来处理，没有的话就不要理我！
+
+//catch 中如果没有相匹配的异常类型就不会执行
+#include <iostream>
+using namespace std;
+int main()
+{
+	double m, n;
+	cin >> m >> n;
+	try {
+		cout << "before dividing." << endl;
+		if (n == 0)
+			throw - 1; //抛出int类型异常
+		else
+			cout << m / n << endl;
+		cout << "after dividing." << endl;
+	}
+	catch (double d) {
+		cout << "catch(double) " << d << endl;
+	}
+	catch (int e) {
+		cout << "catch(int) " << e << endl;
+	}
+	catch (...)
+	{
+		cout << "catch other"<< endl;
+	}
+	cout << "finished" << endl;
+	system("pause");
+	return 0;
+}
+
+//函数内catch处理掉异常 函数外就不再处理
+#include <iostream>
+#include <string>
+using namespace std;
+class CException
+{
+public:
+    string msg;
+    CException(string s) : msg(s) {}
+};
+double Devide(double x, double y)
+{
+    if (y == 0)
+        throw CException("devided by zero");
+    cout << "in Devide" << endl;
+    return x / y;
+}
+int CountTax(int salary)
+{
+    try {
+        if (salary < 0)
+            throw - 1;
+        cout << "counting tax" << endl;
+    }
+    catch (int) {
+        cout << "salary < 0" << endl;
+    }
+    cout << "tax counted" << endl;
+    return salary * 0.15;
+}
+int main()
+{
+    double f = 1.2;
+    try {
+        CountTax(-1);
+        f = Devide(3, 0);
+        cout << "end of try block" << endl;
+    }
+    catch (CException e) {
+        cout << e.msg << endl;
+    }
+    cout << "f = " << f << endl;
+    cout << "finished" << endl;
+    return 0;
+}
+CountTa 函数拋出异常后自行处理，这个异常就不会继续被拋给调用者，即 main 函数。因此在 main 函数的 try 块中，CountTax 之后的语句还能正常执行，即会执行f = Devide(3, 0);。
+
+第 35 行，Devide 函数拋出了异常却不处理，该异常就会被拋给 Devide 函数的调用者，即 main 函数。拋出此异常后，Devide 函数立即结束，第 14 行不会被执行，函数也不会返回一个值，这从第 35 行 f 的值不会被修改可以看出。
+
+//catch 可以将捕获的异常再次抛出
+    catch (string s ) {
+        cout << "CountTax error : " << s << endl;
+        throw; //继续抛出捕获的异常
+    }
+
+#include<iostream>
+#include<string>
+using namespace std;
+void test01(int a)
+{
+	try
+	{
+		if (a < 0)
+		{
+			throw string("tesk01");
+		}
+	}
+	catch(string str)
+	{
+		cout << "test01 异常：" << str << endl;
+		throw;
+	}
+}
+int main()
+{
+	try
+	{
+		test01(-1);
+		cout << "hello world";
+	}
+	catch (string str)
+	{
+		cout << "异常：" << str << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	int *p = nullptr;
+	int a = 10;
+	p = &a;//有指向对象的p不能delete 如果想delete p应当先置空 再delete
+	try
+	{
+		if (p)
+		{
+			cout << *p << endl;
+		}
+		else
+		{
+			throw string("p");
+		}
+	}
+	catch (...)
+	{
+		cout << "异常：" << "p" << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	//const int but;//非法 常量值but应当初始化
+	int cut = 0;
+	const int sz = cut;
+	++cut;
+	//++sz;//非法 常量值sz不能递增操作
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	int i = 10;
+	const int *  a;//指向常量的指针（唯一初始时不需要确定指针值）
+	//const int A;//但是对应常量的对象需要初始化
+	int *const b = &i;//常量指针
+	const int * const c = &i;//指向常量的常量指针
+	system("pause");
+	return 0;
+}
+
+	//自身是const为顶层const
+	//引用或指向值是const为底层const
+
+	const int * p;
+	//int *p2 = p;//指针不能用指向常量的指针赋值
+	int * P;
+	const int * P2 = P;//指向常量的指针可以用指针赋值（与上一条相反）
+	//总结：自身如果维护常量 这个常量则不允许让“被赋值对象”改变
+
+#include<iostream>
+using namespace std;
+int main()
+{
+	//auto一般保留底层const忽略顶层const
+	int i = 0;
+	auto a = i;
+	auto * b = &i;
+	auto &c = i;
+	cout << "a = " << a << endl;
+	cout << "*b = " << *b << endl;
+	cout << "c = " << c << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<typeinfo>
+//多态中使用typeid不包含头文件会谬构
+using namespace std;
+int main()
+{
+	//auto一般保留底层const忽略顶层const
+	int i = 10;
+	const int * const p = &i;
+	const int * R = &i;
+	auto P = p;
+	cout << *P << endl;
+	//typeid同样忽视顶层const 无法证明顶层const是否被忽略
+	cout << typeid(p).name() << endl;
+	cout << typeid(P).name() << endl;
+	//p = R;//常量指针报错
+	P = R;//不报错 证明auto 顶层const被忽略
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<typeinfo>
+//多态中使用typeid不包含头文件会谬构
+using namespace std;
+int main()
+{
+	const int i = 10;
+	const auto a = i;//相当于加了个顶层
+	auto b = i;
+	b = 2;
+	//a = 2;//顶层const导致报错
+	//底层一致为int
+	cout << typeid(i).name() << endl;
+	cout << typeid(a).name() << endl;
+	cout << typeid(b).name() << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<typeinfo>
+//多态中使用typeid不包含头文件会谬构
+using namespace std;
+int main()
+{
+	const int i = 10;
+
+	auto const a = i;//添加顶层const
+	auto b = i;
+	auto * const c = &i;//添加顶层const
+
+	b = 2;//忽略掉了顶层const 因而不报错
+	//a = 2;//顶层const导致报错
+	//c = &i;//顶层const导致报错
+	//底层一致为int
+	cout << typeid(i).name() << endl;
+	cout << typeid(a).name() << endl;
+	cout << typeid(b).name() << endl;
+	cout << typeid(c).name() << endl;
+
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<typeinfo>
+using namespace std;
+int main()
+{
+	int a = 3;
+	decltype(a) b = a;//单层括号 int b=a;
+	decltype((a)) c = a;//双层括号 int &c=a;
+	b++;//独立变量
+	c++;//导致a++
+	cout << a;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<typeinfo>
+using namespace std;
+int main()
+{
+	int a = 3;
+	decltype(a) b = a;//单层括号 int b=a;
+	decltype((a)) c = a;//双层括号 判断为表达式 int &c=a;
+	decltype(a = b) d = a;//单层括号 是表达式
+	b++;//独立变量
+	c++;//导致a++
+	d++;//导致a++
+	cout << a;//5
+	//总结：decltype()里是表达式时为 int &
+	//decltype 相比 auto 完美保留了顶层 
+	system("pause");
+	return 0;
+}

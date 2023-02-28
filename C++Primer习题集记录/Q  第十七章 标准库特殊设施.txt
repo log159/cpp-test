@@ -1,0 +1,74 @@
+#include<iostream>
+using namespace std;
+
+template<int R, int G, int B>
+class MyRgb
+{
+public:
+	MyRgb():m_R(R),m_G(G),m_B(B){}
+	MyRgb(int r,int g,int b) :m_R(r), m_G(g), m_B(b){}
+	MyRgb& operator[](int num) {
+		if (num == 0) { return m_R; }
+		else if (num == 1) { return m_G; }
+		else if (num == 2) { return m_B; }
+		else { throw out_of_range("无效值"); }
+	}
+	void printColor()
+	{
+		cout << " R = " << m_R << " G = " << m_G << " B = " << m_B << endl;
+	}
+
+private:
+	int m_R;
+	int m_G;
+	int m_B;
+};
+int main(int argc, char *argv[])
+{
+	MyRgb<0,0,0>m(1,2,4);
+	m.printColor();
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<bitset>
+template<size_t T>
+class exam
+{
+public:
+	exam(){}
+	void set(const size_t n,bool b)
+	{
+		bit.set(n, b);
+	}
+	size_t score(const bitset<T>&b)
+	{
+		size_t num = 0;
+		for (int i = 0; i < T; ++i)
+		{
+			if (bit[i] == b[i])
+			{
+				++num;
+			}
+		}
+		return num;
+	}
+	bitset<T>bit;
+};
+int main(int argc, char *argv[])
+{
+	exam<30>ex;
+	ex.set(5, 1);
+	ex.set(7, 1);
+	ex.set(18,1);
+	bitset<30>bt;
+	bt.set(5, 1);
+	cout << ex.score(bt) << endl;
+	system("pause");
+	return 0;
+}
+
+

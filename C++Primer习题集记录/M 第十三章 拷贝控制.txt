@@ -1,0 +1,95 @@
+class A
+{
+public:
+	//A(A a) {}//非法 形成死循环
+	A(A &a){}
+};
+
+//对象的创建不需要拷贝构造函数
+
+//堆区对象与拷贝
+#include<iostream>
+#include<string>
+using namespace std;
+class A
+{
+public:
+	A(){}
+	A(const A&a)
+	{
+		strptr = new string(*a.strptr);
+		i = a.i;
+	}
+	~A()
+	{
+		delete strptr;
+	}
+	string *strptr=nullptr;//指针未定义行为会引发错误 所以初始为空
+	int i;
+};
+void test()
+{
+	A a;
+	a.strptr = new string("aaa");
+	a.i = 10;
+	A a2(a);
+}
+int main(int argc,char *argv[])
+{
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+class A
+{
+public:
+	A(){}
+	A(const A&a)
+	{
+		strptr = new string(*a.strptr);
+		i = a.i;
+	}
+	A& operator=(const A&a)
+	{
+		delete this->strptr;
+		this->strptr = new string(*a.strptr);
+		this->i = a.i;
+		return *this;
+	}
+	~A()
+	{
+		delete strptr;
+	}
+	string *strptr = nullptr;
+	int i;
+};
+void test()
+{
+	A a;
+	a.strptr = new string("aa");
+	a.i = 10;
+	A a2;
+	cout<<*(a2 = a).strptr << endl;
+}
+int main(int argc,char *argv[])
+{
+	test();
+	system("pause");
+	return 0;
+}
+
+	A(const A&a)
+	{
+		cout << "拷贝" << endl;
+		A aa(a);//无限拷贝
+		//永远到达不了下一行
+		cout << "拷贝完成" << endl;
+		strptr = new string(*a.strptr);
+		i = a.i;
+	}
+
+//引用传参不需要拷贝构造
+//值传参需要拷贝构造

@@ -1,0 +1,248 @@
+//迭代器访问字符串
+#include <iostream>
+using namespace std;
+#include<string>
+int main()
+{
+	string s = "hello world";
+	string::iterator it = s.begin();
+	while (it!=s.end())
+	{
+		cout << *it;
+		++it;
+	}
+	cout << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+#include<string>
+int main()
+{
+	int grade;
+	cin >> grade;
+	if (grade == 100)
+	{
+		cout << "A++" << endl;
+		system("pause");
+		return 0;
+	}
+	else if (0<=grade&&grade < 60)
+	{
+		cout << "F" << endl;
+		system("pause");
+		return 0;
+	}
+	else if (grade > 100 || grade < 0)
+	{
+		cout << "输入的成绩不合法" << endl;
+		system("pause");
+		return -1;
+	}
+	string s;
+	string s_;
+	if (grade / 10 == 9)
+	{
+		s = "A";
+	}
+	else if(grade / 10 == 8)
+	{
+		s = "B";
+	}
+	else if (grade / 10 == 7)
+	{
+		s = "C";
+	}
+	else if (grade / 10 == 6)
+	{
+		s = "D";
+	}
+	if (grade % 10 < 3)
+	{
+		s_ = "-";
+	}
+	else if (grade % 10 > 7)
+	{
+		s_ = "+";
+	}
+	else
+	{
+		s_ = "";
+	}
+	cout << s + s_ << endl;
+	cout << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+#include<string>
+int main()
+{
+	int grade;
+	cin >> grade;
+	if (grade == 100)
+	{
+		cout << "A++" << endl;
+		system("pause");
+		return 0;
+	}
+	else if (0<=grade&&grade < 60)
+	{
+		cout << "F" << endl;
+		system("pause");
+		return 0;
+	}
+	else if (grade > 100 || grade < 0)
+	{
+		cout << "输入的成绩不合法" << endl;
+		system("pause");
+		return -1;
+	}
+	string s;
+	string s_;
+	s=(grade / 10 == 9) ?"A" : (grade / 10 == 8) ?"B" : (grade / 10 == 7) ? "C" : (grade / 10 == 6) ?"D" : "";
+	s_=(grade % 10 < 3) ? "-" : (grade % 10 > 7)?"+" : "";
+	cout << s + s_ << endl;
+	system("pause");
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+#include<string>
+#include<stdio.h>
+int main()
+{
+	char c;
+	bool needFind = false;
+	int f, l, i;
+	f = l = i = 0;
+	while(cin >> c)
+	{
+		if (needFind == true)
+		{
+			needFind = false;
+			switch (c)
+			{
+			case 'f':++f; continue;
+			case 'l':++l; continue;
+			case 'i':++i; continue;
+			}
+		}
+		if (c == 'f'){needFind = true;}
+	}
+	cout << "ff：" << f << endl;
+	cout << "fl：" << l << endl;
+	cout << "fi：" << i << endl;
+
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+int main()
+{
+	string str;
+	string findStr = "now";
+	string lastStr = "";
+	string theStr = "";
+	int num = 1;
+	bool isFind = false;
+	while (cin >> str){
+		if (str == findStr){
+			isFind = true;
+			if (lastStr == findStr){
+				++num;
+			}
+		}
+		lastStr = str;
+	}
+	if (isFind){cout << "continue find num is " << num;}
+	else{cout << "no find" << endl;}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<string>
+int main()
+{
+	vector<int>v1 = { 1,2,3,4 };
+	vector<int>v2 = { 1,2,3,4,5 };
+	int num = v1.size() < v2.size() ? v1.size() : v2.size();
+	string s = v1.size() < v2.size() ? "v1" : "v2";
+	for (int i = 0; i < num; ++i){
+		if (v1[i] != v2[i]){
+			cout << "互相不是前缀" << endl;
+			system("pause");
+			return -1;
+		}
+	}
+	if (v1.size() == v2.size()){
+		cout << "两容器对象相等" << endl;
+	}
+	else{
+		cout << s << " 是前缀" << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+//while和do while循环条件里不能定义变量也不能在自身的块里定义
+
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<string>
+#include<stdio.h>
+int main()
+{
+	do {
+		string str1, str2;
+		cin >> str1 >> str2;
+		cout << (str1.size() > str2.size() ? str1 : str2) << endl;
+	} while (true);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<stdexcept>//包含异常类的头文件
+int main()
+{
+	int a, b;
+	cout << "请输入被除数和除数" << endl;
+	while (true)
+	{
+		try
+		{
+			cin >> a >> b;
+			if (b == 0)
+			{
+				throw runtime_error("除数不能为零");
+			}
+			cout << "结果是：" << a / b << endl;
+		}
+		catch (runtime_error err)
+		{
+			cout << err.what() << endl;
+			char c;
+			cout << "continue ? y or n" << endl;
+			cin >> c;
+			if (c != 'y'||c!='Y')
+				break;
+		}
+	}
+	system("pause");
+	return 0;
+}

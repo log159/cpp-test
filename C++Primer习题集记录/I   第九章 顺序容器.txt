@@ -1,0 +1,490 @@
+#include<iostream>
+using namespace std;
+#include<vector>
+bool findHave(vector<int>::iterator beg, vector<int>::iterator end, int val)
+{
+	for (;beg != end; ++beg)
+	{
+		if (*beg == val)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+int main()
+{
+	vector<int>v = { 1,2,3,4,5,6 };
+	cout << findHave(v.begin(), v.end(), 5) << endl;
+	cout << findHave(v.begin(), v.end(), 8) << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+vector<int>::iterator findHave(vector<int>::iterator beg, vector<int>::iterator end, int val)
+{
+	for (;beg != end; ++beg)
+	{
+		if (*beg == val)
+		{
+			return beg;
+		}
+	}
+	return end;
+}
+int main()
+{
+	vector<int>v = { 1,2,3,4,5,6 };
+	if (findHave(v.begin(), v.end(), 2) != v.end())
+	{
+		cout << "have find" << endl;
+	}
+	else
+	{
+		cout << "no find" << endl;
+	}
+	system("pause");
+	return 0;
+}
+
+	//list迭代器只支持 递增 递减 等等于 不等于 运算
+
+	v.begin();//可改变
+	v.cbegin();//const 不可改变
+
+	vector<int>v1 = { 1,2,3,4,5 };
+	vector<int>v2(v1.begin(), v1.end());//end位置不包含元素 此初始化区间是左闭右开的
+	for (auto&val : v1)
+	{
+		cout << val << " ";
+	}
+	cout << endl;
+	for (auto&val : v2)
+	{
+		cout << val << " ";
+	}
+
+	//容器类型不同则不可拷贝初始化
+	//容器元素相容 即使容器不同也可以范围初始化 例如 vector<double> 和 list<int>
+
+	//const char * 是与string 相容的
+	vector<const char*>v1;
+	v1.push_back("hello");
+	v1.push_back("world");
+	list<string>v2(v1.begin(), v1.end());
+	for (auto&val : v2)
+	{
+		cout << val << " ";
+	}
+
+//奇数偶数分类
+	list<int>v{ 1,2,3,4,5,6,7,8,9,10 ,-1,-2,0};
+	deque<int>v1;
+	deque<int>v2;
+	for (auto&val : v)
+	{
+		if (val % 2 == 0)
+		{
+			v1.push_back(val);
+		}
+		else
+		{
+			v2.push_back(val);
+		}
+	}
+
+	for (auto&val : v1)
+	{
+		cout << val << " ";
+	}
+	cout << endl;
+	for (auto&val : v2)
+	{
+		cout << val << " ";
+	}
+
+//按位与求奇数偶数
+if (val & 1)//1 奇数 0偶数
+
+	//容器间隔插入数据
+	vector<int>v{ 1,2,3,4,5,6,7,8,9};
+	vector<int>::iterator it = v.begin()+1;
+	while (it < v.end())
+	{
+		it=v.insert(it, 0);
+		it += 2;
+	}
+	for (auto&val : v)
+	{
+		cout << val << " ";
+	}
+
+//删除偶数
+	vector<int>v={ 1,2,3,4,5,6,7,8,9};
+	vector<int>::iterator it = v.begin();
+	while (it < v.end())
+	{
+		if (!(*it & 1))
+		{
+			it = v.erase(it)-1;
+		}
+		++it;
+	}
+	for (auto&val : v)
+	{
+		cout << val << " ";
+	}
+
+//删除奇数
+	//forward_list是单方向迭代器 按照前驱删除元素 因为每个元素都只认识自己下一个元素
+	//优点 比一般链表快
+	forward_list<int>v = { 1,2,3,4,5,6,7,8,9 };
+	forward_list<int>::iterator it = v.begin();
+	forward_list<int>::iterator prev = v.before_begin();
+	while (it != v.end())
+	{
+		if (*it & 1)
+		{
+			it=v.erase_after(prev);
+		}
+		else
+		{
+			prev = it;
+			++it;
+		}
+	}
+	for (auto&val : v)
+	{
+		cout << val << " ";
+	}
+
+#include<iostream>
+using namespace std;
+#include<stdio.h>
+#include<forward_list>
+void insertList(forward_list<int>&v,int find,int push)
+{
+	forward_list<int>::iterator it = v.begin();
+	forward_list<int>::iterator prev = v.before_begin();
+	bool findif = false;
+	while (it != v.end())
+	{
+		if (*it == find)
+		{
+			it=v.insert_after(prev,push);
+			++it;prev = it;++it;
+			findif = true;
+		}
+		else
+		{
+			prev = it; ++it;
+		}
+	}
+	if (!findif)
+	{
+		v.insert_after(prev, push);
+	}
+}
+int main()
+{
+	forward_list<int>v = { 1,2,3,4,5,2,7,8,2 };
+	insertList(v, 6, 10);//如果找到find就插入push到指定位置 如果没找到就push到结尾
+	for (auto&val : v)
+	{
+		cout << val << " ";
+	}
+	system("pause");
+	return 0;
+}
+
+//预留空间与重新分配
+	vector<int>v;
+	v.reserve(100);
+	while (true)
+	{
+		cout <<"capacity："<< v.capacity() << endl;
+		cout << "size：" << v.size() << endl;
+		v.push_back(1);
+		cout << endl;
+	}
+
+#include<iostream>
+using namespace std;
+#include<string>
+void insertStr(string&str,string find,string push)
+{
+	string::iterator it = str.begin();
+	string::iterator itf = find.begin();
+	while (it!=str.end())
+	{
+		if (*it==*itf)
+		{
+			bool trueFind = true;
+			for (int i = 0; i < find.size(); ++i)
+			{
+				if (*(it + i) != *(itf + i))
+				{
+					trueFind = false;
+					break;
+				}
+			}
+			if (trueFind)
+			{
+				it=str.erase(it, (it+find.size()));
+				string::iterator itP = push.begin();
+				while(itP!=push.end())
+				{
+					str.insert(it,*itP);
+					++itP;
+				}
+				it += push.size()-1;
+			}
+			
+		}
+		++it;
+	}
+}
+int main()
+{
+	//字符串元素替换
+	string str;
+	str = "hello world wo he llo he kekeke lo";
+	insertStr(str, " wo ", " www ");
+	insertStr(str, " he ", " hhh ");
+	cout << str << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+void insertStr(string&str,string find,string push)
+{
+	int pos = 0;
+	while ((pos = str.find(find, pos)) != string::npos)
+	{
+		str.replace(pos, find.size(), push);
+		pos += push.size();
+	}
+}
+int main()
+{
+	//字符串元素替换
+	string str;
+	str = "hello world wo he llo he kekeke lo";
+	insertStr(str, " wo ", " www ");
+	insertStr(str, " he ", " hhh ");
+	cout << str << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+string add(string&str,const string&beg,const string &ed)
+{
+	//两种头插方式
+	//str.replace(0, 0, beg);//头插
+	str.insert(str.begin(), beg.begin(), beg.end());//头插
+	str.append(" " + ed);
+	return str;
+}
+int main()
+{
+	string str = "zhangsan";
+	cout << add(str, "Ms.", "Ⅱ") << endl;
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+void find_char(const string&str,const string&beg)
+{
+	string::size_type pos = 0;
+	//str.find_first_of(beg, pos) 查找范围[pos,str.size())
+	while ((pos = str.find_first_of(beg, pos))!=string::npos)
+	{
+		cout << str[pos] << endl;
+		++pos;
+	}
+	return;
+}
+
+int main()
+{
+	string str = "zhangsan12232399012scassfwef";
+	find_char(str, "123456789");
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+void find_char(const string&str,const string&beg)
+{
+	string::size_type pos = 0;
+	//str.find_first_of(beg, pos) 查找范围[pos,str.size())
+	while ((pos = str.find_first_not_of(beg, pos))!=string::npos)
+	{
+		cout << str[pos] << endl;
+		++pos;
+	}
+	return;
+}
+
+int main()
+{
+	string str = "zhangsan12232399012scassfwef";
+	find_char(str, "123456789");
+	system("pause");
+	return 0;
+}
+
+//find_first_of 查找给定字符集元素第一次出现位置
+//find_first_not_of 查找给定字符集补集元素第一次出现位置
+
+	string s1 = "123";
+	int num1 = stoi(s1);//string转int
+	cout << num1 << endl;
+	string s2 = "12.32";
+	float num2 = stof(s2);//string转float
+	cout << num2 << endl;
+
+#pragma once
+#include<iostream>
+#include<string>
+#include<vector>
+#include<stdexcept>
+using namespace std;
+class Date
+{
+public:
+	const string alphanumericStr = "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
+	const string Month_enum[12] = { "January","February","March","April","May","June","July","August","September","October","November","December" };
+	const string month_enum[12] = { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+	int day_enum[12] = { 31,28,31,30,31,30,31,31,30,31,30,31 };//2月待定
+public:
+
+	Date(const string & str);
+	bool setYear(const string str);
+	bool setMonth(const string str);
+	bool setDay(const string str);
+
+private:
+
+	unsigned m_Year;
+	unsigned m_Month;
+	unsigned m_Day;
+
+};
+
+Date::Date(const string&str)
+{
+	//开头结尾为符号处理
+	//分割符号超过两个处理
+	//空字符串处理
+	vector<string>v_Str;//预处理
+	string::size_type pos = 0;
+	string::size_type bef_pos = 0;
+	if (str.find_first_not_of(alphanumericStr, 0) == 0) 
+	{
+		throw invalid_argument("不合法的创建");
+		return;
+	}
+	if (str.find_first_not_of(alphanumericStr, str.size() - 1) == (str.size() - 1))
+	{
+		throw invalid_argument("不合法的创建");
+		return;
+	}
+	while ((pos = str.find_first_not_of(alphanumericStr,pos)) != string::npos)
+	{
+		v_Str.push_back(str.substr(bef_pos, pos-bef_pos));
+		++pos;
+		bef_pos = pos;
+	}
+	if (v_Str.size() != 2)
+	{
+		throw invalid_argument("不合法的创建");
+		return;
+	}
+	v_Str.push_back(str.substr(bef_pos, str.size() - bef_pos));
+
+
+	for (auto&val : v_Str)
+	{
+		if (val == "")
+		{
+			throw invalid_argument("不合法的创建");
+			return;
+		}
+	}
+	//0 月 1日 2年
+	if (setYear(v_Str[2])&& setMonth(v_Str[0]) && setDay(v_Str[1]))
+	{
+		cout << v_Str.at(0) <<" "<< v_Str.at(1) <<" "<< v_Str.at(2) << endl;
+	}
+	else
+	{
+		throw invalid_argument("不合法的创建");
+	}
+
+}
+
+inline bool Date::setYear(string str)
+{
+	if (!(str.find_first_not_of("1234567890")==string::npos))
+	{
+		return false;
+	}
+	int year =stoi(str);
+	if ((year % 4 == 0&&year%100!=0) || year % 400 == 0)
+	{
+		day_enum[1] = 29;//闰年加一天
+	}
+	m_Year = year;
+	return true;
+}
+
+inline bool Date::setMonth(const string str)
+{
+	for (int i = 0; i < 12; ++i)
+	{
+		if (month_enum[i] == str || Month_enum[i] == str)
+		{
+			m_Month = i + 1;
+			return true;
+		}
+	}
+	if (!(str.find_first_not_of("1234567890") == string::npos))
+	{
+		return false;
+	}
+	int month = stoi(str);
+	if (0 < month && month <= 12)
+	{
+		m_Month = month;
+		return true;
+	}
+
+
+	return false;
+}
+
+inline bool Date::setDay(const string str)
+{
+	int day = stoi(str);
+	if (0<day && day <= day_enum[m_Month - 1])
+	{
+		m_Day = day;
+		return true;
+	}
+	return false;
+}

@@ -1,0 +1,125 @@
+//智能指针
+
+reset（）函数详解
+reset( )不带参数时，若智能指针s是唯一指向该对象的指针，则释放，并置空。若智能指针P不是唯一指向该对象的指针，则引用计数减少1，同时将P置空。
+reset( )带参数时，若智能指针s是唯一指向对象的指针，则释放并指向新的对象。若P不是唯一的指针，则只减少引用计数，并指向新的对象。
+
+use_count() ：返回shared_ptr的强引用计数；
+unique() ：若use_count()为1，返回true，否则返回false
+unique_ptr 不支持拷贝 即赋值操作
+
+#include<iostream>
+#include<memory>
+#include"Cat.h"
+using namespace std;
+template<typename T>
+std::unique_ptr<T> get_T_ptr(T t)
+{
+	t.cat_set_str_value("T");
+	return std::make_unique<T>();
+}
+void move_ptr_func(std::unique_ptr<Cat>c)
+{
+	std::cout << "move_ptr_func："; c->cat_print_str_value();
+}
+int main()
+{
+	std::unique_ptr<Cat>c_p1 = std::make_unique<Cat>();
+	std::unique_ptr<Cat>c_p2(new Cat("Name Value Cat2"));
+	c_p1->cat_print_str_value();
+	c_p2->cat_print_str_value();
+	c_p1.reset();
+	c_p2.reset();
+	std::cout << "--------------" << std::endl;
+	get_T_ptr(Cat())->cat_print_str_value();
+	std::cout << "--------------" << std::endl;
+	std::unique_ptr<Cat>c_p3 = std::make_unique<Cat>();
+	if (!c_p3){std::cout << "nullptr c_p3" << std::endl;}
+	//所有权转让
+	move_ptr_func(std::move(c_p3));//所有权转让到函数内部 函数调用结束时释放指向空间并销毁局域指针
+	//std::cout << c_p3->cat_print_str_value << std::endl;
+	if (!c_p3){std::cout << "nullptr c_p3" << std::endl;}
+	system("pause");
+	return 0;
+}
+
+	std::shared_ptr<Cat>c_p1 = std::make_shared<Cat>();
+	std::shared_ptr<Cat>c_p2 = c_p1;
+	std::shared_ptr<Cat>c_p3 = c_p1;
+	std::cout << c_p1.use_count() << std::endl;
+	c_p1.reset(new Cat());//指向新内容 如果引用计数为一就先释放再指向新内容 防止了内存泄漏
+	if (!c_p1) { std::cout << "nullptr"<<std::endl; }
+	std::cout << c_p2.use_count() << std::endl;
+
+shared_ptr不可以转unique_ptr
+unique_ptr可以转shared_ptr
+shared_ptr可以转weak_ptr 引用计数不增加
+weak_ptr通过成员函数lock转shared_ptr
+weak_ptr解决循环依赖问题 即互相指向的对象释放先后问题
+
+#pragma once
+#include<iostream>
+#include<string>
+#include<memory>
+class Cat
+{
+public:
+	Cat() { std::cout << "构造函数" << std::endl; };
+
+	Cat(const std::string &s) :str(s) { std::cout << "有参构造" <<this->str<< std::endl; }
+
+	~Cat() { std::cout << "析构函数 "<<this->str<<std::endl; }
+
+	std::string cat_get_str_value();
+
+	void cat_set_str_value(const std::string&s);
+
+	void cat_print_str_value();
+
+	void set_friend(std::shared_ptr<Cat>c_p);
+
+private:
+	std::string str{ "Init Value String" };
+
+	std::weak_ptr<Cat>m_friend;
+
+};
+inline std::string Cat::cat_get_str_value()
+{
+	return this->str;
+}
+
+inline void Cat::cat_set_str_value(const std::string &s)
+{
+	this->str = s;
+}
+
+inline void Cat::cat_print_str_value()
+{
+	std::cout << this->str << std::endl;
+}
+
+inline void Cat::set_friend(std::shared_ptr<Cat>c_p)
+{
+	this->m_friend = c_p;
+}
+#include<iostream>
+#include<memory>
+#include"Cat.h"
+using namespace std;
+
+void test(shared_ptr<Cat>c_p)
+{
+	cout<<c_p.use_count() << endl;
+}
+int main()
+{
+	std::shared_ptr<Cat>c_p1 = std::make_shared<Cat>("c_p1");
+	std::shared_ptr<Cat>c_p2 = std::make_shared<Cat>("c_p2");
+	cout << c_p1.use_count() << endl;
+	cout << c_p2.use_count() << endl;
+	c_p1->set_friend(c_p2);
+	c_p2->set_friend(c_p1);
+	system("pause");
+	return 0;
+}

@@ -1,0 +1,275 @@
+#include<iostream>
+using namespace std;
+#include<string>
+int test(int val)//阶乘
+{
+	if (val < 0){
+		return -1;
+	}
+	int i = 1; int num = 1;
+	while (true){
+		num *= i;++i;
+		if (i > val){
+			return num;
+		}
+	}
+}
+int main()
+{
+	cout << test(5);
+	system("pause");
+	return 0;
+}
+
+#include<cmath>
+abs(-10);//绝对值
+
+#include<iostream>
+using namespace std;
+#include<string>
+int test(int val)
+{
+	static unsigned num = 0;++num;//静态变量不会被重复定义
+	cout << "函数执行了：" << num << "次" << endl;
+	return val;
+}
+int main()
+{
+	test(5);
+	test(5);
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<string>
+void test(int&val1,int &val2)
+{
+	val1 ^= val2 ^= val1 ^= val2;
+}
+int main()
+{
+	//值交换
+	int a = 10, b = 20;
+	test(a,b);
+	cout << a << " " << b << endl;
+	system("pause");
+	return 0;
+}
+
+int isupper(char c);
+如果 c 是一个大写字母，则该函数返回非零值（true），否则返回 0（false）。
+toupper (char c)
+小写转大写
+
+#include<iostream>
+using namespace std;
+#include<string>
+int main()
+{
+	string str = "hello WORLD";
+	for (auto&val : str)
+	{
+		cout << isupper(val) << endl;//判断是否是大写字母
+	}
+	for (auto&val : str)
+		cout << val;
+	system("pause");
+	return 0;
+}
+
+void test01(int *p1, int*p2)//什么也不改变
+{
+	int *temp = p1;
+	p1 = p2;
+	p2 = temp;
+}
+void test02(int *p1, int *p2)//指针互换内容
+{
+	int temp = *p1;
+	*p1 = *p2;
+	*p2 = temp;
+}
+void test03(int *&p1, int *&p2)//内容互换指针
+{
+	int *temp = p1;
+	p1 = p2;
+	p2 = temp;
+}
+
+#include<iostream>
+using namespace std;
+void print1(const int*arr, const int a)
+{
+	for (int i = 0; i < a; ++i)
+	{
+		cout << *(arr + i);
+	}
+	cout << endl;
+}
+void print2(const int *b, const int *e)
+{
+	for (auto i = b; i != e; ++i)
+	{
+		cout << *i;
+	}
+	cout << endl;
+}
+int main()
+{
+	int arr[5] = { 1,2,3,4,5 };
+	print1(arr, sizeof(arr) / sizeof(*arr));
+	print2(begin(arr), end(arr));
+	system("pause");
+	return 0;
+}
+
+void print(const int arr[10])
+{
+	//不要这样定义参数列表 这样的列表相当于const int *
+	//长度超过10的数组也可以正常调用 因而引发错误
+}
+
+#include<iostream>
+using namespace std;
+void addNum(initializer_list<int>li)
+{
+	int num = 0;
+	for (auto i:li)
+	{
+		num += i;
+	}
+	cout << num;
+}
+int main()
+{
+	addNum({ 1,2,3,4 });
+	system("pause");
+	return 0;
+}
+需要注意的是,initializer_list对象中的元素永远是常量值，我们无法改变initializer_list对象中元素的值。并且，拷贝或赋值一个initializer_list对象不会拷贝列表中的元素，其实只是引用而已，原始列表和副本共享元素。
+
+#include<iostream>
+using namespace std;
+const int & getNum(int *arr,int id)
+{
+	return arr[id];
+}
+int main()
+{
+	int arr[5] = { 1,2,3,4,5 };
+	for (int i = 0; i < sizeof(arr) / sizeof(*arr); ++i)
+	{
+		cout<<getNum(arr, i);
+	}
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+void printV(vector<int>&v, int id = 0)
+{
+	//递归遍历
+	if (!v.empty() && id < v.size())
+	{
+		cout << v[id];
+		printV(v, id + 1);
+	}
+}
+int main()
+{
+	vector<int>v = { 1,2,3,4,5 };
+	printV(v);
+	system("pause");
+	return 0;
+}
+
+void printV(int id1 = 0, int id2)//此参数列表存在二义性 编译不通过
+{
+}
+
+string (&func())[10]
+{
+	//函数表示返回一个数组的引用
+	//此数组有10个string元素
+}
+
+//类型别名
+typedef string arr[10];
+arr&func()
+{
+}
+
+//尾置返回类型
+auto func()->string(&)[10]
+{
+}
+//decltype关键字
+string str[10];
+decltype(str)&func()
+{
+}
+
+//inline在函数定义时添加 在声明时添加无效
+//inline适用于短小且频繁调用的函数
+
+#include "assert.h"
+assert(1);//预处理宏 条件为真什么也不做 条件为假报错
+
+//函数重载后调用 候选函数->可行函数->最佳匹配
+
+//精准匹配 顶层const不能作为区分条件
+void test01(const char* const c)
+{
+}
+void test01(const char* c)
+{
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+void test01(const char* const c)
+{
+}
+int main()
+{
+	cout<<typeid(decltype(test01)*).name();
+
+	system("pause");
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+#include<vector>
+void func1(int a, int b)
+{
+	cout << a + b << endl;
+}
+void func2(int a, int b)
+{
+	cout << a * b << endl;
+}
+void Computer(int a, int b, void(*p)(int, int))
+{
+	p(a, b);
+	//(*p)(a, b);//作用相同
+}
+int main()
+{
+	decltype(func1)*p1 = func1;
+	decltype(func1)*p2 = func2;
+	vector<decltype(func1)*>v;
+	v.push_back(func1);
+	v.push_back(func2);
+	for (auto val : v)
+	{
+		Computer(10, 20, val);
+	}
+	system("pause");
+	return 0;
+}
