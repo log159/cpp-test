@@ -1,0 +1,77 @@
+#include<iostream>
+using namespace std;
+#include<string>
+#include<sstream>
+int legalDouble(const string & str)
+{
+	if (str.at(0) == '.' || str.at(str.size() - 1) == '.')
+	{
+		return 0;
+	}
+	int num = 0;
+	string::size_type pos = 0;
+	while ((pos = str.find('.', pos)) != string::npos)
+	{
+		++num;
+		++pos;
+	}
+	if (num > 1)
+	{
+		return 0;
+	}
+	if (num == 0)
+	{
+		return 1;
+	}
+	else if (num == 1)
+	{
+		return 2;
+	}
+	else
+	{
+		return 0;
+	}
+}
+int main(int argc, char *argv[])
+{
+	cout.precision(10);
+	cout.flags(cout.fixed);
+	while (true)
+	{
+		cout << "cin" << endl;
+		
+		string str;
+		cin >> str;
+
+		int fid = str.find('.');
+		const int n = str.size() - fid - 1;
+
+		istringstream ss1(str.substr(0, fid)), ss2(str.substr(fid + 1, n));
+		double flo1, flo2;
+		ss1 >> flo1;
+		ss2 >> flo2;
+		cout << "整数部分："<<flo1 << endl;
+		for (int i = 0; i < n; ++i)
+		{
+			flo2 = flo2/10.f;
+		}
+		cout << "小数部分：" << flo2 << endl;
+		flo1 += flo2;
+		
+		cout << "转为 double "<<flo1 << endl;
+		printf("转为 double %.10f\n", flo1);
+		cout << endl;
+		//以下数字被约掉了 并没有加上 可猜测double类型在精度过高的运算中丢失了数据
+		//13412341234.3243453
+		for (int i = 0; i < 100000; i++)
+		{
+			flo1 += 0.000000001f;
+		}
+
+		printf("转为 double %.10f\n", flo1);
+
+	}
+	system("pause");
+	return 0;
+}
+

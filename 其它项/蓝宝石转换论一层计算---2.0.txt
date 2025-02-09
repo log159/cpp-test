@@ -1,0 +1,179 @@
+//简洁穷举
+#include<iostream>
+#include<string>
+using namespace std;
+int main()
+{
+	long long war[4] = { 100000,100,100,100 };
+	         //血     攻    防    魔防
+	//勇士   war[0] war[1] war[2] war[3]
+	long long foe[5][3] =
+	{
+		{1238,2837,44},//绿史莱姆
+		{566,491,38},//骷髅人
+		{1889,1332,0},//红史莱姆
+		{100000,104,99},//黑史莱姆
+		{666,120,0},//小蝙蝠
+
+			      //血量      攻击     防御
+			  //foe[0][0] foe[0][1] foe[0][2]
+			  //foe[1][0] foe[1][1] foe[1][2]
+			  //foe[2][0] foe[2][1] foe[2][2]
+			  //foe[3][0] foe[3][1] foe[3][2]
+			  //foe[4][0] foe[4][1] foe[4][2]
+	};
+	string str[100] = { "绿史莱姆","骷髅人","红史莱姆" ,"黑史莱姆" ,"小蝙蝠" };
+	while (true)//壹循环
+	{
+		cout << "输入排序个数" << endl;
+		int a; cin >> a;//a 排序个数(临时) temp01 排序个数(常量)
+
+		int temp01 = a;//临时变量用于数组赋值
+		int temp02 = a;//临时变化用于数组逆置(循环次数)
+
+		//内层变量初始化
+		long long temp1 = 0;//内层临时变量1//记录累计损耗(单组合)
+		long long temp2 = 0;//内层临时变量2//记录真实受伤(单个怪)
+		long long temp3 = 0;//内层临时变量3//记录剩余血量(单组合)
+		long long temp4 = 0;//内层临时变量4//对比每次剩余(单组怪)
+		long long temp5 = 0;//内层临时变量5//累计每次防御(单组怪)
+		long long temp6 = 0;//内层临时变量5//累计每次攻击(单组怪)
+
+		int END[100];
+		//int w = 0;//记录所有排序个数(同阶乘数值相等)
+
+		int arr[100];//{1,2,3,4.....n}
+		for (int i01 = a - 1; i01 >= 0; i01--)
+		{
+			arr[i01] = temp01;
+			temp01--;
+		}
+
+		int Arr[100];//{n,(n-1),....3,2,1}
+		for (int i02 = 0; i02 < a; i02++)
+		{
+			temp02--;
+			Arr[i02] = arr[temp02];
+		}
+
+		int ARR[100];//根据排序的个数初始化零,最终输出{(0~n-1),(0~n-2),....(0~3),(0~2),(0~1),(0~0)}全部集合
+		for (int i03 = 0; i03 < a; i03++)
+		{
+			ARR[i03] = 0;
+		}
+		
+		int overarr[100];
+		bool over = 1;
+		while (over)//贰循环
+		{
+			temp1 = 0;
+			temp3 = war[0];//血量初始化
+			temp6 = war[1];
+			temp5 = war[2];
+			//for (int i = 0; i < a; i++)//输出
+			//{
+			//	cout << ARR[i] << " ";//输出{(0~n-1),(0~n-2),....(0~3),(0~2),(0~1),(0~0)}全部集合
+			//}
+			//cout << endl;
+
+			int temp03 = a;//临时变量用于初始化
+			for (int i04 = a - 1; i04 >= 0; i04--)//初始化数组{1,2,3,4.....n}
+			{
+				arr[i04] = temp03;
+				temp03--;
+			}
+
+			for (int i05 = 0; i05 < a; i05++)
+			{
+				overarr[i05] = arr[ARR[i05]];
+				for (int i06 = 0; i06 < a - ARR[i05]-1; i06++)
+				{
+					arr[ARR[i05] + i06] = arr[ARR[i05] + i06 + 1];
+				}
+			}
+
+			for (int i = 0; i < a; i++)//兼容数组编号
+			{
+				overarr[i] -= 1;
+			}
+
+			//for (int i = 0; i < a; i++)//输出
+			//{
+			//	cout << overarr[i] << " ";
+			//}
+			//cout << endl;
+			//w++;
+
+			//排序运算
+			for (int set = 0; set < a; set++)
+			{
+				if (temp6 > foe[overarr[set]][2])//吾攻大于汝御
+				{
+					if (overarr[set] == 2) { temp3 -= 200; }/*特殊---固伤*/
+					else if (overarr[set] == 3) { temp3 -= 13740; }/*特殊---固伤*/
+					if (temp3 <= 0) { goto ENDL; }/*特殊---固伤---判定*/
+					if (temp5 >= foe[overarr[set]][1]) { temp5++;/*特殊---防御+1*/ goto endl; }//吾御大于汝攻
+					int trueattack = temp6 - foe[overarr[set]][2]; //吾攻较汝御值差
+					int round = foe[overarr[set]][0] / trueattack; 
+					if (foe[overarr[set]][0] % trueattack == 0) { round--; }//汝攻吾数
+					temp2 = round * (foe[overarr[set]][1] - temp5);//汝攻吾伤
+					if (overarr[set] == 4) { temp2 *=6; }/*特殊---6连击*/
+					if (temp2 <= war[3]) { temp5++;/*特殊---防御+1*/goto endl; }//汝伤不若吾魔御
+					else { temp2 -= war[3]; }
+					if (temp2 < temp3) { temp3 -= temp2; if (overarr[set] == 3) { goto s; } temp5++; s:;/*特殊*/ }//吾胜汝之余
+					else { goto ENDL; }
+				}
+				else { goto ENDL; }
+			endl:;
+			}
+
+			//记录当组损耗及路线
+			if (temp4 < temp3)
+			{
+				temp4 = temp3;
+				//cout << "temp3 = " << temp3 << endl;
+				for (int truth = 0; truth < a; truth++)
+				{
+					END[truth] = overarr[truth];
+				}
+			}
+		
+		ENDL:;
+
+			ARR[a - 1]++;//第n项+1
+			for (int I = a - 1; I >= 0; I--)
+			{
+
+				if (ARR[I] == Arr[I])
+				{
+					if (ARR[0] == Arr[0])
+					{
+						over = 0;
+					}
+					ARR[I] = 0;
+					ARR[I - 1]++;
+				}
+			}
+		}
+
+		cout << "最终剩余" << endl;
+		cout<<temp4 << endl;
+		cout << "最佳路线" << endl;
+		//for (int i07 = 0; i07 < a; i07++)
+		//{
+		//	END[i07] = END[i07] + 1;
+		//	cout << END[i07] << " ";//最终顺序输出
+		//}
+		for (int i08 = 0; i08 < a; i08++)
+		{
+			cout << str[END[i08]] << " ";
+		}
+		//cout << "共有 " << w << " 种选择";
+		cout << endl;//换行
+		system("pause");
+		system("cls");
+
+	}
+	return 0;
+
+}
